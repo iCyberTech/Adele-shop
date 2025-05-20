@@ -112,6 +112,12 @@
             color: white;
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .cart-icon {
             position: relative;
         }
@@ -133,20 +139,18 @@
 
         /* Mobile menu toggle */
         .menu-toggle {
-            display: none;
+            display: block;
             background: none;
             border: none;
             font-size: 20px;
             color: var(--dark);
             cursor: pointer;
             padding: 5px;
-            margin-left: 10px;
         }
 
         /* Country/Currency Switcher */
         .country-switcher {
             position: relative;
-            margin-left: 10px;
         }
 
         .country-btn {
@@ -1439,10 +1443,6 @@
             <div class="logo">
                 <i class="fas fa-shopping-bag"></i>
                 <span>Adellem Star Enterprise</span>
-                 <i class="fas fa-shopping-cart"></i>
-                 <a href="#" id="cart-btn" class="cart-icon" align="right">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">0</span>
             </div>
             
             <button class="menu-toggle" id="menu-toggle">
@@ -1450,11 +1450,6 @@
             </button>
             
             <div class="header-right">
-               <!-- <a href="#" id="cart-btn" class="cart-icon">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">0</span>
-                </a>
-                -->
                 <div class="country-switcher">
                     <button class="country-btn" id="country-btn">
                         <img src="https://flagcdn.com/w20/us.png" class="country-flag" id="current-flag">
@@ -1464,6 +1459,11 @@
                         <!-- Country options will be added dynamically -->
                     </div>
                 </div>
+                
+                <a href="#" id="cart-btn" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
             </div>
             
             <nav id="main-nav">
