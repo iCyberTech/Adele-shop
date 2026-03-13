@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VITREO — Liquid Glass Fashion</title>
+<title>SANKOFAHAUS — Ghana Couture</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Syncopate:wght@400;700&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -13,8 +13,8 @@
     --glass-shine: rgba(255,255,255,0.35);
     --bg-deep: #04040a;
     --bg-mid: #070714;
-    --accent-aqua: #7df3ff;
-    --accent-rose: #ff6eb4;
+    --accent-aqua: #f5c842;
+    --accent-rose: #e05c2a;
     --accent-gold: #ffe8a0;
     --text-primary: rgba(255,255,255,0.92);
     --text-secondary: rgba(255,255,255,0.45);
@@ -1077,298 +1077,6 @@ animation: ptPulse 1s ease-in-out;
 50%  { opacity: 1; transform: scale(1); }
 100% { opacity: 0; transform: scale(1.05); }
 }
-
-
-.cp-overlay {
-  position: fixed; inset: 0; z-index: 500;
-  background: var(--bg-deep);
-  overflow-y: hidden;
-  transform: translateY(100%);
-  transition: transform 0.7s cubic-bezier(0.76,0,0.24,1);
-  will-change: transform;
-}
-.cp-overlay.open {
-  transform: translateY(0);
-}
-
-/* NAV */
-.cp-nav {
-  position: sticky; top: 0; z-index: 10;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 22px 48px;
-  background: linear-gradient(180deg, rgba(4,4,10,0.9) 0%, transparent 100%);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.cp-nav-title {
-  font-family: 'Syncopate', sans-serif; font-size: 10px;
-  letter-spacing: 0.35em; text-transform: uppercase;
-  color: var(--text-secondary);
-}
-.cp-close-btn {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  color: var(--text-secondary); cursor: none;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.3s; backdrop-filter: blur(10px);
-}
-.cp-close-btn:hover {
-  background: rgba(255,110,180,0.12);
-  border-color: rgba(255,110,180,0.3);
-  color: var(--accent-rose);
-  transform: rotate(90deg);
-}
-
-/* HERO BANNER */
-.cp-hero {
-  position: relative; z-index: 2;
-  padding: 72px 48px 56px;
-  overflow: hidden;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.cp-hero::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 30% 50%, rgba(125,243,255,0.06) 0%, transparent 60%),
-              radial-gradient(ellipse at 70% 50%, rgba(255,110,180,0.05) 0%, transparent 60%);
-}
-.cp-hero-text { position: relative; z-index: 2; max-width: 600px; }
-.cp-hero-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(52px, 7vw, 100px);
-  font-weight: 300; line-height: 0.92; margin-bottom: 24px;
-}
-.cp-hero-title em {
-  font-style: italic; color: transparent;
-  -webkit-text-stroke: 1px rgba(255,255,255,0.4); display: block;
-}
-.cp-hero-sub {
-  font-size: 15px; line-height: 1.8; color: var(--text-secondary); max-width: 480px;
-}
-
-/* Hero glass shards */
-.cp-hero-shards { position: absolute; right: 80px; top: 50%; transform: translateY(-50%); }
-.cp-shard {
-  position: absolute;
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.12);
-  animation: fragmentFloat ease-in-out infinite alternate;
-}
-.cp-shard-1 {
-  width: 140px; height: 200px; border-radius: 60% 40% 50% 50% / 50% 60% 40% 50%;
-  background: linear-gradient(135deg, rgba(125,243,255,0.08), rgba(192,132,252,0.06));
-  top: -80px; right: 0; animation-duration: 6s;
-}
-.cp-shard-2 {
-  width: 100px; height: 140px; border-radius: 40% 60% 55% 45% / 60% 40% 55% 45%;
-  background: linear-gradient(135deg, rgba(255,110,180,0.07), rgba(125,243,255,0.05));
-  top: -20px; right: 120px; animation-duration: 8s; animation-delay: -2s;
-}
-.cp-shard-3 {
-  width: 70px; height: 100px; border-radius: 50%;
-  background: linear-gradient(135deg, rgba(255,232,160,0.06), rgba(192,132,252,0.05));
-  top: 60px; right: 40px; animation-duration: 5s; animation-delay: -4s;
-}
-
-/* FILTER BAR */
-.cp-filters {
-  position: relative; z-index: 2;
-  display: flex; gap: 8px; flex-wrap: wrap;
-  padding: 32px 48px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  background: rgba(4,4,10,0.3);
-  backdrop-filter: blur(8px);
-}
-.cp-filter-btn {
-  padding: 10px 24px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: var(--text-secondary);
-  font-family: 'Syncopate', sans-serif; font-size: 9px;
-  letter-spacing: 0.2em; text-transform: uppercase;
-  cursor: none; border-radius: 2px;
-  transition: all 0.3s; backdrop-filter: blur(8px);
-}
-.cp-filter-btn:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
-.cp-filter-btn.active {
-  background: linear-gradient(135deg, rgba(125,243,255,0.15), rgba(192,132,252,0.12));
-  border-color: rgba(125,243,255,0.4);
-  color: var(--accent-aqua);
-  box-shadow: 0 0 20px rgba(125,243,255,0.1);
-}
-
-/* SECTIONS */
-.cp-section {
-  position: relative; z-index: 2;
-  padding: 80px 48px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-.cp-section-header { max-width: 640px; margin-bottom: 56px; }
-.cp-section-meta { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
-.cp-section-num {
-  font-family: 'Syncopate', sans-serif; font-size: 11px;
-  color: rgba(255,255,255,0.2); letter-spacing: 0.1em;
-}
-.cp-section-cat-tag {
-  padding: 5px 14px; border-radius: 2px;
-  font-family: 'Syncopate', sans-serif; font-size: 9px;
-  letter-spacing: 0.2em; text-transform: uppercase;
-  border: 1px solid; backdrop-filter: blur(8px);
-}
-.cp-section-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(36px, 4.5vw, 64px); font-weight: 300; line-height: 1;
-  margin-bottom: 18px;
-}
-.cp-section-title em {
-  font-style: italic; color: transparent;
-  -webkit-text-stroke: 1px rgba(255,255,255,0.35);
-}
-.cp-section-desc {
-  font-size: 14px; line-height: 1.8; color: var(--text-secondary);
-}
-
-/* GRID */
-.cp-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-/* ITEM CARD */
-.cp-item {
-  position: relative; border-radius: 4px; overflow: hidden;
-  cursor: none;
-  opacity: 0; transform: translateY(32px);
-  transition: opacity 0.7s cubic-bezier(0.23,1,0.32,1),
-              transform 0.7s cubic-bezier(0.23,1,0.32,1);
-}
-.cp-item.visible { opacity: 1; transform: translateY(0); }
-.cp-item:nth-child(2) { transition-delay: 0.1s; }
-.cp-item:nth-child(3) { transition-delay: 0.2s; }
-.cp-item:nth-child(4) { transition-delay: 0.3s; }
-
-.cp-item-img { position: relative; aspect-ratio: 3/4; overflow: hidden; }
-.cp-img-bg {
-  position: absolute; inset: 0;
-  transition: transform 0.7s cubic-bezier(0.23,1,0.32,1);
-}
-.cp-item:hover .cp-img-bg { transform: scale(1.05); }
-
-/* Category bg gradients */
-.cp-afr-1 { background: linear-gradient(160deg, #1a0e00 0%, #120d00 40%, #0a1008 100%); }
-.cp-afr-2 { background: linear-gradient(160deg, #001a12 0%, #0a120a 40%, #1a0a00 100%); }
-.cp-afr-3 { background: linear-gradient(160deg, #1a0010 0%, #0e000a 40%, #180a00 100%); }
-.cp-afr-4 { background: linear-gradient(160deg, #001218 0%, #0a0a12 40%, #001208 100%); }
-.cp-wed-1 { background: linear-gradient(160deg, #180a14 0%, #0e0818 40%, #0a100e 100%); }
-.cp-wed-2 { background: linear-gradient(160deg, #18100a 0%, #140810 40%, #0a0c18 100%); }
-.cp-wed-3 { background: linear-gradient(160deg, #100818 0%, #0a0818 40%, #08101a 100%); }
-.cp-wed-4 { background: linear-gradient(160deg, #080e18 0%, #080c14 40%, #08101a 100%); }
-.cp-suit-1 { background: linear-gradient(160deg, #060e14 0%, #08081a 40%, #0a0614 100%); }
-.cp-suit-2 { background: linear-gradient(160deg, #14100a 0%, #0a0814 40%, #100a18 100%); }
-.cp-suit-3 { background: linear-gradient(160deg, #0a0618 0%, #060c14 40%, #0e0612 100%); }
-.cp-suit-4 { background: linear-gradient(160deg, #040e14 0%, #06081a 40%, #0a0414 100%); }
-
-.cp-figure {
-  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 70%; height: 92%;
-}
-
-.cp-item-tag {
-  position: absolute; top: 16px; left: 16px;
-  padding: 5px 12px;
-  background: rgba(0,0,0,0.4);
-  border: 1px solid; backdrop-filter: blur(12px);
-  font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
-  border-radius: 2px;
-}
-
-/* ITEM INFO */
-.cp-item-info {
-  padding: 20px 20px 16px;
-  background: rgba(4,4,10,0.85);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-top: none;
-}
-.cp-item-cat {
-  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--text-secondary); margin-bottom: 6px;
-}
-.cp-item-name {
-  font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300;
-  margin-bottom: 5px;
-}
-.cp-item-sub {
-  font-size: 11px; color: var(--text-secondary); line-height: 1.5;
-  margin-bottom: 14px;
-}
-.cp-item-footer {
-  display: flex; justify-content: space-between; align-items: center;
-}
-.cp-item-price {
-  font-family: 'Cormorant Garamond', serif; font-size: 18px;
-}
-
-/* FOOTER STRIP */
-.cp-footer-strip {
-  position: relative; z-index: 2;
-  text-align: center; padding: 80px 48px;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  background: radial-gradient(ellipse at 50% 50%, rgba(125,243,255,0.04) 0%, transparent 70%);
-  font-size: 13px; color: var(--text-secondary);
-  display: flex; flex-direction: column; align-items: center;
-}
-
-/* ── MOBILE RESPONSIVE for Collection Page ── */
-@media (max-width: 1024px) {
-  .cp-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .cp-nav { padding: 18px 32px; }
-  .cp-hero { padding: 56px 32px 44px; }
-  .cp-hero-shards { right: 20px; }
-  .cp-shard-1 { width: 100px; height: 140px; }
-  .cp-shard-2 { width: 70px; height: 100px; right: 80px; }
-  .cp-shard-3 { display: none; }
-  .cp-filters { padding: 24px 32px; }
-  .cp-section { padding: 60px 32px; }
-}
-
-@media (max-width: 768px) {
-  .cp-nav { padding: 16px 20px; }
-  .cp-nav-title { display: none; }
-  .cp-close-btn { cursor: pointer; }
-
-  .cp-hero { padding: 40px 20px 36px; flex-direction: column; }
-  .cp-hero-title { font-size: clamp(40px, 11vw, 64px); }
-  .cp-hero-shards { position: relative; right: auto; top: auto; transform: none; display: flex; gap: 12px; margin-top: 32px; }
-  .cp-shard { position: relative; }
-  .cp-shard-1 { width: 80px; height: 110px; top: 0; }
-  .cp-shard-2 { width: 60px; height: 85px; top: 0; right: auto; }
-
-  .cp-filters { padding: 20px; gap: 8px; }
-  .cp-filter-btn { padding: 8px 16px; font-size: 8px; cursor: pointer; }
-
-  .cp-section { padding: 48px 20px; }
-  .cp-section-header { margin-bottom: 36px; }
-  .cp-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-
-  .cp-item-name { font-size: 16px; }
-  .cp-item-info { padding: 14px 14px 12px; }
-
-  .cp-footer-strip { padding: 56px 20px; }
-}
-
-@media (max-width: 480px) {
-  .cp-grid { grid-template-columns: 1fr; }
-  .cp-hero-title { font-size: clamp(36px, 12vw, 52px); }
-  .cp-filters { gap: 6px; }
-  .cp-filter-btn { padding: 8px 12px; }
-}
-
-@media (hover: none) {
-  .cp-close-btn, .cp-filter-btn { cursor: pointer; }
-}
-
-
 </style>
 
 </head>
@@ -1377,7 +1085,7 @@ animation: ptPulse 1s ease-in-out;
 <!-- PAGE TRANSITION -->
 
 <div class="page-transition">
-  <div class="pt-logo">VITREO</div>
+  <div class="pt-logo">SANKOFAHAUS</div>
 </div>
 
 <!-- CUSTOM CURSOR -->
@@ -1397,14 +1105,14 @@ animation: ptPulse 1s ease-in-out;
 <!-- NAV -->
 
 <nav>
-  <div class="nav-logo">VITREO</div>
+  <div class="nav-logo">SANKOFAHAUS</div>
   <ul class="nav-links">
-    <li><a href="#">Collections</a></li>
+    <li><a href="#">Kente Couture</a></li>
     <li><a href="#">Editorial</a></li>
     <li><a href="#">Lookbook</a></li>
     <li><a href="#">Atelier</a></li>
   </ul>
-  <button class="nav-cta nav-cta-desk">Reserve Access</button>
+  <button class="nav-cta nav-cta-desk">Book a Fitting</button>
   <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
@@ -1414,12 +1122,12 @@ animation: ptPulse 1s ease-in-out;
 
 <div class="mobile-drawer" id="mobileDrawer">
   <ul class="mobile-nav-links">
-    <li><a href="#collections">Collections</a></li>
+    <li><a href="#collections">Kente Couture</a></li>
     <li><a href="#editorial">Editorial</a></li>
     <li><a href="#feature">Lookbook</a></li>
-    <li><a href="#feature">Atelier</a></li>
+    <li><a href="#feature">Atelier Accra</a></li>
   </ul>
-  <button class="nav-cta" style="width:100%;margin-top:32px;">Reserve Access</button>
+  <button class="nav-cta" style="width:100%;margin-top:32px;">Book a Fitting</button>
 </div>
 
 <!-- HERO -->
@@ -1429,11 +1137,16 @@ animation: ptPulse 1s ease-in-out;
   <!-- ── SLIDESHOW BACKGROUND ── -->
 
   <div class="hero-slides" id="heroSlides">
-    <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1600&q=85&fit=crop')"></div>
-    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=1600&q=85&fit=crop&crop=top')"></div>
-    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&q=85&fit=crop')"></div>
-    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1600&q=85&fit=crop&crop=top')"></div>
-    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1600&q=85&fit=crop&crop=top')"></div>
+    <!-- Slide 1: Kente gown — warm editorial -->
+    <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=1600&q=90&fit=crop&crop=top');background-position:center 20%"></div>
+    <!-- Slide 2: Bridal — white gown with African headpiece -->
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=1600&q=90&fit=crop&crop=top')"></div>
+    <!-- Slide 3: Kente wedding couple -->
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1606800052052-a08af7148866?w=1600&q=90&fit=crop')"></div>
+    <!-- Slide 4: Tailored suit — African editorial -->
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1600&q=90&fit=crop&crop=top')"></div>
+    <!-- Slide 5: Ankara/Adinkra street fashion -->
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1600&q=90&fit=crop')"></div>
   </div>
   <!-- Gradient veil over photos -->
   <div class="hero-slide-veil"></div>
@@ -1513,16 +1226,16 @@ animation: ptPulse 1s ease-in-out;
 
 <div class="ticker-wrap">
   <div class="ticker" id="ticker">
-    <div class="ticker-item">Liquid Glass SS 2025</div>
-    <div class="ticker-item">Crystalline Couture</div>
-    <div class="ticker-item">New Arrivals</div>
-    <div class="ticker-item">Free Shipping Over $500</div>
-    <div class="ticker-item">Atelier Ready-To-Wear</div>
-    <div class="ticker-item">Liquid Glass SS 2025</div>
-    <div class="ticker-item">Crystalline Couture</div>
-    <div class="ticker-item">New Arrivals</div>
-    <div class="ticker-item">Free Shipping Over $500</div>
-    <div class="ticker-item">Atelier Ready-To-Wear</div>
+    <div class="ticker-item">Kente Couture SS 2025</div>
+    <div class="ticker-item">Handwoven in Bonwire</div>
+    <div class="ticker-item">Bridal & Traditional</div>
+    <div class="ticker-item">Bespoke Accra Atelier</div>
+    <div class="ticker-item">Adinkra · Kente · Ankara</div>
+    <div class="ticker-item">Kente Couture SS 2025</div>
+    <div class="ticker-item">Handwoven in Bonwire</div>
+    <div class="ticker-item">Bridal & Traditional</div>
+    <div class="ticker-item">Bespoke Accra Atelier</div>
+    <div class="ticker-item">Adinkra · Kente · Ankara</div>
   </div>
 </div>
 
@@ -1531,8 +1244,8 @@ animation: ptPulse 1s ease-in-out;
 <section id="collections">
   <div class="section-header reveal">
     <div>
-      <div class="section-label">Collections</div>
-      <h2 class="section-title">Featured <em>Pieces</em></h2>
+      <div class="section-label">Featured Pieces</div>
+      <h2 class="section-title">Ghana's <em>Finest</em></h2>
     </div>
     <div class="section-nav">
       <button class="s-nav-btn">←</button>
@@ -1541,59 +1254,59 @@ animation: ptPulse 1s ease-in-out;
   </div>
 
   <div class="cards-grid">
-    <!-- Card 1 -->
+    <!-- Card 1: Kente Bridal Gown -->
     <div class="card card-1 reveal reveal-delay-1">
       <div class="card-img-wrap">
         <div class="card-img-bg card-img-photo">
-          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=85&fit=crop&crop=top" alt="Aurore Gown" loading="lazy" onerror="this.parentElement.classList.remove('card-img-photo')">
+          <img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=600&q=90&fit=crop&crop=top" alt="Akosua Bridal Gown" loading="lazy" onerror="this.parentElement.classList.remove('card-img-photo')">
         </div>
         <div class="card-glass"></div>
-        <div class="card-tag">New</div>
+        <div class="card-tag" style="border-color:rgba(245,200,66,0.5);color:#f5c842;">Bridal</div>
       </div>
       <div class="card-info">
-        <div class="card-name">Aurore Gown</div>
-        <div class="card-sub">Crystalline Collection · S / M / L</div>
+        <div class="card-name">Akosua Bridal Gown</div>
+        <div class="card-sub">Kente Bridal Collection · S / M / L</div>
         <div class="card-price">
-          <span class="price-val">$2,840</span>
+          <span class="price-val">GH₵ 8,400</span>
           <button class="add-btn">+</button>
         </div>
       </div>
     </div>
 
 ```
-<!-- Card 2 -->
+<!-- Card 2: Agbada Suit -->
 <div class="card card-2 reveal reveal-delay-2">
   <div class="card-img-wrap">
     <div class="card-img-bg card-img-photo">
-      <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=85&fit=crop&crop=top" alt="Prism Jacket" loading="lazy" onerror="this.parentElement.classList.remove('card-img-photo')">
+      <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=90&fit=crop&crop=top" alt="Kofi Agbada Suit" loading="lazy" onerror="this.parentElement.classList.remove('card-img-photo')">
     </div>
     <div class="card-glass"></div>
-    <div class="card-tag">Limited</div>
+    <div class="card-tag" style="border-color:rgba(224,92,42,0.5);color:#e05c2a;">Suiting</div>
   </div>
   <div class="card-info">
-    <div class="card-name">Prism Jacket</div>
-    <div class="card-sub">Refraction Series · XS / S / M</div>
+    <div class="card-name">Kofi Agbada Suit</div>
+    <div class="card-sub">Kente-Panel Blazer · S / M / L / XL</div>
     <div class="card-price">
-      <span class="price-val">$1,560</span>
+      <span class="price-val">GH₵ 5,200</span>
       <button class="add-btn">+</button>
     </div>
   </div>
 </div>
 
-<!-- Card 3 -->
+<!-- Card 3: Ankara Couture Set -->
 <div class="card card-3 reveal reveal-delay-3">
   <div class="card-img-wrap">
     <div class="card-img-bg card-img-photo">
-      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=85&fit=crop&crop=top" alt="Lumière Set" loading="lazy" onerror="this.parentElement.classList.remove('card-img-photo')">
+      <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=600&q=90&fit=crop" alt="Adwoa Kente Set" loading="lazy" onerror="this.parentElement.classList.remove('card-img-photo')">
     </div>
     <div class="card-glass"></div>
-    <div class="card-tag">Exclusive</div>
+    <div class="card-tag" style="border-color:rgba(245,200,66,0.5);color:#f5c842;">Exclusive</div>
   </div>
   <div class="card-info">
-    <div class="card-name">Lumière Set</div>
-    <div class="card-sub">Clarity Line · S / M</div>
+    <div class="card-name">Adwoa Kente Set</div>
+    <div class="card-sub">Traditional Wedding · S / M</div>
     <div class="card-price">
-      <span class="price-val">$3,200</span>
+      <span class="price-val">GH₵ 6,800</span>
       <button class="add-btn">+</button>
     </div>
   </div>
@@ -1624,16 +1337,16 @@ animation: ptPulse 1s ease-in-out;
   </div>
 
   <div class="feature-text">
-    <div class="section-label reveal">Atelier Process</div>
-    <h2 class="section-title reveal reveal-delay-1">Crafted in <em>Light</em></h2>
+    <div class="section-label reveal">Our Craft · Accra Atelier</div>
+    <h2 class="section-title reveal reveal-delay-1">Woven in <em>Bonwire</em></h2>
     <p class="feature-desc reveal reveal-delay-2">
-      Every VITREO garment is conceived as a study in translucency. Our artisans work with bio-crystalline fabrics, refractive sequins and liquid-coated silk to create wearable light sculptures.
+      Every SANKOFAHAUS garment begins at the looms of Bonwire — Ghana's kente weaving heartland. Master weavers hand-thread silk and gold into patterns that carry centuries of Akan royal history, reimagined for the modern ceremony.
     </p>
     <ul class="feature-list reveal reveal-delay-3">
-      <li>Bio-crystalline fabric technology</li>
-      <li>Hand-finished refractive detailing</li>
-      <li>Zero-waste liquid coating process</li>
-      <li>Carbon-neutral supply chain</li>
+      <li>Authentic hand-woven Bonwire kente cloth</li>
+      <li>Adinkra symbol crystal embellishment</li>
+      <li>Bespoke bridal & traditional packages</li>
+      <li>Ethically sourced Ghanaian materials only</li>
     </ul>
   </div>
 </section>
@@ -1644,21 +1357,21 @@ animation: ptPulse 1s ease-in-out;
   <div class="section-header reveal">
     <div>
       <div class="section-label" style="--n:'03'">Editorial</div>
-      <h2 class="section-title">The <em>Magazine</em></h2>
+      <h2 class="section-title">The Accra <em>Edit</em></h2>
     </div>
   </div>
 
   <div class="editorial-grid">
     <div class="ed-card ed-1 reveal">
       <div class="ed-card-inner">
-        <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1622519407650-3df9883f76a5?w=900&q=80&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#0f0520,#1a0830,#081520)'"></div>
+        <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=900&q=85&fit=crop&crop=top" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#1a0e00,#120d00,#0a1008)'"></div>
         <div class="ed-overlay"></div>
         <div class="ed-glass-top"></div>
         <div class="ed-glass-left"></div>
         <div class="ed-content">
           <div class="ed-cat">Cover Story</div>
-          <div class="ed-title">Glass & Shadow: The New Language of Luxury</div>
-          <div class="ed-meta">By Elara Voss · April 2025 · 12 min read</div>
+          <div class="ed-title">Kente & Gold: Ghana's New Fashion Sovereignty</div>
+          <div class="ed-meta">By Abena Osei · April 2025 · 14 min read</div>
         </div>
       </div>
     </div>
@@ -1666,56 +1379,56 @@ animation: ptPulse 1s ease-in-out;
 ```
 <div class="ed-card ed-2 reveal reveal-delay-1">
   <div class="ed-card-inner">
-    <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&q=80&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#200510,#0a1520)'"></div>
+    <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=600&q=85&fit=crop&crop=top" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#180a00,#0e0800)'"></div>
     <div class="ed-overlay"></div>
     <div class="ed-glass-top"></div>
     <div class="ed-glass-left"></div>
     <div class="ed-content">
-      <div class="ed-cat">Runway</div>
-      <div class="ed-title">Paris After Midnight</div>
-      <div class="ed-meta">SS 2025 Recap</div>
+      <div class="ed-cat">Bridal</div>
+      <div class="ed-title">The Traditional White Wedding</div>
+      <div class="ed-meta">Accra Bridal Week 2025</div>
     </div>
   </div>
 </div>
 
 <div class="ed-card ed-3 reveal reveal-delay-2">
   <div class="ed-card-inner">
-    <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&q=80&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#051510,#101020)'"></div>
+    <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=600&q=85&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#1a0800,#0a0e00)'"></div>
     <div class="ed-overlay"></div>
     <div class="ed-glass-top"></div>
     <div class="ed-glass-left"></div>
     <div class="ed-content">
-      <div class="ed-cat">Atelier</div>
-      <div class="ed-title">Making Liquid Silk</div>
-      <div class="ed-meta">Process & Material</div>
+      <div class="ed-cat">Wedding</div>
+      <div class="ed-title">One Cloth, Two Souls</div>
+      <div class="ed-meta">Matching Kente Ceremony</div>
     </div>
   </div>
 </div>
 
 <div class="ed-card ed-4 reveal reveal-delay-1">
   <div class="ed-card-inner">
-    <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#150520,#0a2015)'"></div>
+    <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=85&fit=crop&crop=top" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#0a0800,#14100a)'"></div>
     <div class="ed-overlay"></div>
     <div class="ed-glass-top"></div>
     <div class="ed-glass-left"></div>
     <div class="ed-content">
-      <div class="ed-cat">Profile</div>
-      <div class="ed-title">Mireille & the Architecture of Skin</div>
-      <div class="ed-meta">Photographer: Noa Winters</div>
+      <div class="ed-cat">Suiting</div>
+      <div class="ed-title">The Ghanaian Gentleman Reimagined</div>
+      <div class="ed-meta">Photographer: Kwame Mensah</div>
     </div>
   </div>
 </div>
 
 <div class="ed-card ed-5 reveal reveal-delay-2">
   <div class="ed-card-inner">
-    <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1551803091-e20673f15770?w=600&q=80&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#200a05,#101520)'"></div>
+    <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=85&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#120a00,#0a0e08)'"></div>
     <div class="ed-overlay"></div>
     <div class="ed-glass-top"></div>
     <div class="ed-glass-left"></div>
     <div class="ed-content">
       <div class="ed-cat">Culture</div>
-      <div class="ed-title">When Art Wears You</div>
-      <div class="ed-meta">Essay · 8 min</div>
+      <div class="ed-title">Sankofa: Why We Dress with Memory</div>
+      <div class="ed-meta">Essay · 10 min</div>
     </div>
   </div>
 </div>
@@ -1728,12 +1441,12 @@ animation: ptPulse 1s ease-in-out;
 
 <section id="newsletter">
   <div class="nl-glass glass reveal">
-    <div class="section-label" style="justify-content:center;margin-bottom:24px;">Stay in the Light</div>
-    <h2 class="nl-title">First Access,<br><em style="font-style:italic;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,0.35)">Always.</em></h2>
-    <p class="nl-sub">Invitations to private showings, early drops and atelier events — delivered before the world knows.</p>
+    <div class="section-label" style="justify-content:center;margin-bottom:24px;">Join the Kente Circle</div>
+    <h2 class="nl-title">First to the <em>Loom.</em></h2>
+    <p class="nl-sub">Be first to know when new kente drops, bridal bookings open, and exclusive Accra atelier events are announced — before anyone else.</p>
     <div class="nl-form">
       <input class="nl-input" type="email" placeholder="your@address.com">
-      <button class="nl-submit">Join the List</button>
+      <button class="nl-submit">Medaase — Join</button>
     </div>
   </div>
 </section>
@@ -1743,39 +1456,39 @@ animation: ptPulse 1s ease-in-out;
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
-      <div class="nav-logo">VITREO</div>
-      <p class="footer-tagline">Fashion distilled through light. Couture crafted for those who wear the future.</p>
+      <div class="nav-logo" style="font-size:15px;margin-bottom:20px;">SANKOFAHAUS</div>
+      <p class="footer-tagline">Ghanaian couture woven from memory, worn into the future. Bridal · Kente · Suiting · Accra.</p>
     </div>
     <div class="footer-col">
       <h4>Shop</h4>
       <ul>
-        <li><a href="#">New Arrivals</a></li>
-        <li><a href="#">Collections</a></li>
+        <li><a href="#">Kente Gowns</a></li>
+        <li><a href="#">Bridal Collection</a></li>
+        <li><a href="#">Agbada Suits</a></li>
         <li><a href="#">Accessories</a></li>
-        <li><a href="#">Archival</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>World</h4>
       <ul>
-        <li><a href="#">Editorial</a></li>
+        <li><a href="#">Accra Editorial</a></li>
         <li><a href="#">Lookbook</a></li>
-        <li><a href="#">Atelier</a></li>
+        <li><a href="#">Bonwire Atelier</a></li>
         <li><a href="#">Events</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>Company</h4>
       <ul>
-        <li><a href="#">About</a></li>
+        <li><a href="#">Our Story</a></li>
         <li><a href="#">Sustainability</a></li>
         <li><a href="#">Careers</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="#">Contact Accra</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy">© 2025 VITREO. All rights reserved.</div>
+    <div class="footer-copy">© 2025 SANKOFAHAUS. Woven with love in Ghana 🇬🇭</div>
     <div class="footer-socials">
       <a href="#" class="social-btn">𝕏</a>
       <a href="#" class="social-btn">in</a>
@@ -1791,39 +1504,39 @@ animation: ptPulse 1s ease-in-out;
   // ══════════════════════════════════════════
   const SLIDES = [
     {
-      img: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1600&q=85&fit=crop',
-      eyebrow: 'SS 2025 Collection',
-      lines: ['Wear','Liquid','Glass'],
-      italic: 1,   // which line index is <em>
-      body: 'Where couture meets crystalline. Each piece distills light through precision-crafted forms — fashion that bends reality, not rules.'
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=1600&q=85&fit=crop&crop=top',
-      eyebrow: 'African Heritage',
-      lines: ['Rooted in','Radiance','Reborn'],
-      italic: 1,
-      body: 'Ancestral craft elevated to couture. Kente, adinkra, and ankara silhouettes woven through crystalline light.'
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&q=85&fit=crop',
-      eyebrow: 'Bridal Couture',
-      lines: ['Dressed','in','Forever'],
+      img: 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=1600&q=90&fit=crop&crop=top',
+      eyebrow: 'Ghana Couture · SS 2025',
+      lines: ['Born from','Kente,','Reborn'],
       italic: 2,
-      body: 'Gowns that dissolve the boundary between fabric and light. Every veil, train and bodice crafted to hold the moment still.'
+      body: 'From the looms of Bonwire to the runways of Accra — SANKOFAHAUS fuses ancestral kente craft with liquid-glass couture.'
     },
     {
-      img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1600&q=85&fit=crop&crop=top',
-      eyebrow: 'Tailored Suiting',
-      lines: ['Power','Dis-','tilled'],
-      italic: 0,
-      body: 'Structured precision meets liquid-glass fabric. Suits engineered for authority, softened by crystalline detail.'
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1600&q=85&fit=crop&crop=top',
-      eyebrow: 'New Arrivals',
-      lines: ['The','New','Now'],
+      img: 'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=1600&q=90&fit=crop&crop=top',
+      eyebrow: 'Bridal Collection · Accra',
+      lines: ['Wed in','Gold &','Grace'],
       italic: 1,
-      body: 'Fresh drops from the atelier — limited runs, lifetime pieces. Reserve yours before the world finds out.'
+      body: 'Bridal gowns woven with Ghanaian tradition — silk kente trains, crystal adinkra beading, and headpieces fit for a queen mother.'
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=1600&q=90&fit=crop',
+      eyebrow: 'Traditional Wedding · Ghana',
+      lines: ['Two Souls,','One','Cloth'],
+      italic: 1,
+      body: 'Matching kente ceremonial wear for your engagement, traditional, and white-wedding — hand-woven in Kumasi for you both.'
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1600&q=90&fit=crop&crop=top',
+      eyebrow: 'Tailored Suiting · Gentleman',
+      lines: ['The','Ghanaian','Gentleman'],
+      italic: 1,
+      body: 'Agbada-inspired suits and slim kente-panel blazers. Precision tailoring from Accra's finest atelier — power dressed in heritage.'
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1600&q=90&fit=crop',
+      eyebrow: 'New Arrivals · Accra Atelier',
+      lines: ['Sankofa —','Go Back','& Fetch'],
+      italic: 1,
+      body: '"Se wo were fi na wosankofa a yenkyi" — it is not wrong to go back for what you forgot. Our roots are our runway.'
     },
   ];
 
@@ -2183,7 +1896,7 @@ animation: ptPulse 1s ease-in-out;
   <!-- NAV BAR inside overlay -->
 
   <div class="cp-nav">
-    <div class="nav-logo">VITREO</div>
+    <div class="nav-logo" style="font-size:13px;">SANKOFAHAUS</div>
     <div class="cp-nav-title">Collections</div>
     <button class="cp-close-btn" id="collectionClose" aria-label="Close">
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -2198,10 +1911,10 @@ animation: ptPulse 1s ease-in-out;
   <div class="cp-hero">
     <div class="cp-hero-text">
       <div class="hero-eyebrow" style="margin-bottom:20px;">
-        SS 2025 · Three Worlds, One Vision
+        Ghana · Three Worlds, One Heritage
       </div>
-      <h1 class="cp-hero-title">The Full <em>Collection</em></h1>
-      <p class="cp-hero-sub">African Heritage · Bridal Couture · Tailored Suiting — each category a universe unto itself.</p>
+      <h1 class="cp-hero-title">The Ghana <em>Collection</em></h1>
+      <p class="cp-hero-sub">Kente Heritage · Bridal Couture · Agbada Suiting — each a universe woven from Ghanaian soul.</p>
     </div>
     <!-- Decorative glass shards -->
     <div class="cp-hero-shards">
@@ -2812,16 +2525,310 @@ animation: ptPulse 1s ease-in-out;
   </div>
 
 </div><!-- /cp-grid suits -->
-
+```
 
   </div>
 
   <!-- FOOTER STRIP -->
 
   <div class="cp-footer-strip">
-    <p>All pieces are made-to-order. Delivery in 8–12 weeks. Complimentary alterations included.</p>
-    <button class="btn-primary" style="margin-top:24px;">Book a Private Fitting</button>
+    <p>All pieces are made-to-order at our Accra atelier. Delivery in 6–10 weeks. Complimentary fittings included. Medaase.</p>
+    <button class="btn-primary" style="margin-top:24px;">Book a Private Fitting in Accra</button>
   </div>
 
 </div><!-- /cp-overlay -->
 
+<style>
+/* ═══════════════════════════════════════════════════ */
+/* COLLECTION OVERLAY STYLES                          */
+/* ═══════════════════════════════════════════════════ */
+
+.cp-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: var(--bg-deep);
+  overflow-y: hidden;
+  transform: translateY(100%);
+  transition: transform 0.7s cubic-bezier(0.76,0,0.24,1);
+  will-change: transform;
+}
+.cp-overlay.open {
+  transform: translateY(0);
+}
+
+/* NAV */
+.cp-nav {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 48px;
+  background: linear-gradient(180deg, rgba(4,4,10,0.9) 0%, transparent 100%);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.cp-nav-title {
+  font-family: 'Syncopate', sans-serif; font-size: 10px;
+  letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.cp-close-btn {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text-secondary); cursor: none;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s; backdrop-filter: blur(10px);
+}
+.cp-close-btn:hover {
+  background: rgba(255,110,180,0.12);
+  border-color: rgba(255,110,180,0.3);
+  color: var(--accent-rose);
+  transform: rotate(90deg);
+}
+
+/* HERO BANNER */
+.cp-hero {
+  position: relative; z-index: 2;
+  padding: 72px 48px 56px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.cp-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(125,243,255,0.06) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 50%, rgba(255,110,180,0.05) 0%, transparent 60%);
+}
+.cp-hero-text { position: relative; z-index: 2; max-width: 600px; }
+.cp-hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(52px, 7vw, 100px);
+  font-weight: 300; line-height: 0.92; margin-bottom: 24px;
+}
+.cp-hero-title em {
+  font-style: italic; color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.4); display: block;
+}
+.cp-hero-sub {
+  font-size: 15px; line-height: 1.8; color: var(--text-secondary); max-width: 480px;
+}
+
+/* Hero glass shards */
+.cp-hero-shards { position: absolute; right: 80px; top: 50%; transform: translateY(-50%); }
+.cp-shard {
+  position: absolute;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.12);
+  animation: fragmentFloat ease-in-out infinite alternate;
+}
+.cp-shard-1 {
+  width: 140px; height: 200px; border-radius: 60% 40% 50% 50% / 50% 60% 40% 50%;
+  background: linear-gradient(135deg, rgba(125,243,255,0.08), rgba(192,132,252,0.06));
+  top: -80px; right: 0; animation-duration: 6s;
+}
+.cp-shard-2 {
+  width: 100px; height: 140px; border-radius: 40% 60% 55% 45% / 60% 40% 55% 45%;
+  background: linear-gradient(135deg, rgba(255,110,180,0.07), rgba(125,243,255,0.05));
+  top: -20px; right: 120px; animation-duration: 8s; animation-delay: -2s;
+}
+.cp-shard-3 {
+  width: 70px; height: 100px; border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255,232,160,0.06), rgba(192,132,252,0.05));
+  top: 60px; right: 40px; animation-duration: 5s; animation-delay: -4s;
+}
+
+/* FILTER BAR */
+.cp-filters {
+  position: relative; z-index: 2;
+  display: flex; gap: 8px; flex-wrap: wrap;
+  padding: 32px 48px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(4,4,10,0.3);
+  backdrop-filter: blur(8px);
+}
+.cp-filter-btn {
+  padding: 10px 24px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text-secondary);
+  font-family: 'Syncopate', sans-serif; font-size: 9px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  cursor: none; border-radius: 2px;
+  transition: all 0.3s; backdrop-filter: blur(8px);
+}
+.cp-filter-btn:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+.cp-filter-btn.active {
+  background: linear-gradient(135deg, rgba(125,243,255,0.15), rgba(192,132,252,0.12));
+  border-color: rgba(125,243,255,0.4);
+  color: var(--accent-aqua);
+  box-shadow: 0 0 20px rgba(125,243,255,0.1);
+}
+
+/* SECTIONS */
+.cp-section {
+  position: relative; z-index: 2;
+  padding: 80px 48px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.cp-section-header { max-width: 640px; margin-bottom: 56px; }
+.cp-section-meta { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.cp-section-num {
+  font-family: 'Syncopate', sans-serif; font-size: 11px;
+  color: rgba(255,255,255,0.2); letter-spacing: 0.1em;
+}
+.cp-section-cat-tag {
+  padding: 5px 14px; border-radius: 2px;
+  font-family: 'Syncopate', sans-serif; font-size: 9px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  border: 1px solid; backdrop-filter: blur(8px);
+}
+.cp-section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 4.5vw, 64px); font-weight: 300; line-height: 1;
+  margin-bottom: 18px;
+}
+.cp-section-title em {
+  font-style: italic; color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.35);
+}
+.cp-section-desc {
+  font-size: 14px; line-height: 1.8; color: var(--text-secondary);
+}
+
+/* GRID */
+.cp-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* ITEM CARD */
+.cp-item {
+  position: relative; border-radius: 4px; overflow: hidden;
+  cursor: none;
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.7s cubic-bezier(0.23,1,0.32,1),
+              transform 0.7s cubic-bezier(0.23,1,0.32,1);
+}
+.cp-item.visible { opacity: 1; transform: translateY(0); }
+.cp-item:nth-child(2) { transition-delay: 0.1s; }
+.cp-item:nth-child(3) { transition-delay: 0.2s; }
+.cp-item:nth-child(4) { transition-delay: 0.3s; }
+
+.cp-item-img { position: relative; aspect-ratio: 3/4; overflow: hidden; }
+.cp-img-bg {
+  position: absolute; inset: 0;
+  transition: transform 0.7s cubic-bezier(0.23,1,0.32,1);
+}
+.cp-item:hover .cp-img-bg { transform: scale(1.05); }
+
+/* Category bg gradients */
+.cp-afr-1 { background: linear-gradient(160deg, #1a0e00 0%, #120d00 40%, #0a1008 100%); }
+.cp-afr-2 { background: linear-gradient(160deg, #001a12 0%, #0a120a 40%, #1a0a00 100%); }
+.cp-afr-3 { background: linear-gradient(160deg, #1a0010 0%, #0e000a 40%, #180a00 100%); }
+.cp-afr-4 { background: linear-gradient(160deg, #001218 0%, #0a0a12 40%, #001208 100%); }
+.cp-wed-1 { background: linear-gradient(160deg, #180a14 0%, #0e0818 40%, #0a100e 100%); }
+.cp-wed-2 { background: linear-gradient(160deg, #18100a 0%, #140810 40%, #0a0c18 100%); }
+.cp-wed-3 { background: linear-gradient(160deg, #100818 0%, #0a0818 40%, #08101a 100%); }
+.cp-wed-4 { background: linear-gradient(160deg, #080e18 0%, #080c14 40%, #08101a 100%); }
+.cp-suit-1 { background: linear-gradient(160deg, #060e14 0%, #08081a 40%, #0a0614 100%); }
+.cp-suit-2 { background: linear-gradient(160deg, #14100a 0%, #0a0814 40%, #100a18 100%); }
+.cp-suit-3 { background: linear-gradient(160deg, #0a0618 0%, #060c14 40%, #0e0612 100%); }
+.cp-suit-4 { background: linear-gradient(160deg, #040e14 0%, #06081a 40%, #0a0414 100%); }
+
+.cp-figure {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 70%; height: 92%;
+}
+
+.cp-item-tag {
+  position: absolute; top: 16px; left: 16px;
+  padding: 5px 12px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid; backdrop-filter: blur(12px);
+  font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+  border-radius: 2px;
+}
+
+/* ITEM INFO */
+.cp-item-info {
+  padding: 20px 20px 16px;
+  background: rgba(4,4,10,0.85);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-top: none;
+}
+.cp-item-cat {
+  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text-secondary); margin-bottom: 6px;
+}
+.cp-item-name {
+  font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300;
+  margin-bottom: 5px;
+}
+.cp-item-sub {
+  font-size: 11px; color: var(--text-secondary); line-height: 1.5;
+  margin-bottom: 14px;
+}
+.cp-item-footer {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.cp-item-price {
+  font-family: 'Cormorant Garamond', serif; font-size: 18px;
+}
+
+/* FOOTER STRIP */
+.cp-footer-strip {
+  position: relative; z-index: 2;
+  text-align: center; padding: 80px 48px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  background: radial-gradient(ellipse at 50% 50%, rgba(125,243,255,0.04) 0%, transparent 70%);
+  font-size: 13px; color: var(--text-secondary);
+  display: flex; flex-direction: column; align-items: center;
+}
+
+/* ── MOBILE RESPONSIVE for Collection Page ── */
+@media (max-width: 1024px) {
+  .cp-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .cp-nav { padding: 18px 32px; }
+  .cp-hero { padding: 56px 32px 44px; }
+  .cp-hero-shards { right: 20px; }
+  .cp-shard-1 { width: 100px; height: 140px; }
+  .cp-shard-2 { width: 70px; height: 100px; right: 80px; }
+  .cp-shard-3 { display: none; }
+  .cp-filters { padding: 24px 32px; }
+  .cp-section { padding: 60px 32px; }
+}
+
+@media (max-width: 768px) {
+  .cp-nav { padding: 16px 20px; }
+  .cp-nav-title { display: none; }
+  .cp-close-btn { cursor: pointer; }
+
+  .cp-hero { padding: 40px 20px 36px; flex-direction: column; }
+  .cp-hero-title { font-size: clamp(40px, 11vw, 64px); }
+  .cp-hero-shards { position: relative; right: auto; top: auto; transform: none; display: flex; gap: 12px; margin-top: 32px; }
+  .cp-shard { position: relative; }
+  .cp-shard-1 { width: 80px; height: 110px; top: 0; }
+  .cp-shard-2 { width: 60px; height: 85px; top: 0; right: auto; }
+
+  .cp-filters { padding: 20px; gap: 8px; }
+  .cp-filter-btn { padding: 8px 16px; font-size: 8px; cursor: pointer; }
+
+  .cp-section { padding: 48px 20px; }
+  .cp-section-header { margin-bottom: 36px; }
+  .cp-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+  .cp-item-name { font-size: 16px; }
+  .cp-item-info { padding: 14px 14px 12px; }
+
+  .cp-footer-strip { padding: 56px 20px; }
+}
+
+@media (max-width: 480px) {
+  .cp-grid { grid-template-columns: 1fr; }
+  .cp-hero-title { font-size: clamp(36px, 12vw, 52px); }
+  .cp-filters { gap: 6px; }
+  .cp-filter-btn { padding: 8px 12px; }
+}
+
+@media (hover: none) {
+  .cp-close-btn, .cp-filter-btn { cursor: pointer; }
+}
+</style>
