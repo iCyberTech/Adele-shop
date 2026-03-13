@@ -951,6 +951,11 @@ animation: ptPulse 1s ease-in-out;
   </div>
 
   <div class="hero-visual">
+    <!-- Real photo: dark editorial fashion portrait -->
+    <div class="hero-photo-wrap">
+      <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=900&q=80&fit=crop" alt="Editorial fashion" class="hero-photo" loading="eager" onerror="this.style.display='none'">
+      <div class="hero-photo-overlay"></div>
+    </div>
     <div class="glass-orb-container">
       <div class="glass-orb"></div>
       <div class="orbit orbit-1"><div class="orbit-ring"></div></div>
@@ -997,25 +1002,8 @@ animation: ptPulse 1s ease-in-out;
     <!-- Card 1 -->
     <div class="card card-1 reveal reveal-delay-1">
       <div class="card-img-wrap">
-        <div class="card-img-bg">
-          <!-- Artistic fashion SVG figure -->
-          <svg class="card-figure" viewBox="0 0 200 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#7df3ff" stop-opacity="0.6"/>
-                <stop offset="100%" stop-color="#c084fc" stop-opacity="0.3"/>
-              </linearGradient>
-            </defs>
-            <!-- Body silhouette -->
-            <ellipse cx="100" cy="70" rx="22" ry="26" fill="url(#g1)" opacity="0.7"/>
-            <path d="M68 110 C60 180 55 260 60 340 L80 340 L85 240 L100 260 L115 240 L120 340 L140 340 C145 260 140 180 132 110 C125 105 115 100 100 98 C85 100 75 105 68 110Z" fill="url(#g1)" opacity="0.5"/>
-            <!-- Dress/gown overlay -->
-            <path d="M65 115 C50 170 35 250 30 340 L170 340 C165 250 150 170 135 115" fill="url(#g1)" opacity="0.25"/>
-            <path d="M75 115 C78 160 80 200 78 240" stroke="rgba(125,243,255,0.5)" stroke-width="0.5"/>
-            <path d="M125 115 C122 160 120 200 122 240" stroke="rgba(125,243,255,0.5)" stroke-width="0.5"/>
-            <!-- Glass sheen on dress -->
-            <path d="M80 120 C85 150 88 190 85 220" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
+        <div class="card-img-bg card-img-photo">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=85&fit=crop&crop=top" alt="Aurore Gown" loading="lazy" onerror="this.parentElement.classList.remove('card-img-photo')">
         </div>
         <div class="card-glass"></div>
         <div class="card-tag">New</div>
@@ -1034,22 +1022,8 @@ animation: ptPulse 1s ease-in-out;
 <!-- Card 2 -->
 <div class="card card-2 reveal reveal-delay-2">
   <div class="card-img-wrap">
-    <div class="card-img-bg">
-      <svg class="card-figure" viewBox="0 0 200 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#ff6eb4" stop-opacity="0.7"/>
-            <stop offset="100%" stop-color="#7df3ff" stop-opacity="0.3"/>
-          </linearGradient>
-        </defs>
-        <ellipse cx="100" cy="65" rx="20" ry="24" fill="url(#g2)" opacity="0.7"/>
-        <path d="M72 100 L70 200 L66 340 L82 340 L88 220 L100 240 L112 220 L118 340 L134 340 L130 200 L128 100" fill="url(#g2)" opacity="0.45"/>
-        <!-- Jacket/structured top -->
-        <path d="M65 98 L55 110 L58 180 L142 180 L145 110 L135 98" fill="url(#g2)" opacity="0.3"/>
-        <path d="M100 98 L100 180" stroke="rgba(255,110,180,0.5)" stroke-width="0.7"/>
-        <path d="M62 130 L85 130" stroke="rgba(255,255,255,0.35)" stroke-width="1" stroke-linecap="round"/>
-        <path d="M115 130 L138 130" stroke="rgba(255,255,255,0.35)" stroke-width="1" stroke-linecap="round"/>
-      </svg>
+    <div class="card-img-bg card-img-photo">
+      <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=85&fit=crop&crop=top" alt="Prism Jacket" loading="lazy" onerror="this.parentElement.classList.remove('card-img-photo')">
     </div>
     <div class="card-glass"></div>
     <div class="card-tag">Limited</div>
@@ -1067,21 +1041,8 @@ animation: ptPulse 1s ease-in-out;
 <!-- Card 3 -->
 <div class="card card-3 reveal reveal-delay-3">
   <div class="card-img-wrap">
-    <div class="card-img-bg">
-      <svg class="card-figure" viewBox="0 0 200 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#ffe8a0" stop-opacity="0.6"/>
-            <stop offset="100%" stop-color="#7df3ff" stop-opacity="0.3"/>
-          </linearGradient>
-        </defs>
-        <ellipse cx="100" cy="68" rx="21" ry="25" fill="url(#g3)" opacity="0.7"/>
-        <path d="M70 105 L65 180 L60 340 L78 340 L85 210 L100 230 L115 210 L122 340 L140 340 L135 180 L130 105" fill="url(#g3)" opacity="0.45"/>
-        <!-- Asymmetric skirt -->
-        <path d="M68 185 C50 220 40 280 45 340 L155 340 C160 280 150 220 132 185" fill="url(#g3)" opacity="0.2"/>
-        <path d="M68 185 C80 195 90 210 85 240" stroke="rgba(255,232,160,0.5)" stroke-width="0.7"/>
-        <ellipse cx="100" cy="68" rx="8" ry="4" fill="rgba(255,255,255,0.4)" transform="rotate(-25 100 68)"/>
-      </svg>
+    <div class="card-img-bg card-img-photo">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=85&fit=crop&crop=top" alt="Lumière Set" loading="lazy" onerror="this.parentElement.classList.remove('card-img-photo')">
     </div>
     <div class="card-glass"></div>
     <div class="card-tag">Exclusive</div>
@@ -1106,30 +1067,8 @@ animation: ptPulse 1s ease-in-out;
   <div class="feature-visual reveal">
     <div class="glass-panel gp-behind"></div>
     <div class="glass-panel gp-main">
-      <!-- Inner silhouette -->
-      <svg style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 340 460" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="gf" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#7df3ff" stop-opacity="0.25"/>
-            <stop offset="50%" stop-color="#c084fc" stop-opacity="0.15"/>
-            <stop offset="100%" stop-color="#ff6eb4" stop-opacity="0.2"/>
-          </linearGradient>
-          <linearGradient id="gf2" x1="0%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stop-color="rgba(255,255,255,0.3)"/>
-            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
-          </linearGradient>
-        </defs>
-        <!-- Large fashion figure centered -->
-        <ellipse cx="170" cy="110" rx="38" ry="44" fill="url(#gf)" />
-        <path d="M120 170 C110 250 100 340 105 440 L140 440 L148 320 L170 345 L192 320 L200 440 L235 440 C240 340 230 250 220 170 C210 162 192 156 170 154 C148 156 130 162 120 170Z" fill="url(#gf)"/>
-        <!-- Flowing gown -->
-        <path d="M118 178 C95 240 78 330 80 440 L260 440 C262 330 245 240 222 178" fill="url(#gf)" opacity="0.4"/>
-        <!-- Glass sheen lines -->
-        <path d="M135 180 C140 230 142 290 138 360" stroke="url(#gf2)" stroke-width="2" stroke-linecap="round"/>
-        <path d="M150 175 C154 220 155 275 152 330" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-linecap="round"/>
-        <!-- Highlight on face -->
-        <ellipse cx="162" cy="102" rx="14" ry="8" fill="rgba(255,255,255,0.2)" transform="rotate(-20 162 102)"/>
-      </svg>
+      <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=700&q=85&fit=crop&crop=top" alt="Atelier feature" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.55;mix-blend-mode:luminosity;" loading="lazy" onerror="this.remove()">
+      <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(18,8,42,0.7) 0%,rgba(8,20,30,0.5) 40%,rgba(4,18,16,0.6) 100%);"></div>
     </div>
     <div class="glass-panel gp-front">
       <div class="pf-label">Avg Rating</div>
@@ -1170,15 +1109,10 @@ animation: ptPulse 1s ease-in-out;
   <div class="editorial-grid">
     <div class="ed-card ed-1 reveal">
       <div class="ed-card-inner">
-        <div class="ed-bg"></div>
+        <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1622519407650-3df9883f76a5?w=900&q=80&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#0f0520,#1a0830,#081520)'"></div>
         <div class="ed-overlay"></div>
         <div class="ed-glass-top"></div>
         <div class="ed-glass-left"></div>
-        <svg class="ed-figure" style="right:0;width:55%;height:80%;" viewBox="0 0 200 400" fill="none">
-          <defs><linearGradient id="ef1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#7df3ff"/><stop offset="100%" stop-color="#c084fc"/></linearGradient></defs>
-          <ellipse cx="100" cy="70" rx="24" ry="28" fill="url(#ef1)"/>
-          <path d="M65 110 C50 200 45 300 50 400 L150 400 C155 300 150 200 135 110" fill="url(#ef1)"/>
-        </svg>
         <div class="ed-content">
           <div class="ed-cat">Cover Story</div>
           <div class="ed-title">Glass & Shadow: The New Language of Luxury</div>
@@ -1190,7 +1124,7 @@ animation: ptPulse 1s ease-in-out;
 ```
 <div class="ed-card ed-2 reveal reveal-delay-1">
   <div class="ed-card-inner">
-    <div class="ed-bg"></div>
+    <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&q=80&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#200510,#0a1520)'"></div>
     <div class="ed-overlay"></div>
     <div class="ed-glass-top"></div>
     <div class="ed-glass-left"></div>
@@ -1204,7 +1138,7 @@ animation: ptPulse 1s ease-in-out;
 
 <div class="ed-card ed-3 reveal reveal-delay-2">
   <div class="ed-card-inner">
-    <div class="ed-bg"></div>
+    <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&q=80&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#051510,#101020)'"></div>
     <div class="ed-overlay"></div>
     <div class="ed-glass-top"></div>
     <div class="ed-glass-left"></div>
@@ -1218,7 +1152,7 @@ animation: ptPulse 1s ease-in-out;
 
 <div class="ed-card ed-4 reveal reveal-delay-1">
   <div class="ed-card-inner">
-    <div class="ed-bg"></div>
+    <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#150520,#0a2015)'"></div>
     <div class="ed-overlay"></div>
     <div class="ed-glass-top"></div>
     <div class="ed-glass-left"></div>
@@ -1232,7 +1166,7 @@ animation: ptPulse 1s ease-in-out;
 
 <div class="ed-card ed-5 reveal reveal-delay-2">
   <div class="ed-card-inner">
-    <div class="ed-bg"></div>
+    <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1551803091-e20673f15770?w=600&q=80&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(160deg,#200a05,#101520)'"></div>
     <div class="ed-overlay"></div>
     <div class="ed-glass-top"></div>
     <div class="ed-glass-left"></div>
@@ -1559,8 +1493,13 @@ animation: ptPulse 1s ease-in-out;
 ```
   <div class="cp-item" data-cat="african">
     <div class="cp-item-img">
-      <div class="cp-img-bg cp-afr-1">
-        <svg class="cp-figure" viewBox="0 0 220 440" fill="none">
+      <div class="cp-img-bg cp-afr-1 cp-photo-bg">
+        <img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=600&q=85&fit=crop&crop=top" alt="Sankofa Gown" loading="lazy" onerror="this.remove()">
+        <div class="cp-photo-tint" style="background:linear-gradient(160deg,rgba(26,14,0,0.55),rgba(10,16,8,0.45))"></div>
+      </div>
+      <div class="card-glass"></div>
+      <div class="cp-item-tag" style="border-color:rgba(255,184,0,0.4);color:#ffb800;">Kente</div>
+    </div>
           <defs>
             <linearGradient id="a1g" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#ffb800" stop-opacity="0.7"/>
