@@ -850,6 +850,205 @@ footer { padding: 40px 20px 28px; }
 
 }
 
+/* ══════════════════════════════════════
+HERO SLIDESHOW
+══════════════════════════════════════ */
+
+/* Slides layer — fills entire hero */
+.hero-slides {
+position: absolute; inset: 0; z-index: 0;
+overflow: hidden;
+}
+.hero-slide {
+position: absolute; inset: 0;
+background-size: cover; background-position: center top;
+opacity: 0;
+transform: scale(1.06);
+transition:
+opacity 1.4s cubic-bezier(0.77,0,0.18,1),
+transform 7s cubic-bezier(0.25,0.46,0.45,0.94);
+will-change: opacity, transform;
+}
+.hero-slide.active {
+opacity: 1;
+transform: scale(1);
+}
+.hero-slide.leaving {
+opacity: 0;
+transform: scale(0.97);
+transition:
+opacity 1.2s cubic-bezier(0.77,0,0.18,1),
+transform 1.2s ease-in;
+}
+
+/* Dark gradient veil — stronger on left for text legibility */
+.hero-slide-veil {
+position: absolute; inset: 0; z-index: 1; pointer-events: none;
+background:
+linear-gradient(105deg,
+rgba(4,4,10,0.82) 0%,
+rgba(4,4,10,0.55) 45%,
+rgba(4,4,10,0.15) 70%,
+transparent 100%),
+linear-gradient(0deg,
+rgba(4,4,10,0.7) 0%,
+transparent 40%);
+}
+
+/* Hero content now sits above veil */
+.hero-content { z-index: 3; }
+
+/* ── Title animation system ── */
+.hero-title-wrap { overflow: visible; }
+.hero-title { margin-bottom: 40px; }
+
+.ht-line {
+display: block;
+overflow: hidden;
+line-height: 1;
+}
+.ht-inner {
+display: block;
+transform: translateY(100%);
+opacity: 0;
+transition:
+transform 0.9s cubic-bezier(0.16,1,0.3,1),
+opacity 0.6s ease;
+}
+.ht-line.visible .ht-inner {
+transform: translateY(0);
+opacity: 1;
+}
+.ht-line-1.visible .ht-inner { transition-delay: 0s; }
+.ht-line-2.visible .ht-inner { transition-delay: 0.12s; }
+.ht-line-3.visible .ht-inner { transition-delay: 0.24s; }
+
+/* exit animation */
+.ht-line.exiting .ht-inner {
+transform: translateY(-110%);
+opacity: 0;
+transition:
+transform 0.6s cubic-bezier(0.55,0,1,0.45),
+opacity 0.4s ease;
+}
+.ht-line-1.exiting .ht-inner { transition-delay: 0.1s; }
+.ht-line-2.exiting .ht-inner { transition-delay: 0.06s; }
+.ht-line-3.exiting .ht-inner { transition-delay: 0s; }
+
+/* Eyebrow slide in */
+.hero-eyebrow {
+overflow: hidden;
+}
+.eyebrow-text {
+display: block;
+transform: translateX(-24px);
+opacity: 0;
+transition: transform 0.8s cubic-bezier(0.16,1,0.3,1) 0.05s,
+opacity 0.6s ease 0.05s;
+}
+.eyebrow-text.visible {
+transform: translateX(0);
+opacity: 1;
+}
+.eyebrow-text.exiting {
+transform: translateX(24px);
+opacity: 0;
+transition: transform 0.5s ease, opacity 0.3s ease;
+}
+
+/* Body text fade */
+#heroBody {
+opacity: 0;
+transform: translateY(16px);
+transition: opacity 0.8s ease 0.4s, transform 0.8s cubic-bezier(0.16,1,0.3,1) 0.4s;
+}
+#heroBody.visible { opacity: 1; transform: translateY(0); }
+#heroBody.exiting { opacity: 0; transform: translateY(-12px);
+transition: opacity 0.4s ease, transform 0.4s ease; }
+
+/* ── Slide dots ── */
+.hero-dots {
+display: flex; gap: 10px; margin-top: 48px;
+position: relative; z-index: 4;
+}
+.hero-dot {
+width: 28px; height: 2px; border-radius: 2px;
+background: rgba(255,255,255,0.25); border: none; cursor: none;
+transition: background 0.4s, width 0.4s;
+padding: 0;
+}
+.hero-dot.active {
+background: var(–accent-aqua);
+width: 48px;
+box-shadow: 0 0 10px rgba(125,243,255,0.5);
+}
+@media (hover:none) { .hero-dot { cursor: pointer; } }
+
+/* ── Progress bar ── */
+.hero-progress {
+position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+background: rgba(255,255,255,0.08); z-index: 4;
+}
+.hero-progress-bar {
+height: 100%;
+background: linear-gradient(90deg, var(–accent-aqua), var(–accent-rose));
+width: 0%;
+transition: width 0.1s linear;
+box-shadow: 0 0 6px rgba(125,243,255,0.6);
+}
+
+/* ── Slide counter ── */
+.hero-counter {
+position: absolute; top: 50%; right: 52px;
+transform: translateY(-50%);
+z-index: 4;
+display: flex; flex-direction: column; align-items: center; gap: 6px;
+font-family: ‘Syncopate’, sans-serif; font-size: 10px; letter-spacing: 0.15em;
+}
+#heroCountCurrent {
+color: var(–text-primary);
+font-size: 18px; font-weight: 700;
+transition: opacity 0.3s;
+}
+.hc-sep {
+display: block; width: 1px; height: 32px;
+background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent);
+}
+.hc-total { color: var(–text-secondary); }
+
+/* ── Prev / Next arrows ── */
+.hero-arrow {
+position: absolute; bottom: 48px;
+z-index: 4;
+width: 52px; height: 52px; border-radius: 50%;
+background: rgba(255,255,255,0.06);
+border: 1px solid rgba(255,255,255,0.14);
+color: var(–text-secondary);
+font-size: 20px; cursor: none;
+display: flex; align-items: center; justify-content: center;
+backdrop-filter: blur(12px);
+transition: all 0.3s;
+}
+.hero-arrow:hover {
+background: rgba(125,243,255,0.12);
+border-color: rgba(125,243,255,0.35);
+color: var(–accent-aqua);
+box-shadow: 0 0 24px rgba(125,243,255,0.15);
+transform: scale(1.05);
+}
+.hero-arrow-prev { left: 48px; }
+.hero-arrow-next { left: 116px; }
+
+@media (hover:none) { .hero-arrow { cursor: pointer; } }
+
+/* mobile counter + arrows */
+@media (max-width:768px) {
+.hero-counter { right: 20px; }
+.hero-arrow-prev { left: 20px; bottom: 32px; }
+.hero-arrow-next { left: 84px; bottom: 32px; }
+.hero-dots { margin-top: 32px; }
+}
+
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: var(–bg-deep); }
@@ -934,28 +1133,65 @@ animation: ptPulse 1s ease-in-out;
 <!-- HERO -->
 
 <section id="hero">
+
+  <!-- ── SLIDESHOW BACKGROUND ── -->
+
+  <div class="hero-slides" id="heroSlides">
+    <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1600&q=85&fit=crop')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=1600&q=85&fit=crop&crop=top')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&q=85&fit=crop')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1600&q=85&fit=crop&crop=top')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1600&q=85&fit=crop&crop=top')"></div>
+  </div>
+  <!-- Gradient veil over photos -->
+  <div class="hero-slide-veil"></div>
+
+  <!-- ── HERO CONTENT ── -->
+
   <div class="hero-content">
-    <div class="hero-eyebrow reveal">SS 2025 Collection</div>
-    <h1 class="hero-title reveal reveal-delay-1">
-      <span>Wear</span>
-      <em>Liquid</em>
-      <span>Glass</span>
-    </h1>
-    <p class="hero-body reveal reveal-delay-2">
-      Where couture meets crystalline. Each piece distills light through precision-crafted forms — fashion that bends reality, not rules.
-    </p>
-    <div class="hero-actions reveal reveal-delay-3">
-      <button id="exploreBtn" class="btn-primary">Explore Collection</button>
-      <a href="#editorial" class="btn-ghost">Editorial <span class="arrow">→</span></a>
-    </div>
+
+```
+<!-- Eyebrow cycles with the slide -->
+<div class="hero-eyebrow" id="heroEyebrow">
+  <span class="eyebrow-text">SS 2025 Collection</span>
+</div>
+
+<!-- Main animated title block -->
+<div class="hero-title-wrap" id="heroTitleWrap">
+  <h1 class="hero-title">
+    <span class="ht-line ht-line-1" id="htLine1"><span class="ht-inner">Wear</span></span>
+    <em   class="ht-line ht-line-2" id="htLine2"><span class="ht-inner">Liquid</span></em>
+    <span class="ht-line ht-line-3" id="htLine3"><span class="ht-inner">Glass</span></span>
+  </h1>
+</div>
+
+<p class="hero-body" id="heroBody">
+  Where couture meets crystalline. Each piece distills light through precision-crafted forms — fashion that bends reality, not rules.
+</p>
+
+<div class="hero-actions">
+  <button id="exploreBtn" class="btn-primary">Explore Collection</button>
+  <a href="#editorial" class="btn-ghost">Editorial <span class="arrow">→</span></a>
+</div>
+
+<!-- Slide indicators -->
+<div class="hero-dots" id="heroDots">
+  <button class="hero-dot active" data-idx="0"></button>
+  <button class="hero-dot" data-idx="1"></button>
+  <button class="hero-dot" data-idx="2"></button>
+  <button class="hero-dot" data-idx="3"></button>
+  <button class="hero-dot" data-idx="4"></button>
+</div>
+
+<!-- Progress bar -->
+<div class="hero-progress"><div class="hero-progress-bar" id="heroProgressBar"></div></div>
+```
+
   </div>
 
+  <!-- Orb still lives on the right -->
+
   <div class="hero-visual">
-    <!-- Real photo: dark editorial fashion portrait -->
-    <div class="hero-photo-wrap">
-      <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=900&q=80&fit=crop" alt="Editorial fashion" class="hero-photo" loading="eager" onerror="this.style.display='none'">
-      <div class="hero-photo-overlay"></div>
-    </div>
     <div class="glass-orb-container">
       <div class="glass-orb"></div>
       <div class="orbit orbit-1"><div class="orbit-ring"></div></div>
@@ -965,6 +1201,20 @@ animation: ptPulse 1s ease-in-out;
       <div class="fragment f3"></div>
     </div>
   </div>
+
+  <!-- Slide counter top-right -->
+
+  <div class="hero-counter">
+    <span id="heroCountCurrent">01</span>
+    <span class="hc-sep"></span>
+    <span class="hc-total">05</span>
+  </div>
+
+  <!-- Prev / Next arrows -->
+
+<button class="hero-arrow hero-arrow-prev" id="heroPrev" aria-label="Previous">←</button>
+<button class="hero-arrow hero-arrow-next" id="heroNext" aria-label="Next">→</button>
+
 </section>
 
 <!-- TICKER -->
@@ -1244,6 +1494,207 @@ animation: ptPulse 1s ease-in-out;
 </footer>
 
 <script>
+  // ══════════════════════════════════════════
+  // HERO SLIDESHOW ENGINE
+  // ══════════════════════════════════════════
+  const SLIDES = [
+    {
+      img: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1600&q=85&fit=crop',
+      eyebrow: 'SS 2025 Collection',
+      lines: ['Wear','Liquid','Glass'],
+      italic: 1,   // which line index is <em>
+      body: 'Where couture meets crystalline. Each piece distills light through precision-crafted forms — fashion that bends reality, not rules.'
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=1600&q=85&fit=crop&crop=top',
+      eyebrow: 'African Heritage',
+      lines: ['Rooted in','Radiance','Reborn'],
+      italic: 1,
+      body: 'Ancestral craft elevated to couture. Kente, adinkra, and ankara silhouettes woven through crystalline light.'
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&q=85&fit=crop',
+      eyebrow: 'Bridal Couture',
+      lines: ['Dressed','in','Forever'],
+      italic: 2,
+      body: 'Gowns that dissolve the boundary between fabric and light. Every veil, train and bodice crafted to hold the moment still.'
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1600&q=85&fit=crop&crop=top',
+      eyebrow: 'Tailored Suiting',
+      lines: ['Power','Dis-','tilled'],
+      italic: 0,
+      body: 'Structured precision meets liquid-glass fabric. Suits engineered for authority, softened by crystalline detail.'
+    },
+    {
+      img: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1600&q=85&fit=crop&crop=top',
+      eyebrow: 'New Arrivals',
+      lines: ['The','New','Now'],
+      italic: 1,
+      body: 'Fresh drops from the atelier — limited runs, lifetime pieces. Reserve yours before the world finds out.'
+    },
+  ];
+
+  const INTERVAL   = 6000;  // ms per slide
+  const TICK       = 60;    // progress bar update rate ms
+
+  let slideIdx     = 0;
+  let slideTimer   = null;
+  let progressTimer= null;
+  let elapsed      = 0;
+  let isAnimating  = false;
+
+  const slideEls   = document.querySelectorAll('.hero-slide');
+  const dotEls     = document.querySelectorAll('.hero-dot');
+  const progressBar= document.getElementById('heroProgressBar');
+  const counterEl  = document.getElementById('heroCountCurrent');
+  const eyebrowEl  = document.querySelector('.eyebrow-text');
+  const line1El    = document.getElementById('htLine1');
+  const line2El    = document.getElementById('htLine2');
+  const line3El    = document.getElementById('htLine3');
+  const bodyEl     = document.getElementById('heroBody');
+  const lineEls    = [line1El, line2El, line3El];
+  const tagNames   = ['span','em','span'];
+
+  function padTwo(n){ return String(n+1).padStart(2,'0'); }
+
+  function applySlideContent(idx, animate){
+    const s = SLIDES[idx];
+    // Counter
+    counterEl.style.opacity = '0';
+    setTimeout(()=>{ counterEl.textContent = padTwo(idx); counterEl.style.opacity='1'; }, 200);
+
+    // Dots
+    dotEls.forEach((d,i)=>d.classList.toggle('active', i===idx));
+
+    if(!animate){ // first load — just make visible
+      eyebrowEl.textContent = s.eyebrow;
+      eyebrowEl.classList.add('visible');
+      s.lines.forEach((txt,i)=>{
+        const inner = lineEls[i].querySelector('.ht-inner');
+        inner.textContent = txt;
+        lineEls[i].classList.add('visible');
+      });
+      bodyEl.textContent = s.body;
+      bodyEl.classList.add('visible');
+      return;
+    }
+
+    // EXIT current text
+    eyebrowEl.classList.remove('visible');
+    eyebrowEl.classList.add('exiting');
+    bodyEl.classList.remove('visible');
+    bodyEl.classList.add('exiting');
+    lineEls.forEach(l=>{ l.classList.remove('visible'); l.classList.add('exiting'); });
+
+    setTimeout(()=>{
+      // Update content
+      eyebrowEl.classList.remove('exiting');
+      bodyEl.classList.remove('exiting');
+      lineEls.forEach(l=>l.classList.remove('exiting'));
+
+      eyebrowEl.textContent = s.eyebrow;
+      bodyEl.textContent = s.body;
+
+      s.lines.forEach((txt,i)=>{
+        const inner = lineEls[i].querySelector('.ht-inner');
+        inner.textContent = txt;
+
+        // Swap tag type for italic line
+        const shouldBeEm = (i === s.italic);
+        if(shouldBeEm && lineEls[i].tagName !== 'EM'){
+          lineEls[i].style.cssText += ';font-style:italic;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,0.4)';
+        } else if(!shouldBeEm){
+          lineEls[i].style.fontStyle = '';
+          lineEls[i].style.color = '';
+          lineEls[i].style.webkitTextStroke = '';
+        }
+      });
+
+      // ENTER new text
+      requestAnimationFrame(()=>{
+        eyebrowEl.classList.add('visible');
+        bodyEl.classList.add('visible');
+        lineEls.forEach(l=>l.classList.add('visible'));
+      });
+    }, 550);
+  }
+
+  function activateSlide(idx, animate=true){
+    if(isAnimating && animate) return;
+    isAnimating = true;
+
+    const prev = slideEls[slideIdx];
+    prev.classList.remove('active');
+    prev.classList.add('leaving');
+    setTimeout(()=>prev.classList.remove('leaving'), 1400);
+
+    slideIdx = ((idx % SLIDES.length) + SLIDES.length) % SLIDES.length;
+    slideEls[slideIdx].classList.add('active');
+    applySlideContent(slideIdx, animate);
+
+    setTimeout(()=>{ isAnimating = false; }, 1400);
+  }
+
+  function startProgress(){
+    clearInterval(progressTimer);
+    elapsed = 0;
+    progressTimer = setInterval(()=>{
+      elapsed += TICK;
+      const pct = Math.min((elapsed / INTERVAL) * 100, 100);
+      progressBar.style.width = pct + '%';
+      if(elapsed >= INTERVAL){
+        clearInterval(progressTimer);
+        progressBar.style.width = '0%';
+        activateSlide(slideIdx + 1);
+        setTimeout(startProgress, 100);
+      }
+    }, TICK);
+  }
+
+  function goTo(idx){
+    clearInterval(progressTimer);
+    progressBar.style.width = '0%';
+    activateSlide(idx);
+    setTimeout(startProgress, 100);
+  }
+
+  // Wire dots
+  dotEls.forEach(d=>d.addEventListener('click',()=>goTo(+d.dataset.idx)));
+
+  // Wire prev/next
+  document.getElementById('heroPrev').addEventListener('click',()=>goTo(slideIdx-1));
+  document.getElementById('heroNext').addEventListener('click',()=>goTo(slideIdx+1));
+
+  // Touch swipe on hero
+  (()=>{
+    let sx=0, sy=0;
+    const hero = document.getElementById('hero');
+    hero.addEventListener('touchstart',e=>{ sx=e.touches[0].clientX; sy=e.touches[0].clientY; },{passive:true});
+    hero.addEventListener('touchend',e=>{
+      const dx=e.changedTouches[0].clientX-sx;
+      const dy=e.changedTouches[0].clientY-sy;
+      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>40){
+        goTo(dx<0 ? slideIdx+1 : slideIdx-1);
+      }
+    },{passive:true});
+  })();
+
+  // Keyboard
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight') goTo(slideIdx+1);
+    if(e.key==='ArrowLeft')  goTo(slideIdx-1);
+  });
+
+  // Pause on hover
+  const heroSection = document.getElementById('hero');
+  heroSection.addEventListener('mouseenter',()=>clearInterval(progressTimer));
+  heroSection.addEventListener('mouseleave',()=>startProgress());
+
+  // Init — first slide in without animation then start timer
+  applySlideContent(0, false);
+  setTimeout(startProgress, 1600); // wait after page-load animation
+
   // ── CURSOR (hide on touch devices) ──
   const isTouchDevice = () => window.matchMedia('(hover: none)').matches;
   const cursor = document.getElementById('cursor');
