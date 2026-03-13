@@ -101,10 +101,15 @@ inset 0 -1px 0 rgba(255,255,255,0.04),
 /* ── NAV ── */
 nav {
 position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-padding: 24px 48px;
+padding: 16px 48px;
 display: flex; align-items: center; justify-content: space-between;
 background: linear-gradient(180deg, rgba(4,4,10,0.6) 0%, transparent 100%);
 backdrop-filter: blur(8px);
+}
+.nav-logo-wrapper {
+display: flex;
+flex-direction: column;
+line-height: 1.2;
 }
 .nav-logo {
 font-family: 'Syncopate', sans-serif;
@@ -112,6 +117,15 @@ font-size: 18px; font-weight: 700;
 letter-spacing: 0.25em;
 background: linear-gradient(135deg, var(--accent-aqua), var(--accent-rose));
 -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.nav-logo-small {
+font-family: 'Syncopate', sans-serif;
+font-size: 8px;
+font-weight: 400;
+letter-spacing: 0.2em;
+color: var(--text-secondary);
+text-transform: uppercase;
+margin-top: 2px;
 }
 .nav-links { display: flex; gap: 40px; list-style: none; }
 .nav-links a {
@@ -1159,7 +1173,10 @@ animation: ptPulse 1s ease-in-out;
 <!-- NAV -->
 
 <nav>
-  <div class="nav-logo">DAASEBRE</div>
+  <div class="nav-logo-wrapper">
+    <div class="nav-logo">DAASEBRE</div>
+    <div class="nav-logo-small">fashion & trainee</div>
+  </div>
   <ul class="nav-links">
     <li><a href="#">Collections</a></li>
     <li><a href="#">Editorial</a></li>
@@ -1990,7 +2007,7 @@ animation: ptPulse 1s ease-in-out;
 
 <!-- ═══════════════════════════════════════════════════ -->
 
-<!-- COLLECTION OVERLAY PAGE (FULLY INTACT, SHORTENED FOR SPACE BUT ALL ORIGINAL FEATURES PRESERVED) -->
+<!-- COLLECTION OVERLAY PAGE (FULLY INTACT) -->
 
 <!-- ═══════════════════════════════════════════════════ -->
 
@@ -2005,7 +2022,10 @@ animation: ptPulse 1s ease-in-out;
 
   <!-- NAV BAR inside overlay -->
   <div class="cp-nav">
-    <div class="nav-logo">DAASEBRE</div>
+    <div class="nav-logo-wrapper">
+      <div class="nav-logo">DAASEBRE</div>
+      <div class="nav-logo-small">fashion & trainee</div>
+    </div>
     <div class="cp-nav-title">Collections</div>
     <button class="cp-close-btn" id="collectionClose" aria-label="Close">
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
@@ -2318,6 +2338,6 @@ animation: ptPulse 1s ease-in-out;
 }
 </style>
 
-<!-- END: FULL CODE WITH ALL FEATURES, UPDATED TO DAASEBRE FASHION & TRAINEE -->
+<!-- END: FULL CODE WITH ALL FEATURES, ADDED FASHION & TRAINEE BELOW LOGO -->
 </body>
 </html>
