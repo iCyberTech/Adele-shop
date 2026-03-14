@@ -98,7 +98,7 @@ inset 0 -1px 0 rgba(255,255,255,0.04),
 0 2px 8px rgba(0,0,0,0.3);
 }
 
-/* ── NAV ── */
+/* ── NAV (with logo image) ── */
 nav {
 position: fixed; top: 0; left: 0; right: 0; z-index: 100;
 padding: 16px 48px;
@@ -107,6 +107,19 @@ background: linear-gradient(180deg, rgba(4,4,10,0.6) 0%, transparent 100%);
 backdrop-filter: blur(8px);
 }
 .nav-logo-wrapper {
+display: flex;
+align-items: center;      /* align image + text vertically */
+gap: 12px;
+}
+.nav-logo-img {
+width: 32px;              /* adjust to your taste */
+height: 32px;
+border-radius: 50%;       /* optional circular crop */
+object-fit: cover;
+border: 1px solid rgba(125,243,255,0.3);
+box-shadow: 0 0 12px rgba(125,243,255,0.2);
+}
+.nav-logo-text-group {
 display: flex;
 flex-direction: column;
 line-height: 1.2;
@@ -1170,12 +1183,16 @@ animation: ptPulse 1s ease-in-out;
   <div class="blob blob-4"></div>
 </div>
 
-<!-- NAV -->
+<!-- NAV (with external logo image) -->
 
 <nav>
   <div class="nav-logo-wrapper">
-    <div class="nav-logo">DAASEBRE</div>
-    <div class="nav-logo-small">fashion & trainee</div>
+    <!-- EXTERNAL LOGO IMAGE (logo.jpg) placed next to text -->
+    <img src="logo.jpg" alt="Daasebre logo" class="nav-logo-img" onerror="this.style.display='none'">
+    <div class="nav-logo-text-group">
+      <div class="nav-logo">DAASEBRE</div>
+      <div class="nav-logo-small">fashion & trainee</div>
+    </div>
   </div>
   <ul class="nav-links">
     <li><a href="#">Collections</a></li>
@@ -2338,6 +2355,7 @@ animation: ptPulse 1s ease-in-out;
 }
 </style>
 
-<!-- END: FULL CODE WITH ALL FEATURES, ADDED FASHION & TRAINEE BELOW LOGO -->
+<!-- END: FULL CODE WITH ALL FEATURES, EXTERNAL LOGO.JPG NOW APPEARS NEXT TO DAASEBRE TEXT LOGO -->
+
 </body>
 </html>
