@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DAASEBRE — African Wear Fashion (full cart + lookbook pick)</title>
+<title>DAASEBRE — African Wear Fashion (full cart + lookbook pick + auth)</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Syncopate:wght@400;700&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
-  /* ----- all original styles (complete, unchanged) plus cart additions ----- */
+  /* ----- all original styles (complete, unchanged) plus cart & auth additions ----- */
   :root {
     --glass-white: rgba(255,255,255,0.08);
     --glass-border: rgba(255,255,255,0.18);
@@ -1028,6 +1028,28 @@ footer { padding: 36px 20px 0; }
 .pick-style-btn:hover { background:rgba(255,110,180,0.3); }
 .style-picker-tag { display:inline-block; margin-left:6px; font-size:9px; background:var(--accent-rose); color:#000; padding:2px 6px; border-radius:2px; }
 .lookbook-card .pick-style-btn { margin:10px 16px 16px; width:calc(100% - 32px); }
+
+/* ---------- AUTH MODAL ---------- */
+.auth-modal {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999;
+  background: rgba(4,4,10,0.98); backdrop-filter: blur(24px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+}
+.auth-modal.open { opacity: 1; pointer-events: all; }
+.auth-card {
+  max-width: 420px; width: 90%; background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;
+  padding: 40px 32px; text-align: center;
+}
+.auth-card h2 { font-family: 'Cormorant Garamond'; font-size: 36px; font-weight: 300; margin-bottom: 10px; }
+.auth-card p { color: var(--text-secondary); font-size: 13px; margin-bottom: 30px; }
+.auth-input { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); padding:14px 18px; margin-bottom:16px; color:white; font-family:'DM Sans'; border-radius:4px; }
+.auth-btn { width:100%; background:linear-gradient(135deg, rgba(125,243,255,0.2), rgba(192,132,252,0.2)); border:1px solid rgba(125,243,255,0.4); color:var(--accent-aqua); padding:14px; font-family:'Syncopate'; font-size:10px; letter-spacing:0.2em; border-radius:2px; cursor:none; transition:0.3s; margin-top:8px; }
+.auth-btn:hover { background:rgba(125,243,255,0.15); box-shadow:0 0 30px rgba(125,243,255,0.2); }
+.auth-close { position:absolute; top:30px; right:30px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:white; cursor:none; font-size:18px; }
+.auth-note { font-size:10px; color:var(--text-secondary); margin-top:24px; }
+.auth-note button { background:none; border:none; color:var(--accent-rose); cursor:none; text-decoration:underline; }
 </style>
 </head>
 <body>
@@ -1087,7 +1109,20 @@ footer { padding: 36px 20px 0; }
   <button class="nav-cta" style="width:100%;margin-top:32px;" id="mobileAdmissionBtn">ADMISSION</button>
 </div>
 
-<!-- MAIN SITE CONTENT (all original sections - COMPLETE) -->
+<!-- AUTH MODAL (signup / login) -->
+<div class="auth-modal" id="authModal">
+  <button class="auth-close" id="authClose">✕</button>
+  <div class="auth-card">
+    <h2>welcome.</h2>
+    <p id="authMessage">Sign up or log in to continue</p>
+    <input type="email" class="auth-input" id="authEmail" placeholder="your@email.com">
+    <input type="password" class="auth-input" id="authPass" placeholder="password (min 6 chars)">
+    <button class="auth-btn" id="authSignupBtn">SIGN UP / LOGIN</button>
+    <div class="auth-note">demo — any email/password works</div>
+  </div>
+</div>
+
+<!-- MAIN SITE CONTENT (all original sections) -->
 <div id="mainSiteContent">
   <!-- HERO (original) -->
   <section id="hero">
@@ -1625,6 +1660,48 @@ footer { padding: 36px 20px 0; }
     const cartTotalEl = document.getElementById('cartTotal');
     const cartCount = document.getElementById('cartCount');
 
+    // ----- AUTH MODAL -----
+    const authModal = document.getElementById('authModal');
+    const authClose = document.getElementById('authClose');
+    const authSignupBtn = document.getElementById('authSignupBtn');
+    const authEmail = document.getElementById('authEmail');
+    const authPass = document.getElementById('authPass');
+    const authMessage = document.getElementById('authMessage');
+
+    let pendingAction = null; // stores action to execute after auth
+
+    function openAuthModal(message, callback) {
+      authMessage.textContent = message || 'Sign up or log in to continue';
+      pendingAction = callback;
+      authModal.classList.add('open');
+    }
+    authClose.addEventListener('click', () => {
+      authModal.classList.remove('open');
+      pendingAction = null;
+    });
+    authSignupBtn.addEventListener('click', () => {
+      // mock authentication – any email/password works
+      if (!authEmail.value.includes('@') || authPass.value.length < 3) {
+        alert('Please enter a valid email and password (min 3 chars)');
+        return;
+      }
+      // store auth flag (session only)
+      sessionStorage.setItem('daasebreAuth', 'true');
+      authModal.classList.remove('open');
+      if (pendingAction) {
+        pendingAction();
+        pendingAction = null;
+      }
+    });
+
+    function checkAuthThen(callback, message) {
+      if (sessionStorage.getItem('daasebreAuth') === 'true') {
+        callback();
+      } else {
+        openAuthModal(message || 'Please sign in to continue', callback);
+      }
+    }
+
     function updateCartUI() {
       let total = 0;
       let html = '';
@@ -1656,9 +1733,17 @@ footer { padding: 36px 20px 0; }
       else cart.push({ id, name, price, img, qty: 1 });
       updateCartUI();
     }
+
+    // wrap add to cart with auth
     document.querySelectorAll('.add-btn[data-collection]').forEach(btn => {
-      btn.addEventListener('click', (e) => { e.stopPropagation(); addToCart(btn); });
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        checkAuthThen(() => {
+          addToCart(btn);
+        }, 'Create an account or log in to add items to your cart');
+      });
     });
+
     cartItemsEl.addEventListener('click', (e) => {
       if (e.target.classList.contains('cart-item-remove')) {
         const idx = e.target.dataset.index;
@@ -1668,14 +1753,16 @@ footer { padding: 36px 20px 0; }
     cartToggle.addEventListener('click', () => cartSidebar.classList.add('open'));
     cartClose.addEventListener('click', () => cartSidebar.classList.remove('open'));
 
-    // style picker
+    // style picker with auth
     document.querySelectorAll('.pick-style-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const card = btn.closest('.lookbook-card');
-        const styleName = card.dataset.look || card.querySelector('.lookbook-caption')?.innerText || 'style';
-        alert(`✨ You picked: ${styleName} – our stylist will contact you.`);
-        console.log('Style picked:', styleName);
+        checkAuthThen(() => {
+          const card = btn.closest('.lookbook-card');
+          const styleName = card.dataset.look || card.querySelector('.lookbook-caption')?.innerText || 'style';
+          alert(`✨ You picked: ${styleName} – our stylist will contact you.`);
+          console.log('Style picked:', styleName);
+        }, 'Please sign up or log in to pick a style');
       });
     });
 
@@ -1695,6 +1782,9 @@ footer { padding: 36px 20px 0; }
     document.getElementById('mobileAdmissionBtn').addEventListener('click', () => { showPage('admission'); });
     backBtn.addEventListener('click', (e) => { e.preventDefault(); showMainSite(); });
     showMainSite();
+
+    // if user clicks explore, open collections page
+    document.getElementById('exploreBtn').addEventListener('click', () => showPage('collections'));
 
     updateCartUI();
   })();
