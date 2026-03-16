@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DAASEBRE — African Wear Fashion (full cart + lookbook pick + auth)</title>
+<title>DAASEBRE — African Wear Fashion (full cart + lookbook pick + auth gate)</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Syncopate:wght@400;700&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
   /* ----- all original styles (complete, unchanged) plus cart & auth additions ----- */
@@ -990,7 +990,7 @@ footer { padding: 36px 20px 0; }
 @media (max-width: 480px) { .cp-grid { grid-template-columns: 1fr; } .cp-hero-title { font-size: clamp(36px, 12vw, 52px); } .cp-filters { gap: 6px; } .cp-filter-btn { padding: 8px 12px; } }
 @media (hover: none) { .cp-close-btn, .cp-filter-btn { cursor: pointer; } }
 
-/* ---------- CART & STYLE PICKER ADDITIONS ---------- */
+/* ---------- CART & STYLE PICKER ADDITIONS (unchanged) ---------- */
 .cart-icon {
   position: relative; margin-left: 20px; cursor: pointer;
   width: 44px; height: 44px; border-radius: 50%;
@@ -1030,26 +1030,25 @@ footer { padding: 36px 20px 0; }
 .lookbook-card .pick-style-btn { margin:10px 16px 16px; width:calc(100% - 32px); }
 
 /* ---------- AUTH MODAL ---------- */
+.auth-overlay {
+  position: fixed; inset:0; z-index:1000; background:rgba(4,4,10,0.8); backdrop-filter:blur(20px);
+  display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none;
+  transition:opacity 0.3s;
+}
+.auth-overlay.open { opacity:1; pointer-events:all; }
 .auth-modal {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999;
-  background: rgba(4,4,10,0.98); backdrop-filter: blur(24px);
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+  background:rgba(4,4,10,0.95); border:1px solid rgba(125,243,255,0.2); border-radius:8px;
+  padding:48px 40px; max-width:400px; width:90%; position:relative;
 }
-.auth-modal.open { opacity: 1; pointer-events: all; }
-.auth-card {
-  max-width: 420px; width: 90%; background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;
-  padding: 40px 32px; text-align: center;
+.auth-modal h2 { font-family:'Cormorant Garamond'; font-size:36px; font-weight:300; margin-bottom:32px; }
+.auth-modal .close-auth {
+  position:absolute; top:20px; right:20px; width:32px; height:32px; border-radius:50%;
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:white; cursor:none;
 }
-.auth-card h2 { font-family: 'Cormorant Garamond'; font-size: 36px; font-weight: 300; margin-bottom: 10px; }
-.auth-card p { color: var(--text-secondary); font-size: 13px; margin-bottom: 30px; }
-.auth-input { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); padding:14px 18px; margin-bottom:16px; color:white; font-family:'DM Sans'; border-radius:4px; }
-.auth-btn { width:100%; background:linear-gradient(135deg, rgba(125,243,255,0.2), rgba(192,132,252,0.2)); border:1px solid rgba(125,243,255,0.4); color:var(--accent-aqua); padding:14px; font-family:'Syncopate'; font-size:10px; letter-spacing:0.2em; border-radius:2px; cursor:none; transition:0.3s; margin-top:8px; }
-.auth-btn:hover { background:rgba(125,243,255,0.15); box-shadow:0 0 30px rgba(125,243,255,0.2); }
-.auth-close { position:absolute; top:30px; right:30px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:white; cursor:none; font-size:18px; }
-.auth-note { font-size:10px; color:var(--text-secondary); margin-top:24px; }
-.auth-note button { background:none; border:none; color:var(--accent-rose); cursor:none; text-decoration:underline; }
+.auth-input { width:100%; padding:14px 18px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:var(--text-primary); margin-bottom:24px; }
+.auth-btn { width:100%; padding:16px; background:linear-gradient(135deg, rgba(125,243,255,0.2), rgba(192,132,252,0.2)); border:1px solid rgba(125,243,255,0.4); color:var(--accent-aqua); font-family:'Syncopate'; font-size:10px; letter-spacing:0.2em; border-radius:2px; cursor:none; }
+.auth-switch { margin-top:20px; font-size:13px; color:var(--text-secondary); }
+.auth-switch span { color:var(--accent-aqua); text-decoration:underline; cursor:none; }
 </style>
 </head>
 <body>
@@ -1069,6 +1068,18 @@ footer { padding: 36px 20px 0; }
   <div class="blob blob-2"></div>
   <div class="blob blob-3"></div>
   <div class="blob blob-4"></div>
+</div>
+
+<!-- AUTH MODAL (sign up / log in) -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-modal">
+    <button class="close-auth" id="closeAuthBtn">✕</button>
+    <h2 id="authTitle">Sign up / Log in</h2>
+    <input type="email" class="auth-input" placeholder="your@email.com" id="authEmail">
+    <input type="password" class="auth-input" placeholder="password" id="authPass">
+    <button class="auth-btn" id="authActionBtn">Continue</button>
+    <div class="auth-switch" id="authSwitch">Already have an account? <span id="toggleAuthMode">Log in</span></div>
+  </div>
 </div>
 
 <!-- NAV (with cart icon) -->
@@ -1109,20 +1120,7 @@ footer { padding: 36px 20px 0; }
   <button class="nav-cta" style="width:100%;margin-top:32px;" id="mobileAdmissionBtn">ADMISSION</button>
 </div>
 
-<!-- AUTH MODAL (signup / login) -->
-<div class="auth-modal" id="authModal">
-  <button class="auth-close" id="authClose">✕</button>
-  <div class="auth-card">
-    <h2>welcome.</h2>
-    <p id="authMessage">Sign up or log in to continue</p>
-    <input type="email" class="auth-input" id="authEmail" placeholder="your@email.com">
-    <input type="password" class="auth-input" id="authPass" placeholder="password (min 6 chars)">
-    <button class="auth-btn" id="authSignupBtn">SIGN UP / LOGIN</button>
-    <!--<div class="auth-note">demo — any email/password works</div>-->
-  </div>
-</div>
-
-<!-- MAIN SITE CONTENT (all original sections) -->
+<!-- MAIN SITE CONTENT (all original sections - COMPLETE) -->
 <div id="mainSiteContent">
   <!-- HERO (original) -->
   <section id="hero">
@@ -1491,7 +1489,7 @@ footer { padding: 36px 20px 0; }
   </div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-total"><span>Total</span><span id="cartTotal">$0</span></div>
-  <button class="checkout-btn">checkout</button>
+  <button class="checkout-btn">checkout (demo)</button>
 </div>
 
 <!-- ORIGINAL COLLECTION OVERLAY (preserved) -->
@@ -1651,7 +1649,68 @@ footer { padding: 36px 20px 0; }
       el.addEventListener('click', () => { hamburger.classList.remove('open'); drawer.classList.remove('open'); document.body.style.overflow = ''; });
     });
 
-    // ----- NEW CART & STYLE PICKER -----
+    // ----- AUTH GATE -----
+    let isAuthenticated = false; // set to false to always prompt
+
+    // Auth modal elements
+    const authOverlay = document.getElementById('authOverlay');
+    const closeAuthBtn = document.getElementById('closeAuthBtn');
+    const authEmail = document.getElementById('authEmail');
+    const authPass = document.getElementById('authPass');
+    const authActionBtn = document.getElementById('authActionBtn');
+    const toggleAuthMode = document.getElementById('toggleAuthMode');
+    const authTitle = document.getElementById('authTitle');
+    let authMode = 'signup'; // 'signup' or 'login'
+    let pendingAction = null; // function to execute after auth
+
+    function openAuthModal(callback) {
+      pendingAction = callback;
+      authOverlay.classList.add('open');
+    }
+
+    closeAuthBtn.addEventListener('click', () => {
+      authOverlay.classList.remove('open');
+      pendingAction = null;
+    });
+
+    toggleAuthMode.addEventListener('click', () => {
+      if (authMode === 'signup') {
+        authMode = 'login';
+        authTitle.innerText = 'Log in';
+        toggleAuthMode.innerText = 'Sign up';
+      } else {
+        authMode = 'signup';
+        authTitle.innerText = 'Sign up / Log in';
+        toggleAuthMode.innerText = 'Log in';
+      }
+    });
+
+    authActionBtn.addEventListener('click', () => {
+      // Simulate authentication – in real app you'd validate with backend
+      if (authEmail.value.trim() && authPass.value.trim()) {
+        isAuthenticated = true;
+        authOverlay.classList.remove('open');
+        if (pendingAction) {
+          pendingAction();
+          pendingAction = null;
+        }
+      } else {
+        alert('Please enter email and password (demo)');
+      }
+    });
+
+    // Wrap addToCart and pickStyle with auth check
+    function withAuthCheck(fn) {
+      return function(...args) {
+        if (isAuthenticated) {
+          fn.apply(this, args);
+        } else {
+          openAuthModal(() => fn.apply(this, args));
+        }
+      };
+    }
+
+    // ----- CART (original but wrapped) -----
     let cart = JSON.parse(localStorage.getItem('daasebreCart')) || [];
     const cartSidebar = document.getElementById('cartSidebar');
     const cartToggle = document.getElementById('cartToggle');
@@ -1659,48 +1718,6 @@ footer { padding: 36px 20px 0; }
     const cartItemsEl = document.getElementById('cartItems');
     const cartTotalEl = document.getElementById('cartTotal');
     const cartCount = document.getElementById('cartCount');
-
-    // ----- AUTH MODAL -----
-    const authModal = document.getElementById('authModal');
-    const authClose = document.getElementById('authClose');
-    const authSignupBtn = document.getElementById('authSignupBtn');
-    const authEmail = document.getElementById('authEmail');
-    const authPass = document.getElementById('authPass');
-    const authMessage = document.getElementById('authMessage');
-
-    let pendingAction = null; // stores action to execute after auth
-
-    function openAuthModal(message, callback) {
-      authMessage.textContent = message || 'Sign up or log in to continue';
-      pendingAction = callback;
-      authModal.classList.add('open');
-    }
-    authClose.addEventListener('click', () => {
-      authModal.classList.remove('open');
-      pendingAction = null;
-    });
-    authSignupBtn.addEventListener('click', () => {
-      // mock authentication – any email/password works
-      if (!authEmail.value.includes('@') || authPass.value.length < 3) {
-        alert('Please enter a valid email and password (min 3 chars)');
-        return;
-      }
-      // store auth flag (session only)
-      sessionStorage.setItem('daasebreAuth', 'true');
-      authModal.classList.remove('open');
-      if (pendingAction) {
-        pendingAction();
-        pendingAction = null;
-      }
-    });
-
-    function checkAuthThen(callback, message) {
-      if (sessionStorage.getItem('daasebreAuth') === 'true') {
-        callback();
-      } else {
-        openAuthModal(message || 'Please sign in to continue', callback);
-      }
-    }
 
     function updateCartUI() {
       let total = 0;
@@ -1721,7 +1738,8 @@ footer { padding: 36px 20px 0; }
       cartCount.textContent = cart.reduce((acc, i) => acc + (i.qty || 1), 0);
       localStorage.setItem('daasebreCart', JSON.stringify(cart));
     }
-    function addToCart(btn) {
+
+    function addToCartImpl(btn) {
       const card = btn.closest('.card');
       if (!card) return;
       const id = card.dataset.id || Math.random().toString(36);
@@ -1733,15 +1751,10 @@ footer { padding: 36px 20px 0; }
       else cart.push({ id, name, price, img, qty: 1 });
       updateCartUI();
     }
+    const addToCart = withAuthCheck(addToCartImpl);
 
-    // wrap add to cart with auth
     document.querySelectorAll('.add-btn[data-collection]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        checkAuthThen(() => {
-          addToCart(btn);
-        }, 'Create an account or log in to add items to your cart');
-      });
+      btn.addEventListener('click', (e) => { e.stopPropagation(); addToCart(btn); });
     });
 
     cartItemsEl.addEventListener('click', (e) => {
@@ -1754,15 +1767,18 @@ footer { padding: 36px 20px 0; }
     cartClose.addEventListener('click', () => cartSidebar.classList.remove('open'));
 
     // style picker with auth
+    function pickStyleImpl(btn) {
+      const card = btn.closest('.lookbook-card');
+      const styleName = card.dataset.look || card.querySelector('.lookbook-caption')?.innerText || 'style';
+      alert(`✨ You picked: ${styleName} – our stylist will contact you.`);
+      console.log('Style picked:', styleName);
+    }
+    const pickStyle = withAuthCheck(pickStyleImpl);
+
     document.querySelectorAll('.pick-style-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        checkAuthThen(() => {
-          const card = btn.closest('.lookbook-card');
-          const styleName = card.dataset.look || card.querySelector('.lookbook-caption')?.innerText || 'style';
-          alert(`✨ You picked: ${styleName} – our stylist will contact you.`);
-          console.log('Style picked:', styleName);
-        }, 'Please sign up or log in to pick a style');
+        pickStyle(btn);
       });
     });
 
@@ -1782,9 +1798,6 @@ footer { padding: 36px 20px 0; }
     document.getElementById('mobileAdmissionBtn').addEventListener('click', () => { showPage('admission'); });
     backBtn.addEventListener('click', (e) => { e.preventDefault(); showMainSite(); });
     showMainSite();
-
-    // if user clicks explore, open collections page
-    document.getElementById('exploreBtn').addEventListener('click', () => showPage('collections'));
 
     updateCartUI();
   })();
