@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>DAASEBRE — African Wear Fashion (full cart + lookbook pick + auth gate)</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Syncopate:wght@400;700&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
@@ -1029,26 +1029,44 @@ footer { padding: 36px 20px 0; }
 .style-picker-tag { display:inline-block; margin-left:6px; font-size:9px; background:var(--accent-rose); color:#000; padding:2px 6px; border-radius:2px; }
 .lookbook-card .pick-style-btn { margin:10px 16px 16px; width:calc(100% - 32px); }
 
-/* ---------- AUTH MODAL ---------- */
+/* ---------- ENHANCED AUTH MODAL with full profile (name, phone, location) & keyboard fit ---------- */
 .auth-overlay {
   position: fixed; inset:0; z-index:1000; background:rgba(4,4,10,0.8); backdrop-filter:blur(20px);
   display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none;
   transition:opacity 0.3s;
+  padding:16px; /* safe area */
 }
 .auth-overlay.open { opacity:1; pointer-events:all; }
 .auth-modal {
   background:rgba(4,4,10,0.95); border:1px solid rgba(125,243,255,0.2); border-radius:8px;
-  padding:48px 40px; max-width:400px; width:90%; position:relative;
+  padding:32px 24px; max-width:440px; width:100%; position:relative;
+  max-height:90vh; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  margin:auto; /* center with keyboard open */
 }
-.auth-modal h2 { font-family:'Cormorant Garamond'; font-size:36px; font-weight:300; margin-bottom:32px; }
+.auth-modal h2 { font-family:'Cormorant Garamond'; font-size:32px; font-weight:300; margin-bottom:24px; }
 .auth-modal .close-auth {
-  position:absolute; top:20px; right:20px; width:32px; height:32px; border-radius:50%;
+  position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%;
   background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:white; cursor:none;
+  display:flex; align-items:center; justify-content:center; font-size:18px;
 }
-.auth-input { width:100%; padding:14px 18px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:var(--text-primary); margin-bottom:24px; }
-.auth-btn { width:100%; padding:16px; background:linear-gradient(135deg, rgba(125,243,255,0.2), rgba(192,132,252,0.2)); border:1px solid rgba(125,243,255,0.4); color:var(--accent-aqua); font-family:'Syncopate'; font-size:10px; letter-spacing:0.2em; border-radius:2px; cursor:none; }
-.auth-switch { margin-top:20px; font-size:13px; color:var(--text-secondary); }
+.auth-input, .auth-field {
+  width:100%; padding:14px 18px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); 
+  color:var(--text-primary); margin-bottom:16px; border-radius:2px; font-family:'DM Sans',sans-serif;
+}
+.auth-input:focus, .auth-field:focus { border-color:var(--accent-aqua); outline:none; }
+.auth-row { display:flex; gap:12px; flex-wrap:wrap; }
+.auth-row .auth-field { flex:1 1 calc(50% - 6px); }
+.auth-btn { width:100%; padding:16px; background:linear-gradient(135deg, rgba(125,243,255,0.2), rgba(192,132,252,0.2)); border:1px solid rgba(125,243,255,0.4); color:var(--accent-aqua); font-family:'Syncopate'; font-size:10px; letter-spacing:0.2em; border-radius:2px; cursor:none; margin-top:8px; }
+.auth-switch { margin-top:20px; font-size:13px; color:var(--text-secondary); text-align:center; }
 .auth-switch span { color:var(--accent-aqua); text-decoration:underline; cursor:none; }
+
+/* ensure content doesn't hide behind keyboard on mobile */
+@media (max-height: 500px) {
+  .auth-modal { padding:24px 20px; }
+  .auth-modal h2 { font-size:28px; margin-bottom:16px; }
+  .auth-field { padding:10px 14px; margin-bottom:10px; }
+}
 </style>
 </head>
 <body>
@@ -1070,15 +1088,27 @@ footer { padding: 36px 20px 0; }
   <div class="blob blob-4"></div>
 </div>
 
-<!-- AUTH MODAL (sign up / log in) -->
+<!-- ENHANCED AUTH MODAL (with name, phone, location & auto‑fit) -->
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-modal">
     <button class="close-auth" id="closeAuthBtn">✕</button>
-    <h2 id="authTitle">Sign up / Log in</h2>
-    <input type="email" class="auth-input" placeholder="your@email.com" id="authEmail">
-    <input type="password" class="auth-input" placeholder="password" id="authPass">
+    <h2 id="authTitle">Create account</h2>
+    
+    <!-- signup fields (always visible, but login mode hides extra fields via js) -->
+    <div id="signupFields">
+      <input type="text" class="auth-field" placeholder="Full name" id="authName">
+      <div class="auth-row">
+        <input type="tel" class="auth-field" placeholder="Phone" id="authPhone">
+        <input type="text" class="auth-field" placeholder="Location (city)" id="authLocation">
+      </div>
+    </div>
+    <input type="email" class="auth-field" placeholder="Email address" id="authEmail">
+    <input type="password" class="auth-field" placeholder="Password" id="authPass">
+    
     <button class="auth-btn" id="authActionBtn">Continue</button>
-    <div class="auth-switch" id="authSwitch">Already have an account? <span id="toggleAuthMode">Log in</span></div>
+    <div class="auth-switch" id="authSwitch">
+      Already have an account? <span id="toggleAuthMode">Log in</span>
+    </div>
   </div>
 </div>
 
@@ -1497,8 +1527,7 @@ footer { padding: 36px 20px 0; }
 
 <script>
   (function() {
-    // ----- COMPLETE ORIGINAL SCRIPT -----
-    // (all original cursor, slideshow, navigation, animations are here)
+    // ----- COMPLETE ORIGINAL SCRIPT (cursor, slideshow, tilt, reveal, mobile nav) -----
     const SLIDES = [
       { img: 'CEO.jpg?w=1600&q=85&fit=crop', eyebrow: 'Oppong Asare Peter', lines: ['Meet','Our','CEO'], italic: 1, body: 'Highly motivated designer crafting stories through fabric and form. Exploring the intersection of streetwear and haute couture. ✂️ — fashion that bends reality, not rules.' },
       { img: 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=1600&q=85&fit=crop&crop=top', eyebrow: 'African Heritage', lines: ['Rooted in','Radiance','Reborn'], italic: 1, body: 'Ancestral craft elevated to couture. Kente, adinkra, and ankara silhouettes woven through crystalline light.' },
@@ -1649,23 +1678,28 @@ footer { padding: 36px 20px 0; }
       el.addEventListener('click', () => { hamburger.classList.remove('open'); drawer.classList.remove('open'); document.body.style.overflow = ''; });
     });
 
-    // ----- AUTH GATE -----
-    let isAuthenticated = false; // set to false to always prompt
+    // ----- AUTH GATE with enhanced fields (name, phone, location) & keyboard fit -----
+    let isAuthenticated = false; // always start false to prompt
 
-    // Auth modal elements
     const authOverlay = document.getElementById('authOverlay');
     const closeAuthBtn = document.getElementById('closeAuthBtn');
+    const authName = document.getElementById('authName');
+    const authPhone = document.getElementById('authPhone');
+    const authLocation = document.getElementById('authLocation');
     const authEmail = document.getElementById('authEmail');
     const authPass = document.getElementById('authPass');
     const authActionBtn = document.getElementById('authActionBtn');
     const toggleAuthMode = document.getElementById('toggleAuthMode');
     const authTitle = document.getElementById('authTitle');
+    const signupFields = document.getElementById('signupFields');
     let authMode = 'signup'; // 'signup' or 'login'
-    let pendingAction = null; // function to execute after auth
+    let pendingAction = null;
 
     function openAuthModal(callback) {
       pendingAction = callback;
       authOverlay.classList.add('open');
+      // ensure modal is scrolled into view if keyboard opens
+      setTimeout(() => { if (document.activeElement?.tagName === 'INPUT') document.activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
     }
 
     closeAuthBtn.addEventListener('click', () => {
@@ -1678,28 +1712,40 @@ footer { padding: 36px 20px 0; }
         authMode = 'login';
         authTitle.innerText = 'Log in';
         toggleAuthMode.innerText = 'Sign up';
+        signupFields.style.display = 'none';
       } else {
         authMode = 'signup';
-        authTitle.innerText = 'Sign up / Log in';
+        authTitle.innerText = 'Create account';
         toggleAuthMode.innerText = 'Log in';
+        signupFields.style.display = 'block';
       }
     });
 
     authActionBtn.addEventListener('click', () => {
-      // Simulate authentication – in real app you'd validate with backend
-      if (authEmail.value.trim() && authPass.value.trim()) {
-        isAuthenticated = true;
-        authOverlay.classList.remove('open');
-        if (pendingAction) {
-          pendingAction();
-          pendingAction = null;
+      // Simple validation – in real app you'd send to backend
+      if (authMode === 'signup') {
+        if (!authName.value.trim() || !authPhone.value.trim() || !authLocation.value.trim() || !authEmail.value.trim() || !authPass.value.trim()) {
+          alert('Please fill in all fields (demo)');
+          return;
         }
+        // store user profile (mock)
+        console.log('Signup:', { name: authName.value, phone: authPhone.value, location: authLocation.value, email: authEmail.value });
       } else {
-        alert('Please enter email and password (demo)');
+        if (!authEmail.value.trim() || !authPass.value.trim()) {
+          alert('Please enter email and password (demo)');
+          return;
+        }
+      }
+      // authenticate
+      isAuthenticated = true;
+      authOverlay.classList.remove('open');
+      if (pendingAction) {
+        pendingAction();
+        pendingAction = null;
       }
     });
 
-    // Wrap addToCart and pickStyle with auth check
+    // Wrap actions with auth check
     function withAuthCheck(fn) {
       return function(...args) {
         if (isAuthenticated) {
@@ -1710,7 +1756,7 @@ footer { padding: 36px 20px 0; }
       };
     }
 
-    // ----- CART (original but wrapped) -----
+    // ----- CART (original) -----
     let cart = JSON.parse(localStorage.getItem('daasebreCart')) || [];
     const cartSidebar = document.getElementById('cartSidebar');
     const cartToggle = document.getElementById('cartToggle');
