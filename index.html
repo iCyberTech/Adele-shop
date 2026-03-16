@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daasebre Fashion — Oppong Asare Peter - African Wear Fashion</title>
+<title>DAASEBRE — African Wear Fashion (Cart + Lookbook style)</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Syncopate:wght@400;700&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
-  /* ----- all original styles (unchanged) ----- */
+  /* ----- all original styles (fully preserved) plus minimal cart additions ----- */
   :root {
     --glass-white: rgba(255,255,255,0.08);
     --glass-border: rgba(255,255,255,0.18);
@@ -930,7 +930,7 @@ footer { padding: 36px 20px 0; }
 .lookbook-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
 .lookbook-card { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 4px; overflow: hidden; transition: transform 0.4s; }
 .lookbook-card:hover { transform: translateY(-6px); }
-.lookbook-media { aspect-ratio: 4/5; width: 100%; overflow: hidden; }
+.lookbook-media { aspect-ratio: 4/5; width: 100%; overflow: hidden; position: relative; }
 .lookbook-media img, .lookbook-media video { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
 .lookbook-card:hover .lookbook-media img, .lookbook-card:hover .lookbook-media video { transform: scale(1.04); }
 .lookbook-caption { padding: 20px 16px 18px; font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 300; }
@@ -989,6 +989,37 @@ footer { padding: 36px 20px 0; }
 @media (max-width: 768px) { .cp-nav { padding: 16px 20px; } .cp-nav-title { display: none; } .cp-close-btn { cursor: pointer; } .cp-hero { padding: 40px 20px 36px; flex-direction: column; } .cp-hero-title { font-size: clamp(40px, 11vw, 64px); } .cp-hero-shards { position: relative; right: auto; top: auto; transform: none; display: flex; gap: 12px; margin-top: 32px; } .cp-shard { position: relative; } .cp-shard-1 { width: 80px; height: 110px; top: 0; } .cp-shard-2 { width: 60px; height: 85px; top: 0; right: auto; } .cp-filters { padding: 20px; gap: 8px; } .cp-filter-btn { padding: 8px 16px; font-size: 8px; cursor: pointer; } .cp-section { padding: 48px 20px; } .cp-section-header { margin-bottom: 36px; } .cp-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } .cp-item-name { font-size: 16px; } .cp-item-info { padding: 14px 14px 12px; } .cp-footer-strip { padding: 56px 20px; } }
 @media (max-width: 480px) { .cp-grid { grid-template-columns: 1fr; } .cp-hero-title { font-size: clamp(36px, 12vw, 52px); } .cp-filters { gap: 6px; } .cp-filter-btn { padding: 8px 12px; } }
 @media (hover: none) { .cp-close-btn, .cp-filter-btn { cursor: pointer; } }
+
+/* --- Cart & style picker additions (preserving all original) --- */
+.cart-sidebar {
+position: fixed; top: 0; right: 0; width: 320px; height: 100vh; z-index: 9990;
+background: rgba(4,4,10,0.95); backdrop-filter: blur(30px); border-left: 1px solid rgba(255,255,255,0.1);
+transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.23,1,0.32,1);
+padding: 80px 24px 32px; color: white; overflow-y: auto;
+}
+.cart-sidebar.open { transform: translateX(0); }
+.cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px; margin-bottom: 24px; }
+.cart-title { font-family: 'Syncopate', sans-serif; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; }
+.cart-close { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); cursor: none; display: flex; align-items: center; justify-content: center; }
+.cart-items { list-style: none; margin-bottom: 32px; }
+.cart-item { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 14px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; }
+.cart-item-name { font-family: 'Cormorant Garamond', serif; }
+.cart-item-price { color: var(--accent-aqua); }
+.cart-total { font-size: 16px; font-family: 'Syncopate', sans-serif; display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 16px; }
+.checkout-btn { margin-top: 24px; width: 100%; padding: 14px; background: rgba(125,243,255,0.1); border: 1px solid var(--accent-aqua); color: var(--accent-aqua); font-family: 'Syncopate', sans-serif; font-size: 10px; letter-spacing: 0.2em; cursor: none; border-radius: 2px; }
+.cart-icon {
+position: fixed; bottom: 24px; right: 24px; width: 60px; height: 60px; border-radius: 50%;
+background: linear-gradient(135deg, rgba(125,243,255,0.2), rgba(255,110,180,0.2));
+border: 1px solid var(--accent-aqua); backdrop-filter: blur(20px);
+z-index: 9980; display: flex; align-items: center; justify-content: center; cursor: none;
+font-size: 22px; color: var(--accent-aqua); transition: 0.3s;
+}
+.cart-icon:hover { transform: scale(1.1); background: rgba(125,243,255,0.3); }
+.cart-count { position: absolute; top: -2px; right: -2px; background: var(--accent-rose); color: black; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+.style-picker { display: flex; gap: 8px; margin-top: 10px; }
+.style-option { width: 30px; height: 30px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; transition: 0.2s; background-size: cover; }
+.style-option.selected { border-color: var(--accent-aqua); transform: scale(1.2); }
+.lookbook-card .style-picker { margin: 8px 16px 16px; }
 </style>
 </head>
 <body>
@@ -1010,6 +1041,16 @@ footer { padding: 36px 20px 0; }
   <div class="blob blob-4"></div>
 </div>
 
+<!-- CART SIDEBAR + ICON (new) -->
+<div class="cart-icon" id="cartIcon">🛍<span class="cart-count" id="cartCount">0</span></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header"><span class="cart-title">Your selection</span><button class="cart-close" id="cartClose">✕</button></div>
+  <ul class="cart-items" id="cartItems"></ul>
+  <div class="cart-total"><span>Total</span><span id="cartTotal">$0</span></div>
+  <button class="checkout-btn" id="checkoutBtn" onclick="alert('Checkout simulation — your items are saved in cart.')">Checkout →</button>
+  <p style="font-size:10px; color:var(--text-secondary); margin-top:16px;">Styles you picked appear here</p>
+</div>
+
 <!-- NAV (with external logo image) -->
 <nav>
   <div class="nav-logo-wrapper">
@@ -1023,17 +1064,15 @@ footer { padding: 36px 20px 0; }
     <li><a href="#" class="nav-link-page" data-page="collections">Collections</a></li>
     <li><a href="#" class="nav-link-page" data-page="lookbook">Lookbook</a></li>
     <li><a href="#" class="nav-link-page" data-page="editorial">Editorial</a></li>
-    <!-- changed first admission to "Galleries" (events & images/videos) -->
     <li><a href="#" class="nav-link-page" data-page="galleries">Galleries</a></li>
   </ul>
-  <!-- now the desk cta is ADMISSION (unchanged) -->
   <button class="nav-cta nav-cta-desk" id="navAdmissionBtn">ADMISSION</button>
   <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
-<!-- MOBILE MENU DRAWER (Galleries now, and admission remains) -->
+<!-- MOBILE MENU DRAWER -->
 <div class="mobile-drawer" id="mobileDrawer">
   <ul class="mobile-nav-links">
     <li><a href="#" class="nav-link-page" data-page="collections">Collections</a></li>
@@ -1288,32 +1327,16 @@ footer { padding: 36px 20px 0; }
         <p class="footer-tagline">Fashion & Trainee — distilled through light. Couture crafted for those who dare to wear the future.</p>
       </div>
       <div class="footer-socials">
-  <!-- TikTok -->
-  <a href="https://www.tiktok.com/@daasebre.fashion?is_from_webapp=1&sender_device=pc" class="social-btn" aria-label="TikTok">
-    <svg viewBox="0 0 24 24">
-      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/>
-    </svg>
-  </a>
-  <!-- WhatsApp -->
-  <a href="https://wa.me/+233530725409" class="social-btn" aria-label="WhatsApp">
-    <svg viewBox="0 0 24 24">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.473-.149-.673.149-.2.297-.767.967-.94 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.099-.198.05-.371-.025-.52-.075-.149-.673-1.62-.922-2.22-.242-.58-.487-.5-.673-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.57-.085 1.758-.719 2.006-1.413.248-.694.248-1.29.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-      <path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.554 4.12 1.522 5.85L.053 23.34c-.114.457.302.866.757.757l5.516-1.473C7.878 23.022 9.878 23.5 12 23.5c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/>
-    </svg>
-  </a>
-  <!-- Email -->
-  <a href="mailto:daasebrefashion@gmail.com" class="social-btn" aria-label="Email">
-    <svg viewBox="0 0 24 24">
-      <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-    </svg>
-  </a>
-  <!-- Phone -->
-  <a href="tel:+233 53 072 5409" class="social-btn" aria-label="Phone">
-    <svg viewBox="0 0 24 24">
-      <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-    </svg>
-  </a>
-</div>
+        <!-- TikTok -->
+        <a href="https://www.tiktok.com/@daasebre.fashion?is_from_webapp=1&sender_device=pc" class="social-btn" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg></a>
+        <!-- WhatsApp -->
+        <a href="https://wa.me/+233530725409" class="social-btn" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.473-.149-.673.149-.2.297-.767.967-.94 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.099-.198.05-.371-.025-.52-.075-.149-.673-1.62-.922-2.22-.242-.58-.487-.5-.673-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.57-.085 1.758-.719 2.006-1.413.248-.694.248-1.29.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.554 4.12 1.522 5.85L.053 23.34c-.114.457.302.866.757.757l5.516-1.473C7.878 23.022 9.878 23.5 12 23.5c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22C6.486 22 2 17.514 2 12S6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg></a>
+        <!-- Email -->
+        <a href="mailto:daasebrefashion@gmail.com" class="social-btn" aria-label="Email"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
+        <!-- Phone -->
+        <a href="tel:+233530725409" class="social-btn" aria-label="Phone"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></a>
+      </div>
+    </div>
     <div class="footer-nav-row">
       <div class="footer-col"><h4>Shop</h4><ul><li><a href="#">New Arrivals</a></li><li><a href="#">Bridal Collection</a></li><li><a href="#">Ready-to-Wear</a></li><li><a href="#">Accessories</a></li><li><a href="#">Archival</a></li></ul></div>
       <div class="footer-col"><h4>World</h4><ul><li><a href="#">Editorial</a></li><li><a href="#">Lookbook</a></li><li><a href="#">Atelier</a></li><li><a href="#">Events</a></li><li><a href="#">Press</a></li></ul></div>
@@ -1327,7 +1350,6 @@ footer { padding: 36px 20px 0; }
 </div>
 
 <!-- NEW PAGES -->
-
 <!-- COLLECTIONS PAGE (unchanged) -->
 <div id="collectionsPage" class="page-container" style="display:none;">
   <div class="section-header">
@@ -1336,49 +1358,33 @@ footer { padding: 36px 20px 0; }
     <p class="page-hero-sub">African heritage, bridal couture, and tailored suiting — each piece a crystalline study.</p>
   </div>
   <div class="collection-gallery">
-    <div class="card card-1">
-      <div class="card-img-wrap"><div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format" alt="gown" loading="lazy"></div><div class="card-glass"></div><div class="card-tag">New</div></div>
-      <div class="card-info"><div class="card-name">Aurore Gown</div><div class="card-sub">African Heritage</div><div class="card-price"><span class="price-val">$2,840</span><button class="add-btn">+</button></div></div>
-    </div>
-    <div class="card card-2">
-      <div class="card-img-wrap"><div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&auto=format" alt="jacket" loading="lazy"></div><div class="card-glass"></div><div class="card-tag">Limited</div></div>
-      <div class="card-info"><div class="card-name">Prism Jacket</div><div class="card-sub">Tailored Suiting</div><div class="card-price"><span class="price-val">$1,560</span><button class="add-btn">+</button></div></div>
-    </div>
-    <div class="card card-3">
-      <div class="card-img-wrap"><div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format" alt="set" loading="lazy"></div><div class="card-glass"></div><div class="card-tag">Exclusive</div></div>
-      <div class="card-info"><div class="card-name">Lumière Set</div><div class="card-sub">Bridal Couture</div><div class="card-price"><span class="price-val">$3,200</span><button class="add-btn">+</button></div></div>
-    </div>
-    <div class="card card-1">
-      <div class="card-img-wrap"><div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&auto=format" alt="evening" loading="lazy"></div><div class="card-glass"></div><div class="card-tag">Archive</div></div>
-      <div class="card-info"><div class="card-name">Noir Crystal</div><div class="card-sub">Evening Wear</div><div class="card-price"><span class="price-val">$4,200</span><button class="add-btn">+</button></div></div>
-    </div>
+    <div class="card card-1"><div class="card-img-wrap"><div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format" alt="gown" loading="lazy"></div><div class="card-glass"></div><div class="card-tag">New</div></div><div class="card-info"><div class="card-name">Aurore Gown</div><div class="card-sub">African Heritage</div><div class="card-price"><span class="price-val">$2,840</span><button class="add-btn">+</button></div></div></div>
+    <div class="card card-2"><div class="card-img-wrap"><div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&auto=format" alt="jacket" loading="lazy"></div><div class="card-glass"></div><div class="card-tag">Limited</div></div><div class="card-info"><div class="card-name">Prism Jacket</div><div class="card-sub">Tailored Suiting</div><div class="card-price"><span class="price-val">$1,560</span><button class="add-btn">+</button></div></div></div>
+    <div class="card card-3"><div class="card-img-wrap"><div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format" alt="set" loading="lazy"></div><div class="card-glass"></div><div class="card-tag">Exclusive</div></div><div class="card-info"><div class="card-name">Lumière Set</div><div class="card-sub">Bridal Couture</div><div class="card-price"><span class="price-val">$3,200</span><button class="add-btn">+</button></div></div></div>
+    <div class="card card-1"><div class="card-img-wrap"><div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&auto=format" alt="evening" loading="lazy"></div><div class="card-glass"></div><div class="card-tag">Archive</div></div><div class="card-info"><div class="card-name">Noir Crystal</div><div class="card-sub">Evening Wear</div><div class="card-price"><span class="price-val">$4,200</span><button class="add-btn">+</button></div></div></div>
   </div>
 </div>
 
-<!-- LOOKBOOK PAGE (now only styles / images & videos, no events text) -->
+<!-- LOOKBOOK PAGE (with style pickers) -->
 <div id="lookbookPage" class="page-container" style="display:none;">
   <div class="section-header">
     <div class="section-label">Visual Diary</div>
     <h1 class="page-hero-title">Lookbook</h1>
-    <p class="page-hero-sub">Editorial styles, campaign imagery and motion — pure fashion.</p>
+    <p class="page-hero-sub">Pick a style you love — it will be saved in your cart.</p>
   </div>
-  <div class="lookbook-grid">
-    <div class="lookbook-card"><div class="lookbook-media"><img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=600&auto=format" loading="lazy"></div><div class="lookbook-caption"><small>SS 2026</small>Glass & Shadow</div></div>
-    <div class="lookbook-card"><div class="lookbook-media"><video poster="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&auto=format" controls><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video></div><div class="lookbook-caption"><small>Campaign</small>Crystalline Movement</div></div>
-    <div class="lookbook-card"><div class="lookbook-media"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&auto=format" loading="lazy"></div><div class="lookbook-caption"><small>Portrait</small>Mireille</div></div>
-    <div class="lookbook-card"><div class="lookbook-media"><video poster="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format" controls><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video></div><div class="lookbook-caption"><small>Film</small>Prismatica</div></div>
-    <div class="lookbook-card"><div class="lookbook-media"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&auto=format" loading="lazy"></div><div class="lookbook-caption"><small>Backstage</small>Quiet Light</div></div>
-    <div class="lookbook-card"><div class="lookbook-media"><video poster="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format" controls><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video></div><div class="lookbook-caption"><small>Studio</small>Pattern Study</div></div>
+  <div class="lookbook-grid" id="lookbookGrid">
+    <div class="lookbook-card"><div class="lookbook-media"><img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=600&auto=format" loading="lazy"></div><div class="lookbook-caption"><small>SS 2026</small>Glass & Shadow</div><div class="style-picker"><div class="style-option" data-style-id="glass1" style="background-color:#7df3ff;"></div><div class="style-option" data-style-id="glass2" style="background-color:#ff6eb4;"></div><div class="style-option" data-style-id="glass3" style="background-color:#c084fc;"></div></div></div>
+    <div class="lookbook-card"><div class="lookbook-media"><video poster="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&auto=format" controls><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video></div><div class="lookbook-caption"><small>Campaign</small>Crystalline Movement</div><div class="style-picker"><div class="style-option" data-style-id="cry1" style="background-color:#a0e7ff;"></div><div class="style-option" data-style-id="cry2" style="background-color:#ffb3c6;"></div></div></div>
+    <div class="lookbook-card"><div class="lookbook-media"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&auto=format" loading="lazy"></div><div class="lookbook-caption"><small>Portrait</small>Mireille</div><div class="style-picker"><div class="style-option" data-style-id="mir1" style="background-color:#d4a5ff;"></div><div class="style-option" data-style-id="mir2" style="background-color:#a5f0d4;"></div></div></div>
+    <div class="lookbook-card"><div class="lookbook-media"><video poster="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format" controls><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video></div><div class="lookbook-caption"><small>Film</small>Prismatica</div><div class="style-picker"><div class="style-option" data-style-id="pri1" style="background-color:#f6ae9a;"></div><div class="style-option" data-style-id="pri2" style="background-color:#9acdf6;"></div></div></div>
+    <div class="lookbook-card"><div class="lookbook-media"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&auto=format" loading="lazy"></div><div class="lookbook-caption"><small>Backstage</small>Quiet Light</div><div class="style-picker"><div class="style-option" data-style-id="quiet1" style="background-color:#efefef;"></div><div class="style-option" data-style-id="quiet2" style="background-color:#d0c0b0;"></div></div></div>
+    <div class="lookbook-card"><div class="lookbook-media"><video poster="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format" controls><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video></div><div class="lookbook-caption"><small>Studio</small>Pattern Study</div><div class="style-picker"><div class="style-option" data-style-id="pat1" style="background-color:#b8d8be;"></div><div class="style-option" data-style-id="pat2" style="background-color:#d8b8d8;"></div></div></div>
   </div>
 </div>
 
-<!-- NEW GALLERIES PAGE (image/video events, as requested) -->
+<!-- GALLERIES PAGE (unchanged) -->
 <div id="galleriesPage" class="page-container" style="display:none;">
-  <div class="section-header">
-    <div class="section-label">Events & Archives</div>
-    <h1 class="page-hero-title">Galleries</h1>
-    <p class="page-hero-sub">Moments from runway shows, private events, and behind‑the‑scenes — captured in light.</p>
-  </div>
+  <div class="section-header"><div class="section-label">Events & Archives</div><h1 class="page-hero-title">Galleries</h1><p class="page-hero-sub">Moments from runway shows, private events, and behind‑the‑scenes — captured in light.</p></div>
   <div class="lookbook-grid">
     <div class="lookbook-card"><div class="lookbook-media"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format" loading="lazy"></div><div class="lookbook-caption"><small>SS 2026 Afterparty</small>Paris Event</div></div>
     <div class="lookbook-card"><div class="lookbook-media"><video poster="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&auto=format" controls><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video></div><div class="lookbook-caption"><small>Runway film</small>Glass & Shadow</div></div>
@@ -1391,11 +1397,7 @@ footer { padding: 36px 20px 0; }
 
 <!-- ADMISSION PAGE (unchanged) -->
 <div id="admissionPage" class="page-container" style="display:none;">
-  <div class="section-header">
-    <div class="section-label">Join the atelier</div>
-    <h1 class="page-hero-title">Admission</h1>
-    <p class="page-hero-sub">Apply for the DAASEBRE fashion & trainee program. Future African designers start here.</p>
-  </div>
+  <div class="section-header"><div class="section-label">Join the atelier</div><h1 class="page-hero-title">Admission</h1><p class="page-hero-sub">Apply for the DAASEBRE fashion & trainee program. Future African designers start here.</p></div>
   <div class="admission-form glass">
     <div class="form-row"><div class="form-group"><label>Full name</label><input type="text" placeholder=" "></div><div class="form-group"><label>Email</label><input type="email" placeholder=" "></div></div>
     <div class="form-row"><div class="form-group"><label>Phone</label><input type="tel" placeholder=" "></div><div class="form-group"><label>Date of birth</label><input type="date" placeholder=" "></div></div>
@@ -1409,11 +1411,7 @@ footer { padding: 36px 20px 0; }
 
 <!-- EDITORIAL PAGE (unchanged) -->
 <div id="editorialPage" class="page-container" style="display:none;">
-  <div class="section-header">
-    <div class="section-label">Stories</div>
-    <h1 class="page-hero-title">The Magazine</h1>
-    <p class="page-hero-sub">Essays, interviews, and visual narratives from the crystalline world.</p>
-  </div>
+  <div class="section-header"><div class="section-label">Stories</div><h1 class="page-hero-title">The Magazine</h1><p class="page-hero-sub">Essays, interviews, and visual narratives from the crystalline world.</p></div>
   <div class="editorial-grid" style="margin-top:40px;">
     <div class="ed-card ed-1"><div class="ed-card-inner"><div class="ed-bg"><img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=900&auto=format"></div><div class="ed-overlay"></div><div class="ed-content"><div class="ed-cat">Cover Story</div><div class="ed-title">Glass & Shadow</div><div class="ed-meta">By Elara Voss</div></div></div></div>
     <div class="ed-card ed-2"><div class="ed-card-inner"><div class="ed-bg"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&auto=format"></div><div class="ed-overlay"></div><div class="ed-content"><div class="ed-cat">Runway</div><div class="ed-title">Paris After Midnight</div></div></div></div>
@@ -1426,54 +1424,23 @@ footer { padding: 36px 20px 0; }
 <!-- back to main button -->
 <a href="#" id="backToMainBtn" class="page-back" style="display:none;">✕</a>
 
-<!-- ORIGINAL COLLECTION OVERLAY (fully preserved) -->
+<!-- ORIGINAL COLLECTION OVERLAY (preserved) -->
 <div id="collectionPage" class="cp-overlay">
   <!-- original overlay content (kept) -->
 </div>
 
 <script>
-  // all original script preserved, with navigation addition for 'galleries'
+  // ---------- ALL ORIGINAL SCRIPT (unchanged) plus cart additions ----------
   const SLIDES = [
-    {
-      img: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1600&q=85&fit=crop',
-      eyebrow: 'Oppong Asare Peter',
-      lines: ['Meet','Our','CEO'],
-      italic: 1,
-      body: 'Highly motivated designer crafting stories through fabric and form. Exploring the intersection of streetwear and haute couture. ✂️ — fashion that bends reality, not rules.'
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=1600&q=85&fit=crop&crop=top',
-      eyebrow: 'African Heritage',
-      lines: ['Rooted in','Radiance','Reborn'],
-      italic: 1,
-      body: 'Ancestral craft elevated to couture. Kente, adinkra, and ankara silhouettes woven through crystalline light.'
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&q=85&fit=crop',
-      eyebrow: 'Bridal Couture',
-      lines: ['Dressed','in','Forever'],
-      italic: 2,
-      body: 'Gowns that dissolve the boundary between fabric and light. Every veil, train and bodice crafted to hold the moment still.'
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1600&q=85&fit=crop&crop=top',
-      eyebrow: 'Tailored Suiting',
-      lines: ['Power','Dis-','tilled'],
-      italic: 0,
-      body: 'Structured precision meets African-Wear fabric. Suits engineered for authority, softened by crystalline detail.'
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1600&q=85&fit=crop&crop=top',
-      eyebrow: 'New Arrivals',
-      lines: ['The','New','Now'],
-      italic: 1,
-      body: 'Fresh drops from the atelier — limited runs, lifetime pieces. Reserve yours before the world finds out.'
-    },
+    { img: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1600&q=85&fit=crop', eyebrow: 'Oppong Asare Peter', lines: ['Meet','Our','CEO'], italic: 1, body: 'Highly motivated designer crafting stories through fabric and form. Exploring the intersection of streetwear and haute couture. ✂️ — fashion that bends reality, not rules.' },
+    { img: 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=1600&q=85&fit=crop&crop=top', eyebrow: 'African Heritage', lines: ['Rooted in','Radiance','Reborn'], italic: 1, body: 'Ancestral craft elevated to couture. Kente, adinkra, and ankara silhouettes woven through crystalline light.' },
+    { img: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&q=85&fit=crop', eyebrow: 'Bridal Couture', lines: ['Dressed','in','Forever'], italic: 2, body: 'Gowns that dissolve the boundary between fabric and light. Every veil, train and bodice crafted to hold the moment still.' },
+    { img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1600&q=85&fit=crop&crop=top', eyebrow: 'Tailored Suiting', lines: ['Power','Dis-','tilled'], italic: 0, body: 'Structured precision meets African-Wear fabric. Suits engineered for authority, softened by crystalline detail.' },
+    { img: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1600&q=85&fit=crop&crop=top', eyebrow: 'New Arrivals', lines: ['The','New','Now'], italic: 1, body: 'Fresh drops from the atelier — limited runs, lifetime pieces. Reserve yours before the world finds out.' },
   ];
 
   const INTERVAL   = 6000;
   const TICK       = 60;
-
   let slideIdx     = 0;
   let slideTimer   = null;
   let progressTimer= null;
@@ -1493,129 +1460,70 @@ footer { padding: 36px 20px 0; }
   const tagNames   = ['span','em','span'];
 
   function padTwo(n){ return String(n+1).padStart(2,'0'); }
-
   function applySlideContent(idx, animate){
     const s = SLIDES[idx];
     counterEl.style.opacity = '0';
     setTimeout(()=>{ counterEl.textContent = padTwo(idx); counterEl.style.opacity='1'; }, 200);
-
     dotEls.forEach((d,i)=>d.classList.toggle('active', i===idx));
-
     if(!animate){
-      eyebrowEl.textContent = s.eyebrow;
-      eyebrowEl.classList.add('visible');
-      s.lines.forEach((txt,i)=>{
-        const inner = lineEls[i].querySelector('.ht-inner');
-        inner.textContent = txt;
-        lineEls[i].classList.add('visible');
-      });
-      bodyEl.textContent = s.body;
-      bodyEl.classList.add('visible');
+      eyebrowEl.textContent = s.eyebrow; eyebrowEl.classList.add('visible');
+      s.lines.forEach((txt,i)=>{ const inner = lineEls[i].querySelector('.ht-inner'); inner.textContent = txt; lineEls[i].classList.add('visible'); });
+      bodyEl.textContent = s.body; bodyEl.classList.add('visible');
       return;
     }
-
-    eyebrowEl.classList.remove('visible');
-    eyebrowEl.classList.add('exiting');
-    bodyEl.classList.remove('visible');
-    bodyEl.classList.add('exiting');
+    eyebrowEl.classList.remove('visible'); eyebrowEl.classList.add('exiting');
+    bodyEl.classList.remove('visible'); bodyEl.classList.add('exiting');
     lineEls.forEach(l=>{ l.classList.remove('visible'); l.classList.add('exiting'); });
-
     setTimeout(()=>{
-      eyebrowEl.classList.remove('exiting');
-      bodyEl.classList.remove('exiting');
+      eyebrowEl.classList.remove('exiting'); bodyEl.classList.remove('exiting');
       lineEls.forEach(l=>l.classList.remove('exiting'));
-
-      eyebrowEl.textContent = s.eyebrow;
-      bodyEl.textContent = s.body;
-
-      s.lines.forEach((txt,i)=>{
-        const inner = lineEls[i].querySelector('.ht-inner');
-        inner.textContent = txt;
-
+      eyebrowEl.textContent = s.eyebrow; bodyEl.textContent = s.body;
+      s.lines.forEach((txt,i)=>{ const inner = lineEls[i].querySelector('.ht-inner'); inner.textContent = txt;
         const shouldBeEm = (i === s.italic);
         if(shouldBeEm && lineEls[i].tagName !== 'EM'){
           lineEls[i].style.cssText += ';font-style:italic;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,0.4)';
         } else if(!shouldBeEm){
-          lineEls[i].style.fontStyle = '';
-          lineEls[i].style.color = '';
-          lineEls[i].style.webkitTextStroke = '';
+          lineEls[i].style.fontStyle = ''; lineEls[i].style.color = ''; lineEls[i].style.webkitTextStroke = '';
         }
       });
-
-      requestAnimationFrame(()=>{
-        eyebrowEl.classList.add('visible');
-        bodyEl.classList.add('visible');
-        lineEls.forEach(l=>l.classList.add('visible'));
-      });
+      requestAnimationFrame(()=>{ eyebrowEl.classList.add('visible'); bodyEl.classList.add('visible'); lineEls.forEach(l=>l.classList.add('visible')); });
     }, 550);
   }
-
   function activateSlide(idx, animate=true){
     if(isAnimating && animate) return;
     isAnimating = true;
-
     const prev = slideEls[slideIdx];
-    prev.classList.remove('active');
-    prev.classList.add('leaving');
+    prev.classList.remove('active'); prev.classList.add('leaving');
     setTimeout(()=>prev.classList.remove('leaving'), 1400);
-
     slideIdx = ((idx % SLIDES.length) + SLIDES.length) % SLIDES.length;
     slideEls[slideIdx].classList.add('active');
     applySlideContent(slideIdx, animate);
-
     setTimeout(()=>{ isAnimating = false; }, 1400);
   }
-
   function startProgress(){
-    clearInterval(progressTimer);
-    elapsed = 0;
+    clearInterval(progressTimer); elapsed = 0;
     progressTimer = setInterval(()=>{
-      elapsed += TICK;
-      const pct = Math.min((elapsed / INTERVAL) * 100, 100);
+      elapsed += TICK; const pct = Math.min((elapsed / INTERVAL) * 100, 100);
       progressBar.style.width = pct + '%';
-      if(elapsed >= INTERVAL){
-        clearInterval(progressTimer);
-        progressBar.style.width = '0%';
-        activateSlide(slideIdx + 1);
-        setTimeout(startProgress, 100);
-      }
+      if(elapsed >= INTERVAL){ clearInterval(progressTimer); progressBar.style.width = '0%'; activateSlide(slideIdx + 1); setTimeout(startProgress, 100); }
     }, TICK);
   }
-
-  function goTo(idx){
-    clearInterval(progressTimer);
-    progressBar.style.width = '0%';
-    activateSlide(idx);
-    setTimeout(startProgress, 100);
-  }
-
+  function goTo(idx){ clearInterval(progressTimer); progressBar.style.width = '0%'; activateSlide(idx); setTimeout(startProgress, 100); }
   dotEls.forEach(d=>d.addEventListener('click',()=>goTo(+d.dataset.idx)));
-
   document.getElementById('heroPrev').addEventListener('click',()=>goTo(slideIdx-1));
   document.getElementById('heroNext').addEventListener('click',()=>goTo(slideIdx+1));
-
   (()=>{
-    let sx=0, sy=0;
-    const hero = document.getElementById('hero');
+    let sx=0, sy=0; const hero = document.getElementById('hero');
     hero.addEventListener('touchstart',e=>{ sx=e.touches[0].clientX; sy=e.touches[0].clientY; },{passive:true});
     hero.addEventListener('touchend',e=>{
-      const dx=e.changedTouches[0].clientX-sx;
-      const dy=e.changedTouches[0].clientY-sy;
-      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>40){
-        goTo(dx<0 ? slideIdx+1 : slideIdx-1);
-      }
+      const dx=e.changedTouches[0].clientX-sx; const dy=e.changedTouches[0].clientY-sy;
+      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>40) goTo(dx<0 ? slideIdx+1 : slideIdx-1);
     },{passive:true});
   })();
-
-  document.addEventListener('keydown',e=>{
-    if(e.key==='ArrowRight') goTo(slideIdx+1);
-    if(e.key==='ArrowLeft')  goTo(slideIdx-1);
-  });
-
+  document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight') goTo(slideIdx+1); if(e.key==='ArrowLeft') goTo(slideIdx-1); });
   const heroSection = document.getElementById('hero');
   heroSection.addEventListener('mouseenter',()=>clearInterval(progressTimer));
   heroSection.addEventListener('mouseleave',()=>startProgress());
-
   applySlideContent(0, false);
   setTimeout(startProgress, 1600);
 
@@ -1623,190 +1531,138 @@ footer { padding: 36px 20px 0; }
   const isTouchDevice = () => window.matchMedia('(hover: none)').matches;
   const cursor = document.getElementById('cursor');
   const ring = document.getElementById('cursor-ring');
-  if (isTouchDevice()) {
-    document.body.style.cursor = 'auto';
-    cursor.style.display = 'none';
-    ring.style.display = 'none';
-  }
+  if (isTouchDevice()) { document.body.style.cursor = 'auto'; cursor.style.display = 'none'; ring.style.display = 'none'; }
   let mx = 0, my = 0, rx = 0, ry = 0;
   document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
   (function animCursor() {
-    rx += (mx - rx) * 0.18;
-    ry += (my - ry) * 0.18;
-    cursor.style.left = mx + 'px';
-    cursor.style.top = my + 'px';
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
+    rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
     requestAnimationFrame(animCursor);
   })();
 
   // SCROLL REVEAL
   const reveals = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-  }, { threshold: 0.12 });
+  const io = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } }); }, { threshold: 0.12 });
   reveals.forEach(el => io.observe(el));
 
-  // TILT on CARDS
+  // TILT effects (cards)
   document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('mousemove', e => {
-      const r = card.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5;
-      const y = (e.clientY - r.top) / r.height - 0.5;
+      const r = card.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - 0.5; const y = (e.clientY - r.top) / r.height - 0.5;
       card.style.transform = `perspective(800px) rotateY(${x * 10}deg) rotateX(${-y * 8}deg) translateY(-8px) scale(1.01)`;
     });
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = '';
-      card.style.transition = 'transform 0.6s cubic-bezier(0.23,1,0.32,1)';
-    });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; card.style.transition = 'transform 0.6s cubic-bezier(0.23,1,0.32,1)'; });
   });
-
   document.querySelectorAll('.ed-card').forEach(card => {
     card.addEventListener('mousemove', e => {
-      const r = card.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5;
-      const y = (e.clientY - r.top) / r.height - 0.5;
+      const r = card.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - 0.5; const y = (e.clientY - r.top) / r.height - 0.5;
       card.querySelector('.ed-card-inner').style.transform = `perspective(600px) rotateY(${x * 6}deg) rotateX(${-y * 4}deg) scale(1.02)`;
     });
-    card.addEventListener('mouseleave', () => {
-      card.querySelector('.ed-card-inner').style.transform = '';
-    });
+    card.addEventListener('mouseleave', () => { card.querySelector('.ed-card-inner').style.transform = ''; });
   });
 
   document.addEventListener('mousemove', e => {
-    const ox = (e.clientX / window.innerWidth - 0.5) * 30;
-    const oy = (e.clientY / window.innerHeight - 0.5) * 20;
+    const ox = (e.clientX / window.innerWidth - 0.5) * 30; const oy = (e.clientY / window.innerHeight - 0.5) * 20;
     const orb = document.querySelector('.glass-orb-container');
     if (orb) orb.style.transform = `translate(${ox}px, ${oy}px)`;
   });
 
   window.addEventListener('scroll', () => {
-    const s = window.scrollY;
-    const hero = document.querySelector('.hero-content');
-    if (hero) hero.style.transform = `translateY(${s * 0.15}px)`;
-    const vis = document.querySelector('.hero-visual');
-    if (vis) vis.style.transform = `translateY(${s * 0.08}px)`;
+    const s = window.scrollY; const hero = document.querySelector('.hero-content'); if (hero) hero.style.transform = `translateY(${s * 0.15}px)`;
+    const vis = document.querySelector('.hero-visual'); if (vis) vis.style.transform = `translateY(${s * 0.08}px)`;
   });
 
   const orbEl = document.querySelector('.glass-orb');
   document.addEventListener('mousemove', e => {
-    if (!orbEl) return;
-    const r = orbEl.getBoundingClientRect();
-    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-    const dx = (e.clientX - cx) / (r.width / 2);
-    const dy = (e.clientY - cy) / (r.height / 2);
-    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (!orbEl) return; const r = orbEl.getBoundingClientRect(); const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    const dx = (e.clientX - cx) / (r.width / 2); const dy = (e.clientY - cy) / (r.height / 2); const dist = Math.sqrt(dx*dx+dy*dy);
     const gx = 30 + dx * 15, gy = 25 + dy * 10;
-    orbEl.style.background = `
-      radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,${0.25 + dist * 0.1}) 0%, transparent 40%),
-      radial-gradient(circle at ${70 - dx * 10}% ${75 - dy * 8}%, rgba(125,243,255,0.15) 0%, transparent 40%),
-      radial-gradient(circle at 50% 50%, rgba(192,132,252,0.1) 0%, transparent 70%)
-    `;
+    orbEl.style.background = `radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,${0.25 + dist * 0.1}) 0%, transparent 40%), radial-gradient(circle at ${70 - dx * 10}% ${75 - dy * 8}%, rgba(125,243,255,0.15) 0%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(192,132,252,0.1) 0%, transparent 70%)`;
   });
 
-  const ticker = document.getElementById('ticker');
-  ticker.innerHTML += ticker.innerHTML;
+  const ticker = document.getElementById('ticker'); ticker.innerHTML += ticker.innerHTML;
+  const hamburger = document.getElementById('navHamburger'); const drawer = document.getElementById('mobileDrawer');
+  hamburger.addEventListener('click', () => { const open = hamburger.classList.toggle('open'); drawer.classList.toggle('open', open); document.body.style.overflow = open ? 'hidden' : ''; });
+  drawer.querySelectorAll('a, button').forEach(el => { el.addEventListener('click', () => { hamburger.classList.remove('open'); drawer.classList.remove('open'); document.body.style.overflow = ''; }); });
+  if (isTouchDevice()) { document.querySelectorAll('.card').forEach(card => { card.style.transform = ''; }); }
 
-  const hamburger = document.getElementById('navHamburger');
-  const drawer = document.getElementById('mobileDrawer');
-  hamburger.addEventListener('click', () => {
-    const open = hamburger.classList.toggle('open');
-    drawer.classList.toggle('open', open);
-    document.body.style.overflow = open ? 'hidden' : '';
-  });
-  drawer.querySelectorAll('a, button').forEach(el => {
-    el.addEventListener('click', () => {
-      hamburger.classList.remove('open');
-      drawer.classList.remove('open');
-      document.body.style.overflow = '';
+  // NAVIGATION ADDITIONS (including galleries)
+  const mainSite = document.getElementById('mainSiteContent');
+  const pages = { collections: document.getElementById('collectionsPage'), lookbook: document.getElementById('lookbookPage'), editorial: document.getElementById('editorialPage'), admission: document.getElementById('admissionPage'), galleries: document.getElementById('galleriesPage') };
+  const backBtn = document.getElementById('backToMainBtn');
+  function showMainSite() { mainSite.style.display = 'block'; for (let p in pages) pages[p].style.display = 'none'; backBtn.style.display = 'none'; document.body.style.overflow = ''; }
+  function showPage(pageId) { mainSite.style.display = 'none'; for (let p in pages) pages[p].style.display = 'none'; if (pages[pageId]) { pages[pageId].style.display = 'block'; backBtn.style.display = 'flex'; } document.getElementById('mobileDrawer').classList.remove('open'); document.getElementById('navHamburger').classList.remove('open'); }
+  document.querySelectorAll('.nav-link-page').forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); const page = link.dataset.page; showPage(page); }); });
+  document.getElementById('navAdmissionBtn').addEventListener('click', () => showPage('admission'));
+  document.getElementById('mobileAdmissionBtn').addEventListener('click', () => { showPage('admission'); document.getElementById('mobileDrawer').classList.remove('open'); document.getElementById('navHamburger').classList.remove('open'); });
+  backBtn.addEventListener('click', (e) => { e.preventDefault(); showMainSite(); });
+  showMainSite();
+
+  // ---------- CART & STYLE PICKER (new) ----------
+  let cart = [];
+  function updateCartUI() {
+    const container = document.getElementById('cartItems'); const totalSpan = document.getElementById('cartTotal'); const countSpan = document.getElementById('cartCount');
+    if (!container) return; container.innerHTML = ''; let total = 0;
+    cart.forEach((item, idx) => {
+      const li = document.createElement('li'); li.className = 'cart-item';
+      li.innerHTML = `<span class="cart-item-name">${item.name} ${item.style ? '['+item.style+']' : ''}</span><span class="cart-item-price">$${item.price}</span>`;
+      container.appendChild(li); total += item.price;
     });
-  });
-
-  if (isTouchDevice()) {
-    document.querySelectorAll('.card').forEach(card => {
-      card.style.transform = '';
-    });
+    totalSpan.innerText = '$' + total; countSpan.innerText = cart.length;
   }
+  function addToCart(item) { cart.push(item); updateCartUI(); }
 
+  // Attach to all original add buttons
+  document.querySelectorAll('.add-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = e.target.closest('.card');
+      if (!card) return;
+      const name = card.querySelector('.card-name')?.innerText || 'Piece';
+      const priceText = card.querySelector('.price-val')?.innerText || '$0';
+      const price = parseInt(priceText.replace(/[^0-9]/g,'')) || 0;
+      addToCart({ id: Date.now() + Math.random(), name, price, style: null });
+    });
+  });
+
+  // Style picker in lookbook page
+  document.querySelectorAll('.style-option').forEach(opt => {
+    opt.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const parentCard = opt.closest('.lookbook-card');
+      if (!parentCard) return;
+      const styleName = opt.getAttribute('data-style-id') || 'custom';
+      const captionEl = parentCard.querySelector('.lookbook-caption');
+      const baseName = captionEl ? captionEl.innerText.trim() : 'Lookbook style';
+      parentCard.querySelectorAll('.style-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      addToCart({ id: Date.now() + Math.random(), name: baseName + ' style', price: 120, style: styleName });
+    });
+  });
+
+  // Cart sidebar toggle
+  const cartIcon = document.getElementById('cartIcon');
+  const cartSidebar = document.getElementById('cartSidebar');
+  const cartClose = document.getElementById('cartClose');
+  if (cartIcon) cartIcon.addEventListener('click', () => cartSidebar.classList.add('open'));
+  if (cartClose) cartClose.addEventListener('click', () => cartSidebar.classList.remove('open'));
+
+  // Explore collection overlay (original)
   const exploreBtn = document.getElementById('exploreBtn');
   const collectionPage = document.getElementById('collectionPage');
-  const collectionClose = document.getElementById('collectionClose'); // not used but safe
-
   if (exploreBtn && collectionPage) {
     exploreBtn.addEventListener('click', () => {
       collectionPage.classList.add('open');
       document.body.style.overflow = 'hidden';
-      setTimeout(() => {
-        document.body.style.overflow = '';
-        collectionPage.style.overflowY = 'auto';
-      }, 700);
+      setTimeout(() => { document.body.style.overflow = ''; collectionPage.style.overflowY = 'auto'; }, 700);
     });
-    // optional close
     const closeBtn = document.querySelector('.cp-close-btn');
     if(closeBtn) closeBtn.addEventListener('click', () => {
-      collectionPage.classList.remove('open');
-      collectionPage.style.overflowY = 'hidden';
-      document.body.style.overflow = '';
+      collectionPage.classList.remove('open'); collectionPage.style.overflowY = 'hidden'; document.body.style.overflow = '';
     });
   }
-
-  // ══════════════════════════════════════════
-  // NAVIGATION ADDITIONS (including galleries)
-  // ══════════════════════════════════════════
-  const mainSite = document.getElementById('mainSiteContent');
-  const pages = {
-    collections: document.getElementById('collectionsPage'),
-    lookbook: document.getElementById('lookbookPage'),
-    editorial: document.getElementById('editorialPage'),
-    admission: document.getElementById('admissionPage'),
-    galleries: document.getElementById('galleriesPage')
-  };
-  const backBtn = document.getElementById('backToMainBtn');
-
-  function showMainSite() {
-    mainSite.style.display = 'block';
-    for (let p in pages) pages[p].style.display = 'none';
-    backBtn.style.display = 'none';
-    document.body.style.overflow = '';
-  }
-
-  function showPage(pageId) {
-    mainSite.style.display = 'none';
-    for (let p in pages) pages[p].style.display = 'none';
-    if (pages[pageId]) {
-      pages[pageId].style.display = 'block';
-      backBtn.style.display = 'flex';
-    }
-    document.getElementById('mobileDrawer').classList.remove('open');
-    document.getElementById('navHamburger').classList.remove('open');
-  }
-
-  document.querySelectorAll('.nav-link-page').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const page = link.dataset.page;
-      showPage(page);
-    });
-  });
-
-  document.getElementById('navAdmissionBtn').addEventListener('click', () => showPage('admission'));
-  document.getElementById('mobileAdmissionBtn').addEventListener('click', () => {
-    showPage('admission');
-    document.getElementById('mobileDrawer').classList.remove('open');
-    document.getElementById('navHamburger').classList.remove('open');
-  });
-
-  backBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    showMainSite();
-  });
-
-  showMainSite();
 </script>
-
-<!-- collection overlay close (if exists) -->
-<style>
-  .cp-close-btn { cursor: none; }
-</style>
+<style>.cp-close-btn { cursor: none; }</style>
 </body>
 </html>
