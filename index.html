@@ -1523,7 +1523,7 @@ footer { padding: 36px 20px 0; }
   </div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-total"><span>Total</span><span id="cartTotal">$0</span></div>
-  <button class="checkout-btn">checkout (demo)</button>
+  <button class="checkout-btn">checkout</button>
 </div>
 
 <!-- ORIGINAL COLLECTION OVERLAY (preserved) -->
@@ -1748,13 +1748,13 @@ footer { padding: 36px 20px 0; }
     authActionBtn.addEventListener('click', () => {
       if (authMode === 'signup') {
         if (!authName.value.trim() || !authPhone.value.trim() || !authLocation.value.trim() || !authEmail.value.trim() || !authPass.value.trim()) {
-          alert('Please fill in all fields (demo)');
+          alert('Please fill in all fields');
           return;
         }
         console.log('Signup:', { name: authName.value, phone: authPhone.value, location: authLocation.value, email: authEmail.value });
       } else {
         if (!authEmail.value.trim() || !authPass.value.trim()) {
-          alert('Please enter email and password (demo)');
+          alert('Please enter email and password');
           return;
         }
       }
