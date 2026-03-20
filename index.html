@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>DAASEBRE — African Wear Fashion (full cart + lookbook pick + auth gate + geolocation)</title>
+<title>DAASEBRE — African Wear Fashion (full cart + lookbook pick + auth gate + geolocation + Firebase RTDB)</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Syncopate:wght@400;700&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <style>
   /* ----- all original styles (complete, unchanged) plus cart & auth additions ----- */
   :root {
@@ -990,7 +993,7 @@ footer { padding: 36px 20px 0; }
 @media (max-width: 480px) { .cp-grid { grid-template-columns: 1fr; } .cp-hero-title { font-size: clamp(36px, 12vw, 52px); } .cp-filters { gap: 6px; } .cp-filter-btn { padding: 8px 12px; } }
 @media (hover: none) { .cp-close-btn, .cp-filter-btn { cursor: pointer; } }
 
-/* ---------- CART & STYLE PICKER ADDITIONS (unchanged) ---------- */
+/* ---------- CART & STYLE PICKER ADDITIONS (enhanced) ---------- */
 .cart-icon {
   position: relative; margin-left: 20px; cursor: pointer;
   width: 44px; height: 44px; border-radius: 50%;
@@ -1034,7 +1037,7 @@ footer { padding: 36px 20px 0; }
   position: fixed; inset:0; z-index:1000; background:rgba(4,4,10,0.8); backdrop-filter:blur(20px);
   display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none;
   transition:opacity 0.3s;
-  padding:16px; /* safe area */
+  padding:16px;
 }
 .auth-overlay.open { opacity:1; pointer-events:all; }
 .auth-modal {
@@ -1042,7 +1045,7 @@ footer { padding: 36px 20px 0; }
   padding:32px 24px; max-width:440px; width:100%; position:relative;
   max-height:90vh; overflow-y:auto; -webkit-overflow-scrolling:touch;
   box-shadow:0 20px 60px rgba(0,0,0,0.5);
-  margin:auto; /* center with keyboard open */
+  margin:auto;
 }
 .auth-modal h2 { font-family:'Cormorant Garamond'; font-size:32px; font-weight:300; margin-bottom:24px; }
 .auth-modal .close-auth {
@@ -1062,7 +1065,6 @@ footer { padding: 36px 20px 0; }
 .auth-switch span { color:var(--accent-aqua); text-decoration:underline; cursor:none; }
 .geo-hint { font-size:11px; color:var(--accent-aqua); margin:-10px 0 16px; text-align:right; cursor:none; display:inline-block; float:right; }
 
-/* ensure content doesn't hide behind keyboard on mobile */
 @media (max-height: 500px) {
   .auth-modal { padding:24px 20px; }
   .auth-modal h2 { font-size:28px; margin-bottom:16px; }
@@ -1089,13 +1091,11 @@ footer { padding: 36px 20px 0; }
   <div class="blob blob-4"></div>
 </div>
 
-<!-- ENHANCED AUTH MODAL (with name, phone, location, geolocation) -->
+<!-- ENHANCED AUTH MODAL -->
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-modal">
     <button class="close-auth" id="closeAuthBtn">✕</button>
     <h2 id="authTitle">Create account</h2>
-    
-    <!-- signup fields (always visible, but login mode hides extra fields via js) -->
     <div id="signupFields">
       <input type="text" class="auth-field" placeholder="Full name" id="authName">
       <div class="auth-row">
@@ -1108,7 +1108,6 @@ footer { padding: 36px 20px 0; }
     </div>
     <input type="email" class="auth-field" placeholder="Email address" id="authEmail">
     <input type="password" class="auth-field" placeholder="Password" id="authPass">
-    
     <button class="auth-btn" id="authActionBtn">Continue</button>
     <div class="auth-switch" id="authSwitch">
       Already have an account? <span id="toggleAuthMode">Log in</span>
@@ -1116,7 +1115,7 @@ footer { padding: 36px 20px 0; }
   </div>
 </div>
 
-<!-- NAV (with cart icon) -->
+<!-- NAV -->
 <nav>
   <div class="nav-logo-wrapper">
     <img src="logo.jpg" alt="Daasebre logo" class="nav-logo-img" onerror="this.style.display='none'">
@@ -1151,14 +1150,13 @@ footer { padding: 36px 20px 0; }
     <li><a href="#" class="nav-link-page" data-page="editorial">Editorial</a></li>
     <li><a href="#" class="nav-link-page" data-page="galleries">Galleries</a></li>
   </ul>
-  <!-- NEW: Sign Up / Log Out button at bottom of menu drawer -->
   <button class="nav-cta" id="mobileAuthBtn" style="width:100%;margin-top:32px;">Log In</button>
   <button class="nav-cta" style="width:100%;margin-top:16px;" id="mobileAdmissionBtn">ADMISSION</button>
 </div>
 
-<!-- MAIN SITE CONTENT (all original sections - COMPLETE) -->
+<!-- MAIN SITE CONTENT -->
 <div id="mainSiteContent">
-  <!-- HERO (original) -->
+  <!-- HERO -->
   <section id="hero">
     <div class="hero-slides" id="heroSlides">
       <div class="hero-slide active" style="background-image:url('CEO.jpg?w=1600&q=85&fit=crop')"></div>
@@ -1210,7 +1208,7 @@ footer { padding: 36px 20px 0; }
     <button class="hero-arrow hero-arrow-next" id="heroNext" aria-label="Next">→</button>
   </section>
 
-  <!-- TICKER (original) -->
+  <!-- TICKER -->
   <div class="ticker-wrap">
     <div class="ticker" id="ticker">
       <div class="ticker-item">DAASEBRE Fashion & Trainee</div>
@@ -1228,53 +1226,16 @@ footer { padding: 36px 20px 0; }
     </div>
   </div>
 
-  <!-- COLLECTIONS (original) with cart buttons -->
+  <!-- COLLECTIONS (Firebase "featured") -->
   <section id="collections">
     <div class="section-header reveal">
       <div><div class="section-label">Featured Pieces</div><h2 class="section-title">Featured <em>Pieces</em></h2></div>
       <div class="section-nav"><button class="s-nav-btn">←</button><button class="s-nav-btn">→</button></div>
     </div>
-    <div class="cards-grid">
-      <div class="card card-1 reveal reveal-delay-1" data-id="1" data-name="Aurore Gown" data-price="2840" data-img="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=85&fit=crop&crop=top">
-        <div class="card-img-wrap">
-          <div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=85&fit=crop&crop=top" alt="Aurore Gown" loading="lazy"></div>
-          <div class="card-glass"></div>
-          <div class="card-tag">New</div>
-        </div>
-        <div class="card-info">
-          <div class="card-name">Aurore Gown</div>
-          <div class="card-sub">Crystalline Collection · S / M / L</div>
-          <div class="card-price"><span class="price-val">₵2,840</span><button class="add-btn" data-collection>+</button></div>
-        </div>
-      </div>
-      <div class="card card-2 reveal reveal-delay-2" data-id="2" data-name="Prism Jacket" data-price="1560" data-img="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=85&fit=crop&crop=top">
-        <div class="card-img-wrap">
-          <div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=85&fit=crop&crop=top" alt="Prism Jacket" loading="lazy"></div>
-          <div class="card-glass"></div>
-          <div class="card-tag">Limited</div>
-        </div>
-        <div class="card-info">
-          <div class="card-name">Prism Jacket</div>
-          <div class="card-sub">Refraction Series · XS / S / M</div>
-          <div class="card-price"><span class="price-val">₵1,560</span><button class="add-btn" data-collection>+</button></div>
-        </div>
-      </div>
-      <div class="card card-3 reveal reveal-delay-3" data-id="3" data-name="Lumière Set" data-price="3200" data-img="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=85&fit=crop&crop=top">
-        <div class="card-img-wrap">
-          <div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=85&fit=crop&crop=top" alt="Lumière Set" loading="lazy"></div>
-          <div class="card-glass"></div>
-          <div class="card-tag">Exclusive</div>
-        </div>
-        <div class="card-info">
-          <div class="card-name">Lumière Set</div>
-          <div class="card-sub">Clarity Line · S / M</div>
-          <div class="card-price"><span class="price-val">₵3,200</span><button class="add-btn" data-collection>+</button></div>
-        </div>
-      </div>
-    </div>
+    <div class="cards-grid" id="featuredGrid"></div>
   </section>
 
-  <!-- FEATURE (original) -->
+  <!-- FEATURE -->
   <section id="feature">
     <div class="feature-visual reveal">
       <div class="glass-panel gp-behind"></div>
@@ -1305,81 +1266,15 @@ footer { padding: 36px 20px 0; }
     </div>
   </section>
 
-  <!-- EDITORIAL (original) -->
+  <!-- EDITORIAL (Firebase "editorial") -->
   <section id="editorial">
     <div class="section-header reveal">
       <div><div class="section-label">Editorial</div><h2 class="section-title">The <em>Magazine</em></h2></div>
     </div>
-    <div class="editorial-grid">
-      <div class="ed-card ed-1 reveal">
-        <div class="ed-card-inner">
-          <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=900&q=85&fit=crop&crop=top" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy"></div>
-          <div class="ed-overlay"></div>
-          <div class="ed-glass-top"></div>
-          <div class="ed-glass-left"></div>
-          <div class="ed-content">
-            <div class="ed-cat">Cover Story</div>
-            <div class="ed-title">Glass & Shadow: The New Language of Luxury</div>
-            <div class="ed-meta">By Elara Voss · April 2026 · 12 min read</div>
-          </div>
-        </div>
-      </div>
-      <div class="ed-card ed-2 reveal reveal-delay-1">
-        <div class="ed-card-inner">
-          <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&q=80&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy"></div>
-          <div class="ed-overlay"></div>
-          <div class="ed-glass-top"></div>
-          <div class="ed-glass-left"></div>
-          <div class="ed-content">
-            <div class="ed-cat">Runway</div>
-            <div class="ed-title">Paris After Midnight</div>
-            <div class="ed-meta">SS 2026 Recap</div>
-          </div>
-        </div>
-      </div>
-      <div class="ed-card ed-3 reveal reveal-delay-2">
-        <div class="ed-card-inner">
-          <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&q=80&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy"></div>
-          <div class="ed-overlay"></div>
-          <div class="ed-glass-top"></div>
-          <div class="ed-glass-left"></div>
-          <div class="ed-content">
-            <div class="ed-cat">Atelier</div>
-            <div class="ed-title">Making AfricanSilk</div>
-            <div class="ed-meta">Process & Material</div>
-          </div>
-        </div>
-      </div>
-      <div class="ed-card ed-4 reveal reveal-delay-1">
-        <div class="ed-card-inner">
-          <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy"></div>
-          <div class="ed-overlay"></div>
-          <div class="ed-glass-top"></div>
-          <div class="ed-glass-left"></div>
-          <div class="ed-content">
-            <div class="ed-cat">Profile</div>
-            <div class="ed-title">Mireille & the Architecture of Skin</div>
-            <div class="ed-meta">Photographer: Noa Winters</div>
-          </div>
-        </div>
-      </div>
-      <div class="ed-card ed-5 reveal reveal-delay-2">
-        <div class="ed-card-inner">
-          <div class="ed-bg" style="background:none"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=85&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" loading="lazy"></div>
-          <div class="ed-overlay"></div>
-          <div class="ed-glass-top"></div>
-          <div class="ed-glass-left"></div>
-          <div class="ed-content">
-            <div class="ed-cat">Culture</div>
-            <div class="ed-title">When Art Wears You</div>
-            <div class="ed-meta">Essay · 8 min</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="editorial-grid" id="editorialGrid"></div>
   </section>
 
-  <!-- NEWSLETTER (original) -->
+  <!-- NEWSLETTER -->
   <section id="newsletter">
     <div class="nl-glass glass reveal">
       <div class="section-label" style="justify-content:center;margin-bottom:24px;">Stay in the Light</div>
@@ -1392,7 +1287,7 @@ footer { padding: 36px 20px 0; }
     </div>
   </section>
 
-  <!-- FOOTER (original) -->
+  <!-- FOOTER -->
   <footer>
     <div class="footer-brand-row">
       <div class="footer-brand-left">
@@ -1418,498 +1313,231 @@ footer { padding: 36px 20px 0; }
   </footer>
 </div>
 
-<!-- NEW PAGES (complete) -->
-<!-- COLLECTIONS PAGE -->
-<div id="collectionsPage" class="page-container" style="display:none;">
-  <div class="section-header">
-    <div class="section-label">Full Archive</div>
-    <h1 class="page-hero-title">The Collections</h1>
-    <p class="page-hero-sub">African heritage, bridal couture, and tailored suiting — each piece a crystalline study.</p>
-  </div>
-  <div class="collection-gallery">
-    <div class="card card-1" data-id="4" data-name="Aurore Gown" data-price="2840" data-img="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format">
-      <div class="card-img-wrap"><div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format" alt="gown" loading="lazy"></div><div class="card-glass"></div><div class="card-tag">New</div></div>
-      <div class="card-info"><div class="card-name">Aurore Gown</div><div class="card-sub">African Heritage</div><div class="card-price"><span class="price-val">₵2,840</span><button class="add-btn" data-collection>+</button></div></div>
-    </div>
-    <div class="card card-2" data-id="5" data-name="Prism Jacket" data-price="1560" data-img="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&auto=format">
-      <div class="card-img-wrap"><div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&auto=format" alt="jacket" loading="lazy"></div><div class="card-glass"></div><div class="card-tag">Limited</div></div>
-      <div class="card-info"><div class="card-name">Prism Jacket</div><div class="card-sub">Tailored Suiting</div><div class="card-price"><span class="price-val">₵1,560</span><button class="add-btn" data-collection>+</button></div></div>
-    </div>
-    <div class="card card-3" data-id="6" data-name="Lumière Set" data-price="3200" data-img="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format">
-      <div class="card-img-wrap"><div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format" alt="set" loading="lazy"></div><div class="card-glass"></div><div class="card-tag">Exclusive</div></div>
-      <div class="card-info"><div class="card-name">Lumière Set</div><div class="card-sub">Bridal Couture</div><div class="card-price"><span class="price-val">₵3,200</span><button class="add-btn" data-collection>+</button></div></div>
-    </div>
-    <div class="card card-1" data-id="7" data-name="Noir Crystal" data-price="4200" data-img="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&auto=format">
-      <div class="card-img-wrap"><div class="card-img-bg card-img-photo"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&auto=format" alt="evening" loading="lazy"></div><div class="card-glass"></div><div class="card-tag">Archive</div></div>
-      <div class="card-info"><div class="card-name">Noir Crystal</div><div class="card-sub">Evening Wear</div><div class="card-price"><span class="price-val">₵4,200</span><button class="add-btn" data-collection>+</button></div></div>
-    </div>
-  </div>
-</div>
-
-<!-- LOOKBOOK PAGE with style picker -->
-<div id="lookbookPage" class="page-container" style="display:none;">
-  <div class="section-header">
-    <div class="section-label">Visual Diary</div>
-    <h1 class="page-hero-title">Lookbook</h1>
-    <p class="page-hero-sub">Editorial styles, campaign imagery and motion — pick your favorite.</p>
-  </div>
-  <div class="lookbook-grid">
-    <div class="lookbook-card" data-look="Glass & Shadow"><div class="lookbook-media"><img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=600&auto=format" loading="lazy"></div><div class="lookbook-caption"><small>SS 2026</small>Glass & Shadow</div><button class="pick-style-btn">PICK THIS STYLE</button></div>
-    <div class="lookbook-card" data-look="Crystalline Movement"><div class="lookbook-media"><video poster="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&auto=format" controls><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video></div><div class="lookbook-caption"><small>Campaign</small>Crystalline Movement</div><button class="pick-style-btn">PICK THIS STYLE</button></div>
-    <div class="lookbook-card" data-look="Mireille"><div class="lookbook-media"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&auto=format" loading="lazy"></div><div class="lookbook-caption"><small>Portrait</small>Mireille</div><button class="pick-style-btn">PICK THIS STYLE</button></div>
-    <div class="lookbook-card" data-look="Prismatica"><div class="lookbook-media"><video poster="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format" controls><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video></div><div class="lookbook-caption"><small>Film</small>Prismatica</div><button class="pick-style-btn">PICK THIS STYLE</button></div>
-    <div class="lookbook-card" data-look="Quiet Light"><div class="lookbook-media"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&auto=format" loading="lazy"></div><div class="lookbook-caption"><small>Backstage</small>Quiet Light</div><button class="pick-style-btn">PICK THIS STYLE</button></div>
-    <div class="lookbook-card" data-look="Pattern Study"><div class="lookbook-media"><video poster="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format" controls><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video></div><div class="lookbook-caption"><small>Studio</small>Pattern Study</div><button class="pick-style-btn">PICK THIS STYLE</button></div>
-  </div>
-</div>
-
-<!-- GALLERIES PAGE -->
-<div id="galleriesPage" class="page-container" style="display:none;">
-  <div class="section-header">
-    <div class="section-label">Events & Archives</div>
-    <h1 class="page-hero-title">Galleries</h1>
-    <p class="page-hero-sub">Moments from runway shows, private events, and behind‑the‑scenes — captured in light.</p>
-  </div>
-  <div class="lookbook-grid">
-    <div class="lookbook-card"><div class="lookbook-media"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format" loading="lazy"></div><div class="lookbook-caption"><small>SS 2026 Afterparty</small>Paris Event</div></div>
-    <div class="lookbook-card"><div class="lookbook-media"><video poster="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&auto=format" controls><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video></div><div class="lookbook-caption"><small>Runway film</small>Glass & Shadow</div></div>
-    <div class="lookbook-card"><div class="lookbook-media"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&auto=format" loading="lazy"></div><div class="lookbook-caption"><small>Atelier event</small>Meet the designer</div></div>
-    <div class="lookbook-card"><div class="lookbook-media"><video poster="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&auto=format" controls><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video></div><div class="lookbook-caption"><small>VIP preview</small>African collection</div></div>
-    <div class="lookbook-card"><div class="lookbook-media"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format" loading="lazy"></div><div class="lookbook-caption"><small>Backstage</small>Bridal showcase</div></div>
-    <div class="lookbook-card"><div class="lookbook-media"><video poster="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format" controls><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4"></video></div><div class="lookbook-caption"><small>Interview</small>Creative director</div></div>
-  </div>
-</div>
-
-<!-- ADMISSION PAGE -->
-<div id="admissionPage" class="page-container" style="display:none;">
-  <div class="section-header">
-    <div class="section-label">Join the atelier</div>
-    <h1 class="page-hero-title">Admission</h1>
-    <p class="page-hero-sub">Apply for the DAASEBRE fashion & trainee program. Future African designers start here.</p>
-  </div>
-  <div class="admission-form glass">
-    <div class="form-row"><div class="form-group"><label>Full name</label><input type="text" placeholder=" "></div><div class="form-group"><label>Email</label><input type="email" placeholder=" "></div></div>
-    <div class="form-row"><div class="form-group"><label>Phone</label><input type="tel" placeholder=" "></div><div class="form-group"><label>Date of birth</label><input type="date" placeholder=" "></div></div>
-    <div class="form-group"><label>Program of interest</label><select><option>Fashion design (African wear)</option><option>Pattern making / Atelier</option><option>Textile innovation</option><option>Creative direction</option></select></div>
-    <div class="form-group"><label>Portfolio / CV link</label><input type="url" placeholder="https://..."></div>
-    <div class="form-group"><label>Why DAASEBRE? (short statement)</label><textarea placeholder="Tell us about your vision..."></textarea></div>
-    <button class="btn-submit">Submit application</button>
-    <p style="font-size:11px; color:var(--text-secondary); margin-top:8px;">We'll respond within 2 weeks. All trainee positions include mentorship.</p>
-  </div>
-</div>
-
-<!-- EDITORIAL PAGE -->
-<div id="editorialPage" class="page-container" style="display:none;">
-  <div class="section-header">
-    <div class="section-label">Stories</div>
-    <h1 class="page-hero-title">The Magazine</h1>
-    <p class="page-hero-sub">Essays, interviews, and visual narratives from the crystalline world.</p>
-  </div>
-  <div class="editorial-grid" style="margin-top:40px;">
-    <div class="ed-card ed-1"><div class="ed-card-inner"><div class="ed-bg"><img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=900&auto=format"></div><div class="ed-overlay"></div><div class="ed-content"><div class="ed-cat">Cover Story</div><div class="ed-title">Glass & Shadow</div><div class="ed-meta">By Elara Voss</div></div></div></div>
-    <div class="ed-card ed-2"><div class="ed-card-inner"><div class="ed-bg"><img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600&auto=format"></div><div class="ed-overlay"></div><div class="ed-content"><div class="ed-cat">Runway</div><div class="ed-title">Paris After Midnight</div></div></div></div>
-    <div class="ed-card ed-3"><div class="ed-card-inner"><div class="ed-bg"><img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&auto=format"></div><div class="ed-overlay"></div><div class="ed-content"><div class="ed-cat">Atelier</div><div class="ed-title">Making AfricanSilk</div></div></div></div>
-    <div class="ed-card ed-4"><div class="ed-card-inner"><div class="ed-bg"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&auto=format"></div><div class="ed-overlay"></div><div class="ed-content"><div class="ed-cat">Profile</div><div class="ed-title">Mireille & the Architecture of Skin</div></div></div></div>
-    <div class="ed-card ed-5"><div class="ed-card-inner"><div class="ed-bg"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&auto=format"></div><div class="ed-overlay"></div><div class="ed-content"><div class="ed-cat">Culture</div><div class="ed-title">When Art Wears You</div></div></div></div>
-  </div>
-</div>
-
-<!-- back to main button -->
+<!-- NEW PAGES -->
+<div id="collectionsPage" class="page-container" style="display:none;"><div class="section-header"><div class="section-label">Full Archive</div><h1 class="page-hero-title">The Collections</h1><p class="page-hero-sub">African heritage, bridal couture, and tailored suiting — each piece a crystalline study.</p></div><div class="collection-gallery" id="collectionsGallery"></div></div>
+<div id="lookbookPage" class="page-container" style="display:none;"><div class="section-header"><div class="section-label">Visual Diary</div><h1 class="page-hero-title">Lookbook</h1><p class="page-hero-sub">Editorial styles, campaign imagery and motion — pick your favorite.</p></div><div class="lookbook-grid" id="lookbookGrid"></div></div>
+<div id="galleriesPage" class="page-container" style="display:none;"><div class="section-header"><div class="section-label">Events & Archives</div><h1 class="page-hero-title">Galleries</h1><p class="page-hero-sub">Moments from runway shows, private events, and behind‑the‑scenes — captured in light.</p></div><div class="lookbook-grid" id="galleriesGrid"></div></div>
+<div id="admissionPage" class="page-container" style="display:none;"><div class="section-header"><div class="section-label">Join the atelier</div><h1 class="page-hero-title">Admission</h1><p class="page-hero-sub">Apply for the DAASEBRE fashion & trainee program. Future African designers start here.</p></div><div class="admission-form glass" id="admissionFormContainer"><div class="form-row"><div class="form-group"><label>Full name</label><input type="text" id="admissionName"></div><div class="form-group"><label>Email</label><input type="email" id="admissionEmail"></div></div><div class="form-row"><div class="form-group"><label>Phone</label><input type="tel" id="admissionPhone"></div><div class="form-group"><label>Date of birth</label><input type="date" id="admissionDob"></div></div><div class="form-group"><label>Program of interest</label><select id="admissionProgram"><option>Fashion design (African wear)</option><option>Pattern making / Atelier</option><option>Textile innovation</option><option>Creative direction</option></select></div><div class="form-group"><label>Portfolio / CV link</label><input type="url" id="admissionPortfolio"></div><div class="form-group"><label>Why DAASEBRE? (short statement)</label><textarea id="admissionStatement"></textarea></div><button class="btn-submit" id="submitAdmissionBtn">Submit application</button><p style="font-size:11px; color:var(--text-secondary); margin-top:8px;">We'll respond within 2 weeks. All trainee positions include mentorship.</p></div></div>
+<div id="editorialPage" class="page-container" style="display:none;"><div class="section-header"><div class="section-label">Stories</div><h1 class="page-hero-title">The Magazine</h1><p class="page-hero-sub">Essays, interviews, and visual narratives from the crystalline world.</p></div><div class="editorial-grid" id="editorialFullGrid"></div></div>
 <a href="#" id="backToMainBtn" class="page-back" style="display:none;">✕</a>
-
-<!-- CART SIDEBAR -->
-<div class="cart-sidebar" id="cartSidebar">
-  <div class="cart-header">
-    <span class="cart-title">Your light cart</span>
-    <button class="cart-close" id="cartClose">✕</button>
-  </div>
-  <div class="cart-items" id="cartItems"></div>
-  <div class="cart-total"><span>Total</span><span id="cartTotal">₵0</span></div>
-  <button class="checkout-btn">checkout</button>
-</div>
-
-<!-- ORIGINAL COLLECTION OVERLAY (preserved) -->
-<div id="collectionPage" class="cp-overlay"><!-- original overlay content (kept) --></div>
+<div class="cart-sidebar" id="cartSidebar"><div class="cart-header"><span class="cart-title">Your light cart</span><button class="cart-close" id="cartClose">✕</button></div><div class="cart-items" id="cartItems"></div><div class="cart-total"><span>Total</span><span id="cartTotal">₵0</span></div><button class="checkout-btn">checkout</button></div>
 
 <script>
-  (function() {
-    // ----- COMPLETE ORIGINAL SCRIPT (cursor, slideshow, tilt, reveal, mobile nav) -----
-    const SLIDES = [
-      { img: 'CEO.jpg?w=1600&q=85&fit=crop', eyebrow: 'Oppong Asare Peter', lines: ['Meet','Our','CEO'], italic: 1, body: 'Highly motivated designer crafting stories through fabric and form. Exploring the intersection of streetwear and haute couture. ✂️ — fashion that bends reality, not rules.' },
-      { img: 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=1600&q=85&fit=crop&crop=top', eyebrow: 'African Heritage', lines: ['Rooted in','Radiance','Reborn'], italic: 1, body: 'Ancestral craft elevated to couture. Kente, adinkra, and ankara silhouettes woven through crystalline light.' },
-      { img: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&q=85&fit=crop', eyebrow: 'Bridal Couture', lines: ['Dressed','in','Forever'], italic: 2, body: 'Gowns that dissolve the boundary between fabric and light. Every veil, train and bodice crafted to hold the moment still.' },
-      { img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1600&q=85&fit=crop&crop=top', eyebrow: 'Tailored Suiting', lines: ['Power','Dis-','tilled'], italic: 0, body: 'Structured precision meets African-Wear fabric. Suits engineered for authority, softened by crystalline detail.' },
-      { img: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1600&q=85&fit=crop&crop=top', eyebrow: 'New Arrivals', lines: ['The','New','Now'], italic: 1, body: 'Fresh drops from the atelier — limited runs, lifetime pieces. Reserve yours before the world finds out.' },
-    ];
-    const INTERVAL = 6000;
-    const TICK = 60;
-    let slideIdx = 0;
-    let slideTimer = null;
-    let progressTimer = null;
-    let elapsed = 0;
-    let isAnimating = false;
+// Firebase Config & Init
+const firebaseConfig = {
+  apiKey: "AIzaSyDhqCQgnU4i9qwQBePgoLifDDS_A7vUrR0",
+  authDomain: "daasebre-94aef.firebaseapp.com",
+  databaseURL: "https://daasebre-94aef-default-rtdb.firebaseio.com",
+  projectId: "daasebre-94aef",
+  storageBucket: "daasebre-94aef.firebasestorage.app",
+  messagingSenderId: "323322906130",
+  appId: "1:323322906130:web:c2a8ae0bd20b460f55bacb",
+  measurementId: "G-10SK6CQXKV"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-    const slideEls = document.querySelectorAll('.hero-slide');
-    const dotEls = document.querySelectorAll('.hero-dot');
-    const progressBar = document.getElementById('heroProgressBar');
-    const counterEl = document.getElementById('heroCountCurrent');
-    const eyebrowEl = document.querySelector('.eyebrow-text');
-    const line1El = document.getElementById('htLine1');
-    const line2El = document.getElementById('htLine2');
-    const line3El = document.getElementById('htLine3');
-    const bodyEl = document.getElementById('heroBody');
-    const lineEls = [line1El, line2El, line3El];
+// ---- ORIGINAL CORE FUNCTIONALITY (cursor, slideshow, tilt, reveal, mobile nav) ----
+const SLIDES = [
+  { img: 'CEO.jpg?w=1600&q=85&fit=crop', eyebrow: 'Oppong Asare Peter', lines: ['Meet','Our','CEO'], italic: 1, body: 'Highly motivated designer crafting stories through fabric and form. Exploring the intersection of streetwear and haute couture. ✂️ — fashion that bends reality, not rules.' },
+  { img: 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=1600&q=85&fit=crop&crop=top', eyebrow: 'African Heritage', lines: ['Rooted in','Radiance','Reborn'], italic: 1, body: 'Ancestral craft elevated to couture. Kente, adinkra, and ankara silhouettes woven through crystalline light.' },
+  { img: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&q=85&fit=crop', eyebrow: 'Bridal Couture', lines: ['Dressed','in','Forever'], italic: 2, body: 'Gowns that dissolve the boundary between fabric and light. Every veil, train and bodice crafted to hold the moment still.' },
+  { img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1600&q=85&fit=crop&crop=top', eyebrow: 'Tailored Suiting', lines: ['Power','Dis-','tilled'], italic: 0, body: 'Structured precision meets African-Wear fabric. Suits engineered for authority, softened by crystalline detail.' },
+  { img: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1600&q=85&fit=crop&crop=top', eyebrow: 'New Arrivals', lines: ['The','New','Now'], italic: 1, body: 'Fresh drops from the atelier — limited runs, lifetime pieces. Reserve yours before the world finds out.' },
+];
+const INTERVAL = 6000, TICK = 60;
+let slideIdx = 0, slideTimer = null, progressTimer = null, elapsed = 0, isAnimating = false;
+const slideEls = document.querySelectorAll('.hero-slide'), dotEls = document.querySelectorAll('.hero-dot'), progressBar = document.getElementById('heroProgressBar'), counterEl = document.getElementById('heroCountCurrent'), eyebrowEl = document.querySelector('.eyebrow-text'), line1El = document.getElementById('htLine1'), line2El = document.getElementById('htLine2'), line3El = document.getElementById('htLine3'), bodyEl = document.getElementById('heroBody'), lineEls = [line1El, line2El, line3El];
+function padTwo(n) { return String(n + 1).padStart(2, '0'); }
+function applySlideContent(idx, animate) {
+  const s = SLIDES[idx];
+  counterEl.style.opacity = '0'; setTimeout(() => { counterEl.textContent = padTwo(idx); counterEl.style.opacity = '1'; }, 200);
+  dotEls.forEach((d, i) => d.classList.toggle('active', i === idx));
+  if (!animate) {
+    eyebrowEl.textContent = s.eyebrow; eyebrowEl.classList.add('visible');
+    s.lines.forEach((txt, i) => { const inner = lineEls[i].querySelector('.ht-inner'); inner.textContent = txt; lineEls[i].classList.add('visible'); });
+    bodyEl.textContent = s.body; bodyEl.classList.add('visible'); return;
+  }
+  eyebrowEl.classList.remove('visible'); eyebrowEl.classList.add('exiting');
+  bodyEl.classList.remove('visible'); bodyEl.classList.add('exiting');
+  lineEls.forEach(l => { l.classList.remove('visible'); l.classList.add('exiting'); });
+  setTimeout(() => {
+    eyebrowEl.classList.remove('exiting'); bodyEl.classList.remove('exiting');
+    lineEls.forEach(l => l.classList.remove('exiting'));
+    eyebrowEl.textContent = s.eyebrow; bodyEl.textContent = s.body;
+    s.lines.forEach((txt, i) => { const inner = lineEls[i].querySelector('.ht-inner'); inner.textContent = txt; });
+    requestAnimationFrame(() => { eyebrowEl.classList.add('visible'); bodyEl.classList.add('visible'); lineEls.forEach(l => l.classList.add('visible')); });
+  }, 550);
+}
+function activateSlide(idx, animate = true) {
+  if (isAnimating && animate) return;
+  isAnimating = true;
+  const prev = slideEls[slideIdx];
+  prev.classList.remove('active'); prev.classList.add('leaving');
+  setTimeout(() => prev.classList.remove('leaving'), 1400);
+  slideIdx = ((idx % SLIDES.length) + SLIDES.length) % SLIDES.length;
+  slideEls[slideIdx].classList.add('active');
+  applySlideContent(slideIdx, animate);
+  setTimeout(() => { isAnimating = false; }, 1400);
+}
+function startProgress() {
+  clearInterval(progressTimer); elapsed = 0;
+  progressTimer = setInterval(() => { elapsed += TICK; const pct = Math.min((elapsed / INTERVAL) * 100, 100); progressBar.style.width = pct + '%'; if (elapsed >= INTERVAL) { clearInterval(progressTimer); progressBar.style.width = '0%'; activateSlide(slideIdx + 1); setTimeout(startProgress, 100); } }, TICK);
+}
+function goTo(idx) { clearInterval(progressTimer); progressBar.style.width = '0%'; activateSlide(idx); setTimeout(startProgress, 100); }
+dotEls.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.idx)));
+document.getElementById('heroPrev')?.addEventListener('click', () => goTo(slideIdx - 1));
+document.getElementById('heroNext')?.addEventListener('click', () => goTo(slideIdx + 1));
+document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') goTo(slideIdx + 1); if (e.key === 'ArrowLeft') goTo(slideIdx - 1); });
+const heroSection = document.getElementById('hero');
+heroSection?.addEventListener('mouseenter', () => clearInterval(progressTimer));
+heroSection?.addEventListener('mouseleave', () => startProgress());
+applySlideContent(0, false);
+setTimeout(startProgress, 1600);
 
-    function padTwo(n) { return String(n + 1).padStart(2, '0'); }
-    function applySlideContent(idx, animate) {
-      const s = SLIDES[idx];
-      counterEl.style.opacity = '0';
-      setTimeout(() => { counterEl.textContent = padTwo(idx); counterEl.style.opacity = '1'; }, 200);
-      dotEls.forEach((d, i) => d.classList.toggle('active', i === idx));
-      if (!animate) {
-        eyebrowEl.textContent = s.eyebrow;
-        eyebrowEl.classList.add('visible');
-        s.lines.forEach((txt, i) => {
-          const inner = lineEls[i].querySelector('.ht-inner');
-          inner.textContent = txt;
-          lineEls[i].classList.add('visible');
-        });
-        bodyEl.textContent = s.body;
-        bodyEl.classList.add('visible');
-        return;
-      }
-      eyebrowEl.classList.remove('visible'); eyebrowEl.classList.add('exiting');
-      bodyEl.classList.remove('visible'); bodyEl.classList.add('exiting');
-      lineEls.forEach(l => { l.classList.remove('visible'); l.classList.add('exiting'); });
-      setTimeout(() => {
-        eyebrowEl.classList.remove('exiting'); bodyEl.classList.remove('exiting');
-        lineEls.forEach(l => l.classList.remove('exiting'));
-        eyebrowEl.textContent = s.eyebrow;
-        bodyEl.textContent = s.body;
-        s.lines.forEach((txt, i) => {
-          const inner = lineEls[i].querySelector('.ht-inner');
-          inner.textContent = txt;
-          const shouldBeEm = (i === s.italic);
-          if (shouldBeEm && lineEls[i].tagName !== 'EM') {
-            lineEls[i].style.cssText += ';font-style:italic;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,0.4)';
-          } else if (!shouldBeEm) {
-            lineEls[i].style.fontStyle = ''; lineEls[i].style.color = ''; lineEls[i].style.webkitTextStroke = '';
-          }
-        });
-        requestAnimationFrame(() => {
-          eyebrowEl.classList.add('visible'); bodyEl.classList.add('visible');
-          lineEls.forEach(l => l.classList.add('visible'));
-        });
-      }, 550);
-    }
-    function activateSlide(idx, animate = true) {
-      if (isAnimating && animate) return;
-      isAnimating = true;
-      const prev = slideEls[slideIdx];
-      prev.classList.remove('active'); prev.classList.add('leaving');
-      setTimeout(() => prev.classList.remove('leaving'), 1400);
-      slideIdx = ((idx % SLIDES.length) + SLIDES.length) % SLIDES.length;
-      slideEls[slideIdx].classList.add('active');
-      applySlideContent(slideIdx, animate);
-      setTimeout(() => { isAnimating = false; }, 1400);
-    }
-    function startProgress() {
-      clearInterval(progressTimer); elapsed = 0;
-      progressTimer = setInterval(() => {
-        elapsed += TICK;
-        const pct = Math.min((elapsed / INTERVAL) * 100, 100);
-        progressBar.style.width = pct + '%';
-        if (elapsed >= INTERVAL) {
-          clearInterval(progressTimer); progressBar.style.width = '0%';
-          activateSlide(slideIdx + 1);
-          setTimeout(startProgress, 100);
-        }
-      }, TICK);
-    }
-    function goTo(idx) { clearInterval(progressTimer); progressBar.style.width = '0%'; activateSlide(idx); setTimeout(startProgress, 100); }
-    dotEls.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.idx)));
-    document.getElementById('heroPrev')?.addEventListener('click', () => goTo(slideIdx - 1));
-    document.getElementById('heroNext')?.addEventListener('click', () => goTo(slideIdx + 1));
-    (() => { let sx = 0, sy = 0; const hero = document.getElementById('hero'); hero?.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true }); hero?.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - sx; const dy = e.changedTouches[0].clientY - sy; if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) goTo(dx < 0 ? slideIdx + 1 : slideIdx - 1); }, { passive: true }); })();
-    document.addEventListener('keydown', e => { if (e.key === 'ArrowRight') goTo(slideIdx + 1); if (e.key === 'ArrowLeft') goTo(slideIdx - 1); });
-    const heroSection = document.getElementById('hero');
-    heroSection?.addEventListener('mouseenter', () => clearInterval(progressTimer));
-    heroSection?.addEventListener('mouseleave', () => startProgress());
-    applySlideContent(0, false);
-    setTimeout(startProgress, 1600);
+// cursor
+const isTouchDevice = () => window.matchMedia('(hover: none)').matches;
+const cursor = document.getElementById('cursor'), ring = document.getElementById('cursor-ring');
+if (isTouchDevice()) { document.body.style.cursor = 'auto'; cursor.style.display = 'none'; ring.style.display = 'none'; }
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function animCursor() { rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animCursor); })();
 
-    // cursor
-    const isTouchDevice = () => window.matchMedia('(hover: none)').matches;
-    const cursor = document.getElementById('cursor');
-    const ring = document.getElementById('cursor-ring');
-    if (isTouchDevice()) { document.body.style.cursor = 'auto'; cursor.style.display = 'none'; ring.style.display = 'none'; }
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-    (function animCursor() { rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animCursor); })();
+// reveal
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } }); }, { threshold: 0.12 });
+reveals.forEach(el => io.observe(el));
 
-    // reveal
-    const reveals = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } }); }, { threshold: 0.12 });
-    reveals.forEach(el => io.observe(el));
+// tilt
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('mousemove', e => { const r = card.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - 0.5; const y = (e.clientY - r.top) / r.height - 0.5; card.style.transform = `perspective(800px) rotateY(${x * 10}deg) rotateX(${-y * 8}deg) translateY(-8px) scale(1.01)`; });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; card.style.transition = 'transform 0.6s cubic-bezier(0.23,1,0.32,1)'; });
+});
+document.querySelectorAll('.ed-card').forEach(card => {
+  card.addEventListener('mousemove', e => { const r = card.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - 0.5; const y = (e.clientY - r.top) / r.height - 0.5; card.querySelector('.ed-card-inner').style.transform = `perspective(600px) rotateY(${x * 6}deg) rotateX(${-y * 4}deg) scale(1.02)`; });
+  card.addEventListener('mouseleave', () => { card.querySelector('.ed-card-inner').style.transform = ''; });
+});
 
-    // tilt
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - 0.5;
-        const y = (e.clientY - r.top) / r.height - 0.5;
-        card.style.transform = `perspective(800px) rotateY(${x * 10}deg) rotateX(${-y * 8}deg) translateY(-8px) scale(1.01)`;
-      });
-      card.addEventListener('mouseleave', () => { card.style.transform = ''; card.style.transition = 'transform 0.6s cubic-bezier(0.23,1,0.32,1)'; });
+// mobile nav
+const hamburger = document.getElementById('navHamburger'), drawer = document.getElementById('mobileDrawer');
+hamburger?.addEventListener('click', () => { const open = hamburger.classList.toggle('open'); drawer.classList.toggle('open', open); document.body.style.overflow = open ? 'hidden' : ''; });
+drawer?.querySelectorAll('a, button').forEach(el => { el.addEventListener('click', () => { hamburger.classList.remove('open'); drawer.classList.remove('open'); document.body.style.overflow = ''; }); });
+
+// ---- AUTH GATE with geolocation & working signup storage ----
+let isAuthenticated = false;
+let currentUser = null;
+const authOverlay = document.getElementById('authOverlay'), closeAuthBtn = document.getElementById('closeAuthBtn'), authName = document.getElementById('authName'), authPhone = document.getElementById('authPhone'), authLocation = document.getElementById('authLocation'), authEmail = document.getElementById('authEmail'), authPass = document.getElementById('authPass'), authActionBtn = document.getElementById('authActionBtn'), toggleAuthMode = document.getElementById('toggleAuthMode'), authTitle = document.getElementById('authTitle'), signupFields = document.getElementById('signupFields'), detectBtn = document.getElementById('detectLocationBtn'), mobileAuthBtn = document.getElementById('mobileAuthBtn');
+let authMode = 'signup', pendingAction = null;
+function updateAuthButton() { if (mobileAuthBtn) { if (isAuthenticated) { mobileAuthBtn.textContent = 'Log Out'; mobileAuthBtn.style.borderColor = 'rgba(255,110,180,0.5)'; mobileAuthBtn.style.color = 'var(--accent-rose)'; } else { mobileAuthBtn.textContent = 'Log In'; mobileAuthBtn.style.borderColor = 'rgba(125,243,255,0.3)'; mobileAuthBtn.style.color = 'var(--accent-aqua)'; } } }
+if (detectBtn) { detectBtn.addEventListener('click', () => { if (navigator.geolocation) { navigator.geolocation.getCurrentPosition(pos => { fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&localityLanguage=en`).then(res => res.json()).then(data => { authLocation.value = data.city || data.locality || data.principalSubdivision || 'Unknown'; }).catch(() => alert('Could not detect location.')); }, () => alert('Geolocation permission denied.')); } else alert('Geolocation not supported.'); }); }
+function openAuthModal(callback) { pendingAction = callback; authOverlay.classList.add('open'); setTimeout(() => { if (document.activeElement?.tagName === 'INPUT') document.activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); }
+closeAuthBtn.addEventListener('click', () => { authOverlay.classList.remove('open'); pendingAction = null; });
+toggleAuthMode.addEventListener('click', () => { if (authMode === 'signup') { authMode = 'login'; authTitle.innerText = 'Log in'; toggleAuthMode.innerText = 'Sign up'; signupFields.style.display = 'none'; } else { authMode = 'signup'; authTitle.innerText = 'Create account'; toggleAuthMode.innerText = 'Log in'; signupFields.style.display = 'block'; } });
+authActionBtn.addEventListener('click', () => { 
+  const email = authEmail.value.trim(), pass = authPass.value.trim();
+  if (!email || !pass) { alert('Email and password required'); return; }
+  if (authMode === 'signup') { 
+    if (!authName.value.trim() || !authPhone.value.trim() || !authLocation.value.trim()) { alert('Please fill all fields'); return; }
+    currentUser = { name: authName.value.trim(), phone: authPhone.value.trim(), location: authLocation.value.trim(), email, password: pass };
+    db.ref('users/' + email.replace(/[.#$/[\]]/g, '_')).set(currentUser).catch(console.warn);
+  } else {
+    db.ref('users/' + email.replace(/[.#$/[\]]/g, '_')).once('value', snap => {
+      if (snap.exists() && snap.val().password === pass) { currentUser = snap.val(); isAuthenticated = true; updateAuthButton(); authOverlay.classList.remove('open'); if (pendingAction) { pendingAction(); pendingAction = null; } } else { alert('Invalid email or password'); }
     });
-    document.querySelectorAll('.ed-card').forEach(card => {
-      card.addEventListener('mousemove', e => {
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - 0.5;
-        const y = (e.clientY - r.top) / r.height - 0.5;
-        card.querySelector('.ed-card-inner').style.transform = `perspective(600px) rotateY(${x * 6}deg) rotateX(${-y * 4}deg) scale(1.02)`;
-      });
-      card.addEventListener('mouseleave', () => { card.querySelector('.ed-card-inner').style.transform = ''; });
-    });
+    return;
+  }
+  isAuthenticated = true; updateAuthButton(); authOverlay.classList.remove('open'); if (pendingAction) { pendingAction(); pendingAction = null; } 
+});
+function logout() { isAuthenticated = false; currentUser = null; updateAuthButton(); alert('You have been logged out.'); }
+function withAuthCheck(fn) { return function(...args) { if (isAuthenticated) fn.apply(this, args); else openAuthModal(() => fn.apply(this, args)); }; }
+if (mobileAuthBtn) { mobileAuthBtn.addEventListener('click', () => { if (isAuthenticated) logout(); else openAuthModal(null); }); }
 
-    // mobile nav
-    const hamburger = document.getElementById('navHamburger');
-    const drawer = document.getElementById('mobileDrawer');
-    hamburger?.addEventListener('click', () => {
-      const open = hamburger.classList.toggle('open');
-      drawer.classList.toggle('open', open);
-      document.body.style.overflow = open ? 'hidden' : '';
-    });
-    drawer?.querySelectorAll('a, button').forEach(el => {
-      el.addEventListener('click', () => { hamburger.classList.remove('open'); drawer.classList.remove('open'); document.body.style.overflow = ''; });
-    });
+// ---- CART (unchanged) ----
+let cart = JSON.parse(localStorage.getItem('daasebreCart')) || [];
+const cartSidebar = document.getElementById('cartSidebar'), cartToggle = document.getElementById('cartToggle'), cartClose = document.getElementById('cartClose'), cartItemsEl = document.getElementById('cartItems'), cartTotalEl = document.getElementById('cartTotal'), cartCount = document.getElementById('cartCount');
+function updateCartUI() { let total = 0, html = ''; cart.forEach((item, idx) => { total += item.price * (item.qty || 1); html += `<div class="cart-item"><div class="cart-item-img" style="background-image:url('${item.img}')"></div><div class="cart-item-details"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">₵${item.price}</div><button class="cart-item-remove" data-index="${idx}">remove</button></div></div>`; }); cartItemsEl.innerHTML = html || '<div style="color:var(--text-secondary);text-align:center;">Your cart is empty</div>'; cartTotalEl.textContent = '₵' + total; cartCount.textContent = cart.reduce((acc, i) => acc + (i.qty || 1), 0); localStorage.setItem('daasebreCart', JSON.stringify(cart)); }
+function addToCartImpl(btn) { const card = btn.closest('.card'); if (!card) return; const id = card.dataset.id || Math.random().toString(36), name = card.dataset.name || 'Piece', price = parseInt(card.dataset.price) || 0, img = card.dataset.img || ''; const existing = cart.find(i => i.id === id); if (existing) existing.qty = (existing.qty || 1) + 1; else cart.push({ id, name, price, img, qty: 1 }); updateCartUI(); }
+const addToCart = withAuthCheck(addToCartImpl);
+function bindAddButtons() { document.querySelectorAll('.add-btn[data-collection]').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); addToCart(btn); })); }
+cartItemsEl.addEventListener('click', (e) => { if (e.target.classList.contains('cart-item-remove')) { const idx = e.target.dataset.index; if (idx !== undefined) { cart.splice(idx, 1); updateCartUI(); } } });
+cartToggle.addEventListener('click', () => cartSidebar.classList.add('open'));
+cartClose.addEventListener('click', () => cartSidebar.classList.remove('open'));
 
-    // ----- AUTH GATE with geolocation & keyboard fit, plus logout -----
-    let isAuthenticated = false; // always start false to prompt
+// ---- STYLE PICKER with confirmation and Firebase storage ----
+function pickStyleImpl(btn) {
+  const card = btn.closest('.lookbook-card');
+  const styleName = card.dataset.look || card.querySelector('.lookbook-caption')?.innerText || 'style';
+  if (!currentUser) { alert('Please log in first'); return; }
+  if (confirm(`✨ Are you interested in "${styleName}"? We'll get back to you soon.`)) {
+    const requestData = {
+      userId: currentUser.email.replace(/[.#$/[\]]/g, '_'),
+      userName: currentUser.name,
+      phone: currentUser.phone,
+      location: currentUser.location,
+      email: currentUser.email,
+      style: styleName,
+      timestamp: Date.now(),
+      status: 'pending'
+    };
+    db.ref('requests').push(requestData).then(() => {
+      alert("✅ We will get in touch soon!");
+    }).catch(err => { console.error(err); alert("Request saved locally, we'll contact you."); });
+  }
+}
+const pickStyle = withAuthCheck(pickStyleImpl);
+function bindPickButtons() { document.querySelectorAll('.pick-style-btn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); pickStyle(btn); })); }
 
-    const authOverlay = document.getElementById('authOverlay');
-    const closeAuthBtn = document.getElementById('closeAuthBtn');
-    const authName = document.getElementById('authName');
-    const authPhone = document.getElementById('authPhone');
-    const authLocation = document.getElementById('authLocation');
-    const authEmail = document.getElementById('authEmail');
-    const authPass = document.getElementById('authPass');
-    const authActionBtn = document.getElementById('authActionBtn');
-    const toggleAuthMode = document.getElementById('toggleAuthMode');
-    const authTitle = document.getElementById('authTitle');
-    const signupFields = document.getElementById('signupFields');
-    const detectBtn = document.getElementById('detectLocationBtn');
-    const mobileAuthBtn = document.getElementById('mobileAuthBtn');
-    let authMode = 'signup'; // 'signup' or 'login'
-    let pendingAction = null;
+// ---- ADMISSION APPLICATION STORAGE (new collection "admissions") ----
+const submitAdmissionBtn = document.getElementById('submitAdmissionBtn');
+if (submitAdmissionBtn) {
+  submitAdmissionBtn.addEventListener('click', () => {
+    const name = document.getElementById('admissionName')?.value.trim();
+    const email = document.getElementById('admissionEmail')?.value.trim();
+    const phone = document.getElementById('admissionPhone')?.value.trim();
+    const dob = document.getElementById('admissionDob')?.value;
+    const program = document.getElementById('admissionProgram')?.value;
+    const portfolio = document.getElementById('admissionPortfolio')?.value.trim();
+    const statement = document.getElementById('admissionStatement')?.value.trim();
+    if (!name || !email || !phone || !program) { alert('Please fill all required fields (Name, Email, Phone, Program)'); return; }
+    const admissionData = {
+      name, email, phone, dob: dob || '', program, portfolio: portfolio || '', statement: statement || '',
+      timestamp: Date.now(),
+      status: 'pending'
+    };
+    db.ref('admissions').push(admissionData).then(() => {
+      alert('✅ Application submitted successfully! We will contact you within 2 weeks.');
+      document.getElementById('admissionName').value = '';
+      document.getElementById('admissionEmail').value = '';
+      document.getElementById('admissionPhone').value = '';
+      document.getElementById('admissionDob').value = '';
+      document.getElementById('admissionPortfolio').value = '';
+      document.getElementById('admissionStatement').value = '';
+    }).catch(err => { console.error(err); alert('Error submitting application. Please try again.'); });
+  });
+}
 
-    // Update auth button in drawer based on auth state
-    function updateAuthButton() {
-      if (mobileAuthBtn) {
-        if (isAuthenticated) {
-          mobileAuthBtn.textContent = 'Log Out';
-          mobileAuthBtn.style.borderColor = 'rgba(255,110,180,0.5)';
-          mobileAuthBtn.style.color = 'var(--accent-rose)';
-        } else {
-          mobileAuthBtn.textContent = 'Log In';
-          mobileAuthBtn.style.borderColor = 'rgba(125,243,255,0.3)';
-          mobileAuthBtn.style.color = 'var(--accent-aqua)';
-        }
-      }
-    }
+// ---- FIREBASE DATA LOADERS ----
+function loadFeatured() { db.ref('featured').once('value', snap => { const items = snap.val(); const grid = document.getElementById('featuredGrid'); if(!grid) return; grid.innerHTML = ''; if(items) Object.values(items).forEach((item, idx) => { const card = document.createElement('div'); card.className = `card card-${(idx%3)+1} reveal reveal-delay-${idx+1}`; card.setAttribute('data-id', item.id || idx); card.setAttribute('data-name', item.name); card.setAttribute('data-price', item.price); card.setAttribute('data-img', item.image); card.innerHTML = `<div class="card-img-wrap"><div class="card-img-bg card-img-photo"><img src="${item.image}" alt="${item.name}" style="width:100%;height:100%;object-fit:cover;"></div><div class="card-glass"></div><div class="card-tag">${item.tag || 'New'}</div></div><div class="card-info"><div class="card-name">${item.name}</div><div class="card-sub">${item.sub || 'Crystalline Collection'}</div><div class="card-price"><span class="price-val">₵${item.price}</span><button class="add-btn" data-collection>+</button></div></div>`; grid.appendChild(card); }); bindAddButtons(); }); }
+function loadEditorial() { db.ref('editorial').orderByChild('date').once('value', snap => { const items = snap.val(); const grid = document.getElementById('editorialGrid'); const fullGrid = document.getElementById('editorialFullGrid'); if(!grid) return; grid.innerHTML = ''; if(items) { const arr = Object.values(items).sort((a,b) => (b.date || 0) - (a.date || 0)); arr.slice(0,5).forEach((item, idx) => { const card = document.createElement('div'); card.className = `ed-card ed-${idx+1} reveal ${idx>0?'reveal-delay-1':''}`; card.innerHTML = `<div class="ed-card-inner"><div class="ed-bg"><img src="${item.image}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"></div><div class="ed-overlay"></div><div class="ed-glass-top"></div><div class="ed-glass-left"></div><div class="ed-content"><div class="ed-cat">${item.category || 'Story'}</div><div class="ed-title">${item.title}</div><div class="ed-meta">${item.meta || ''}</div></div></div>`; grid.appendChild(card); }); if(fullGrid) { fullGrid.innerHTML = ''; arr.forEach((item, idx) => { const card = document.createElement('div'); card.className = `ed-card ed-${(idx%5)+1}`; card.innerHTML = `<div class="ed-card-inner"><div class="ed-bg"><img src="${item.image}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"></div><div class="ed-overlay"></div><div class="ed-glass-top"></div><div class="ed-glass-left"></div><div class="ed-content"><div class="ed-cat">${item.category || 'Story'}</div><div class="ed-title">${item.title}</div><div class="ed-meta">${item.meta || ''}</div></div></div>`; fullGrid.appendChild(card); }); } } }); }
+function loadLookbook() { db.ref('lookbook').once('value', snap => { const items = snap.val(); const grid = document.getElementById('lookbookGrid'); if(!grid) return; grid.innerHTML = ''; if(items) Object.values(items).forEach(item => { const card = document.createElement('div'); card.className = 'lookbook-card'; card.setAttribute('data-look', item.title); card.innerHTML = `<div class="lookbook-media">${item.type === 'video' ? `<video controls poster="${item.image}"><source src="${item.src}" type="video/mp4"></video>` : `<img src="${item.image}" loading="lazy">`}</div><div class="lookbook-caption"><small>${item.category || ''}</small>${item.title}</div><button class="pick-style-btn">PICK THIS STYLE</button>`; grid.appendChild(card); }); bindPickButtons(); }); }
+function loadGalleries() { db.ref('galleries').once('value', snap => { const items = snap.val(); const grid = document.getElementById('galleriesGrid'); if(!grid) return; grid.innerHTML = ''; if(items) Object.values(items).forEach(item => { const card = document.createElement('div'); card.className = 'lookbook-card'; card.innerHTML = `<div class="lookbook-media">${item.type === 'video' ? `<video controls poster="${item.image}"><source src="${item.src}" type="video/mp4"></video>` : `<img src="${item.image}" loading="lazy">`}</div><div class="lookbook-caption"><small>${item.category || ''}</small>${item.title}</div>`; grid.appendChild(card); }); }); }
+function loadCollectionsFull() { db.ref('collections').once('value', snap => { const items = snap.val(); const grid = document.getElementById('collectionsGallery'); if(!grid) return; grid.innerHTML = ''; if(items) Object.values(items).forEach((item, idx) => { const card = document.createElement('div'); card.className = `card card-${(idx%3)+1}`; card.setAttribute('data-id', item.id || idx); card.setAttribute('data-name', item.name); card.setAttribute('data-price', item.price); card.setAttribute('data-img', item.image); card.innerHTML = `<div class="card-img-wrap"><div class="card-img-bg card-img-photo"><img src="${item.image}" style="width:100%;height:100%;object-fit:cover;"></div><div class="card-glass"></div><div class="card-tag">${item.tag || 'Archive'}</div></div><div class="card-info"><div class="card-name">${item.name}</div><div class="card-sub">${item.sub || ''}</div><div class="card-price"><span class="price-val">₵${item.price}</span><button class="add-btn" data-collection>+</button></div></div>`; grid.appendChild(card); }); bindAddButtons(); }); }
 
-    // Geolocation (auto‑fill location)
-    if (detectBtn) {
-      detectBtn.addEventListener('click', () => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(pos => {
-            const { latitude, longitude } = pos.coords;
-            fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`)
-              .then(res => res.json())
-              .then(data => {
-                const city = data.city || data.locality || data.principalSubdivision || 'Unknown';
-                authLocation.value = city;
-              })
-              .catch(() => alert('Could not detect location.'));
-          }, () => alert('Geolocation permission denied.'));
-        } else {
-          alert('Geolocation not supported.');
-        }
-      });
-    }
+// ---- PAGE NAVIGATION ----
+const mainSite = document.getElementById('mainSiteContent');
+const pages = { collections: document.getElementById('collectionsPage'), lookbook: document.getElementById('lookbookPage'), editorial: document.getElementById('editorialPage'), admission: document.getElementById('admissionPage'), galleries: document.getElementById('galleriesPage') };
+const backBtn = document.getElementById('backToMainBtn');
+function showMainSite() { mainSite.style.display = 'block'; for (let p in pages) if(pages[p]) pages[p].style.display = 'none'; backBtn.style.display = 'none'; }
+function showPage(pageId) { mainSite.style.display = 'none'; for (let p in pages) if(pages[p]) pages[p].style.display = 'none'; if(pages[pageId]) { pages[pageId].style.display = 'block'; backBtn.style.display = 'flex'; } drawer.classList.remove('open'); hamburger.classList.remove('open'); }
+document.querySelectorAll('.nav-link-page').forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); showPage(link.dataset.page); }); });
+document.getElementById('navAdmissionBtn')?.addEventListener('click', () => showPage('admission'));
+document.getElementById('mobileAdmissionBtn')?.addEventListener('click', () => { showPage('admission'); });
+backBtn.addEventListener('click', (e) => { e.preventDefault(); showMainSite(); });
+document.getElementById('exploreBtn')?.addEventListener('click', (e) => { e.preventDefault(); showPage('collections'); });
 
-    function openAuthModal(callback) {
-      pendingAction = callback;
-      authOverlay.classList.add('open');
-      setTimeout(() => { if (document.activeElement?.tagName === 'INPUT') document.activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
-    }
-
-    closeAuthBtn.addEventListener('click', () => {
-      authOverlay.classList.remove('open');
-      pendingAction = null;
-    });
-
-    toggleAuthMode.addEventListener('click', () => {
-      if (authMode === 'signup') {
-        authMode = 'login';
-        authTitle.innerText = 'Log in';
-        toggleAuthMode.innerText = 'Sign up';
-        signupFields.style.display = 'none';
-      } else {
-        authMode = 'signup';
-        authTitle.innerText = 'Create account';
-        toggleAuthMode.innerText = 'Log in';
-        signupFields.style.display = 'block';
-      }
-    });
-
-    authActionBtn.addEventListener('click', () => {
-      if (authMode === 'signup') {
-        if (!authName.value.trim() || !authPhone.value.trim() || !authLocation.value.trim() || !authEmail.value.trim() || !authPass.value.trim()) {
-          alert('Please fill in all fields');
-          return;
-        }
-        console.log('Signup:', { name: authName.value, phone: authPhone.value, location: authLocation.value, email: authEmail.value });
-      } else {
-        if (!authEmail.value.trim() || !authPass.value.trim()) {
-          alert('Please enter email and password');
-          return;
-        }
-      }
-      isAuthenticated = true;
-      updateAuthButton();
-      authOverlay.classList.remove('open');
-      if (pendingAction) {
-        pendingAction();
-        pendingAction = null;
-      }
-    });
-
-    function logout() {
-      isAuthenticated = false;
-      updateAuthButton();
-      alert('You have been logged out.');
-    }
-
-    function withAuthCheck(fn) {
-      return function(...args) {
-        if (isAuthenticated) {
-          fn.apply(this, args);
-        } else {
-          openAuthModal(() => fn.apply(this, args));
-        }
-      };
-    }
-
-    // mobile auth button: login or logout
-    if (mobileAuthBtn) {
-      mobileAuthBtn.addEventListener('click', () => {
-        if (isAuthenticated) {
-          logout();
-        } else {
-          openAuthModal(null);
-        }
-      });
-    }
-
-    // ----- CART (original) -----
-    let cart = JSON.parse(localStorage.getItem('daasebreCart')) || [];
-    const cartSidebar = document.getElementById('cartSidebar');
-    const cartToggle = document.getElementById('cartToggle');
-    const cartClose = document.getElementById('cartClose');
-    const cartItemsEl = document.getElementById('cartItems');
-    const cartTotalEl = document.getElementById('cartTotal');
-    const cartCount = document.getElementById('cartCount');
-
-    function updateCartUI() {
-      let total = 0;
-      let html = '';
-      cart.forEach((item, idx) => {
-        total += item.price * (item.qty || 1);
-        html += `<div class="cart-item">
-          <div class="cart-item-img" style="background-image:url('${item.img}')"></div>
-          <div class="cart-item-details">
-            <div class="cart-item-name">${item.name}</div>
-            <div class="cart-item-price">₵${item.price}</div>
-            <button class="cart-item-remove" data-index="${idx}">remove</button>
-          </div>
-        </div>`;
-      });
-      cartItemsEl.innerHTML = html || '<div style="color:var(--text-secondary);text-align:center;">Your cart is empty</div>';
-      cartTotalEl.textContent = '₵' + total;
-      cartCount.textContent = cart.reduce((acc, i) => acc + (i.qty || 1), 0);
-      localStorage.setItem('daasebreCart', JSON.stringify(cart));
-    }
-
-    function addToCartImpl(btn) {
-      const card = btn.closest('.card');
-      if (!card) return;
-      const id = card.dataset.id || Math.random().toString(36);
-      const name = card.dataset.name || 'Piece';
-      const price = parseInt(card.dataset.price) || 0;
-      const img = card.dataset.img || '';
-      const existing = cart.find(i => i.id === id);
-      if (existing) existing.qty = (existing.qty || 1) + 1;
-      else cart.push({ id, name, price, img, qty: 1 });
-      updateCartUI();
-    }
-    const addToCart = withAuthCheck(addToCartImpl);
-
-    document.querySelectorAll('.add-btn[data-collection]').forEach(btn => {
-      btn.addEventListener('click', (e) => { e.stopPropagation(); addToCart(btn); });
-    });
-
-    cartItemsEl.addEventListener('click', (e) => {
-      if (e.target.classList.contains('cart-item-remove')) {
-        const idx = e.target.dataset.index;
-        if (idx !== undefined) { cart.splice(idx, 1); updateCartUI(); }
-      }
-    });
-    cartToggle.addEventListener('click', () => cartSidebar.classList.add('open'));
-    cartClose.addEventListener('click', () => cartSidebar.classList.remove('open'));
-
-    // style picker with auth
-    function pickStyleImpl(btn) {
-      const card = btn.closest('.lookbook-card');
-      const styleName = card.dataset.look || card.querySelector('.lookbook-caption')?.innerText || 'style';
-      alert(`✨ You picked: ${styleName} – our stylist will contact you.`);
-      console.log('Style picked:', styleName);
-    }
-    const pickStyle = withAuthCheck(pickStyleImpl);
-
-    document.querySelectorAll('.pick-style-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        pickStyle(btn);
-      });
-    });
-
-    // page navigation (admission, back etc)
-    const mainSite = document.getElementById('mainSiteContent');
-    const pages = { collections: document.getElementById('collectionsPage'), lookbook: document.getElementById('lookbookPage'), editorial: document.getElementById('editorialPage'), admission: document.getElementById('admissionPage'), galleries: document.getElementById('galleriesPage') };
-    const backBtn = document.getElementById('backToMainBtn');
-    function showMainSite() { mainSite.style.display = 'block'; for (let p in pages) pages[p].style.display = 'none'; backBtn.style.display = 'none'; }
-    function showPage(pageId) {
-      mainSite.style.display = 'none';
-      for (let p in pages) pages[p].style.display = 'none';
-      if (pages[pageId]) { pages[pageId].style.display = 'block'; backBtn.style.display = 'flex'; }
-      drawer.classList.remove('open'); hamburger.classList.remove('open');
-    }
-    document.querySelectorAll('.nav-link-page').forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); showPage(link.dataset.page); }); });
-    document.getElementById('navAdmissionBtn').addEventListener('click', () => showPage('admission'));
-    document.getElementById('mobileAdmissionBtn').addEventListener('click', () => { showPage('admission'); });
-    backBtn.addEventListener('click', (e) => { e.preventDefault(); showMainSite(); });
-    showMainSite();
-
-    // Explore button -> Collections page
-    document.getElementById('exploreBtn').addEventListener('click', (e) => {
-      e.preventDefault();
-      showPage('collections');
-    });
-
-    updateCartUI();
-    updateAuthButton();
-  })();
+// INIT: load all Firebase content and finalize
+loadFeatured(); loadEditorial(); loadLookbook(); loadGalleries(); loadCollectionsFull();
+updateCartUI(); updateAuthButton();
 </script>
 </body>
 </html>
