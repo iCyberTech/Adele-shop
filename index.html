@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Daasebre Fashion - Oppong Asare Peter - Fashion Designer</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Syncopate:wght@400;700&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
-<!-- Firebase SDKs -->
+<!-- Firebase SDKs (Compat + Modular for Auth) -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <style>
   /* ----- all original styles (complete, unchanged) plus cart & auth additions ----- */
   :root {
@@ -1032,7 +1033,7 @@ footer { padding: 36px 20px 0; }
 .style-picker-tag { display:inline-block; margin-left:6px; font-size:9px; background:var(--accent-rose); color:#000; padding:2px 6px; border-radius:2px; }
 .lookbook-card .pick-style-btn { margin:10px 16px 16px; width:calc(100% - 32px); }
 
-/* ---------- ENHANCED AUTH MODAL with full profile, geolocation & keyboard fit ---------- */
+/* ---------- ENHANCED AUTH MODAL with full profile, geolocation & keyboard fit (using Firebase Auth) ---------- */
 .auth-overlay {
   position: fixed; inset:0; z-index:1000; background:rgba(4,4,10,0.8); backdrop-filter:blur(20px);
   display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none;
@@ -1091,7 +1092,7 @@ footer { padding: 36px 20px 0; }
   <div class="blob blob-4"></div>
 </div>
 
-<!-- ENHANCED AUTH MODAL -->
+<!-- ENHANCED AUTH MODAL (Firebase Auth) -->
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-modal">
     <button class="close-auth" id="closeAuthBtn">✕</button>
@@ -1336,6 +1337,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+const auth = firebase.auth();
 
 // ---- ORIGINAL CORE FUNCTIONALITY (cursor, slideshow, tilt, reveal, mobile nav) ----
 const SLIDES = [
@@ -1423,12 +1425,17 @@ const hamburger = document.getElementById('navHamburger'), drawer = document.get
 hamburger?.addEventListener('click', () => { const open = hamburger.classList.toggle('open'); drawer.classList.toggle('open', open); document.body.style.overflow = open ? 'hidden' : ''; });
 drawer?.querySelectorAll('a, button').forEach(el => { el.addEventListener('click', () => { hamburger.classList.remove('open'); drawer.classList.remove('open'); document.body.style.overflow = ''; }); });
 
-// ---- AUTH GATE with geolocation & working signup storage ----
-let isAuthenticated = false;
+// ---- FIREBASE AUTH + PROFILE STORAGE ----
 let currentUser = null;
 const authOverlay = document.getElementById('authOverlay'), closeAuthBtn = document.getElementById('closeAuthBtn'), authName = document.getElementById('authName'), authPhone = document.getElementById('authPhone'), authLocation = document.getElementById('authLocation'), authEmail = document.getElementById('authEmail'), authPass = document.getElementById('authPass'), authActionBtn = document.getElementById('authActionBtn'), toggleAuthMode = document.getElementById('toggleAuthMode'), authTitle = document.getElementById('authTitle'), signupFields = document.getElementById('signupFields'), detectBtn = document.getElementById('detectLocationBtn'), mobileAuthBtn = document.getElementById('mobileAuthBtn');
 let authMode = 'signup', pendingAction = null;
-function updateAuthButton() { if (mobileAuthBtn) { if (isAuthenticated) { mobileAuthBtn.textContent = 'Log Out'; mobileAuthBtn.style.borderColor = 'rgba(255,110,180,0.5)'; mobileAuthBtn.style.color = 'var(--accent-rose)'; } else { mobileAuthBtn.textContent = 'Log In'; mobileAuthBtn.style.borderColor = 'rgba(125,243,255,0.3)'; mobileAuthBtn.style.color = 'var(--accent-aqua)'; } } }
+
+function updateAuthUI() {
+  if (mobileAuthBtn) {
+    if (currentUser) { mobileAuthBtn.textContent = 'Log Out'; mobileAuthBtn.style.borderColor = 'rgba(255,110,180,0.5)'; mobileAuthBtn.style.color = 'var(--accent-rose)'; }
+    else { mobileAuthBtn.textContent = 'Log In'; mobileAuthBtn.style.borderColor = 'rgba(125,243,255,0.3)'; mobileAuthBtn.style.color = 'var(--accent-aqua)'; }
+  }
+}
 if (detectBtn) { detectBtn.addEventListener('click', () => { if (navigator.geolocation) { navigator.geolocation.getCurrentPosition(pos => { fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&localityLanguage=en`).then(res => res.json()).then(data => { authLocation.value = data.city || data.locality || data.principalSubdivision || 'Unknown'; }).catch(() => alert('Could not detect location.')); }, () => alert('Geolocation permission denied.')); } else alert('Geolocation not supported.'); }); }
 function openAuthModal(callback) { pendingAction = callback; authOverlay.classList.add('open'); setTimeout(() => { if (document.activeElement?.tagName === 'INPUT') document.activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); }
 closeAuthBtn.addEventListener('click', () => { authOverlay.classList.remove('open'); pendingAction = null; });
@@ -1438,19 +1445,26 @@ authActionBtn.addEventListener('click', () => {
   if (!email || !pass) { alert('Email and password required'); return; }
   if (authMode === 'signup') { 
     if (!authName.value.trim() || !authPhone.value.trim() || !authLocation.value.trim()) { alert('Please fill all fields'); return; }
-    currentUser = { name: authName.value.trim(), phone: authPhone.value.trim(), location: authLocation.value.trim(), email, password: pass };
-    db.ref('users/' + email.replace(/[.#$/[\]]/g, '_')).set(currentUser).catch(console.warn);
+    auth.createUserWithEmailAndPassword(email, pass).then((userCred) => {
+      const profile = { name: authName.value.trim(), phone: authPhone.value.trim(), location: authLocation.value.trim(), email, uid: userCred.user.uid };
+      db.ref('users/' + userCred.user.uid).set(profile).catch(console.warn);
+      currentUser = { ...profile, uid: userCred.user.uid };
+      updateAuthUI(); authOverlay.classList.remove('open'); if (pendingAction) { pendingAction(); pendingAction = null; }
+    }).catch(err => alert(err.message));
   } else {
-    db.ref('users/' + email.replace(/[.#$/[\]]/g, '_')).once('value', snap => {
-      if (snap.exists() && snap.val().password === pass) { currentUser = snap.val(); isAuthenticated = true; updateAuthButton(); authOverlay.classList.remove('open'); if (pendingAction) { pendingAction(); pendingAction = null; } } else { alert('Invalid email or password'); }
-    });
-    return;
+    auth.signInWithEmailAndPassword(email, pass).then((userCred) => {
+      db.ref('users/' + userCred.user.uid).once('value', snap => {
+        const data = snap.val() || { email, uid: userCred.user.uid };
+        currentUser = { ...data, uid: userCred.user.uid };
+        updateAuthUI(); authOverlay.classList.remove('open'); if (pendingAction) { pendingAction(); pendingAction = null; }
+      });
+    }).catch(err => alert(err.message));
   }
-  isAuthenticated = true; updateAuthButton(); authOverlay.classList.remove('open'); if (pendingAction) { pendingAction(); pendingAction = null; } 
 });
-function logout() { isAuthenticated = false; currentUser = null; updateAuthButton(); alert('You have been logged out.'); }
-function withAuthCheck(fn) { return function(...args) { if (isAuthenticated) fn.apply(this, args); else openAuthModal(() => fn.apply(this, args)); }; }
-if (mobileAuthBtn) { mobileAuthBtn.addEventListener('click', () => { if (isAuthenticated) logout(); else openAuthModal(null); }); }
+function logout() { auth.signOut().then(() => { currentUser = null; updateAuthUI(); alert('Logged out.'); }).catch(console.warn); }
+function withAuthCheck(fn) { return function(...args) { if (currentUser) fn.apply(this, args); else openAuthModal(() => fn.apply(this, args)); }; }
+if (mobileAuthBtn) { mobileAuthBtn.addEventListener('click', () => { if (currentUser) logout(); else openAuthModal(null); }); }
+auth.onAuthStateChanged(user => { if (user) { db.ref('users/' + user.uid).once('value', snap => { currentUser = snap.val() || { email: user.email, uid: user.uid }; updateAuthUI(); }); } else { currentUser = null; updateAuthUI(); } });
 
 // ---- CART (unchanged) ----
 let cart = JSON.parse(localStorage.getItem('daasebreCart')) || [];
@@ -1469,19 +1483,8 @@ function pickStyleImpl(btn) {
   const styleName = card.dataset.look || card.querySelector('.lookbook-caption')?.innerText || 'style';
   if (!currentUser) { alert('Please log in first'); return; }
   if (confirm(`✨ Are you interested in "${styleName}"? We'll get back to you soon.`)) {
-    const requestData = {
-      userId: currentUser.email.replace(/[.#$/[\]]/g, '_'),
-      userName: currentUser.name,
-      phone: currentUser.phone,
-      location: currentUser.location,
-      email: currentUser.email,
-      style: styleName,
-      timestamp: Date.now(),
-      status: 'pending'
-    };
-    db.ref('requests').push(requestData).then(() => {
-      alert("✅ We will get in touch soon!");
-    }).catch(err => { console.error(err); alert("Request saved locally, we'll contact you."); });
+    const requestData = { userId: currentUser.uid, userName: currentUser.name, phone: currentUser.phone, location: currentUser.location, email: currentUser.email, style: styleName, timestamp: Date.now(), status: 'pending' };
+    db.ref('requests').push(requestData).then(() => { alert("✅ We will get in touch soon!"); }).catch(err => { console.error(err); alert("Request saved locally, we'll contact you."); });
   }
 }
 const pickStyle = withAuthCheck(pickStyleImpl);
@@ -1499,19 +1502,10 @@ if (submitAdmissionBtn) {
     const portfolio = document.getElementById('admissionPortfolio')?.value.trim();
     const statement = document.getElementById('admissionStatement')?.value.trim();
     if (!name || !email || !phone || !program) { alert('Please fill all required fields (Name, Email, Phone, Program)'); return; }
-    const admissionData = {
-      name, email, phone, dob: dob || '', program, portfolio: portfolio || '', statement: statement || '',
-      timestamp: Date.now(),
-      status: 'pending'
-    };
+    const admissionData = { name, email, phone, dob: dob || '', program, portfolio: portfolio || '', statement: statement || '', timestamp: Date.now(), status: 'pending' };
     db.ref('admissions').push(admissionData).then(() => {
       alert('✅ Application submitted successfully! We will contact you within 2 weeks.');
-      document.getElementById('admissionName').value = '';
-      document.getElementById('admissionEmail').value = '';
-      document.getElementById('admissionPhone').value = '';
-      document.getElementById('admissionDob').value = '';
-      document.getElementById('admissionPortfolio').value = '';
-      document.getElementById('admissionStatement').value = '';
+      document.getElementById('admissionName').value = ''; document.getElementById('admissionEmail').value = ''; document.getElementById('admissionPhone').value = ''; document.getElementById('admissionDob').value = ''; document.getElementById('admissionPortfolio').value = ''; document.getElementById('admissionStatement').value = '';
     }).catch(err => { console.error(err); alert('Error submitting application. Please try again.'); });
   });
 }
@@ -1537,7 +1531,7 @@ document.getElementById('exploreBtn')?.addEventListener('click', (e) => { e.prev
 
 // INIT: load all Firebase content and finalize
 loadFeatured(); loadEditorial(); loadLookbook(); loadGalleries(); loadCollectionsFull();
-updateCartUI(); updateAuthButton();
+updateCartUI(); updateAuthUI();
 </script>
 </body>
 </html>
