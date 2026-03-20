@@ -163,6 +163,35 @@ backdrop-filter: blur(10px);
 }
 .nav-cta:hover { background: linear-gradient(135deg, rgba(125,243,255,0.25), rgba(255,110,180,0.25)); box-shadow: 0 0 24px rgba(125,243,255,0.2); }
 
+/* New auth button style */
+.auth-nav-btn {
+  font-family: 'Syncopate', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  border: none;
+  cursor: none;
+  background: linear-gradient(135deg, rgba(125,243,255,0.1), rgba(192,132,252,0.1));
+  border: 1px solid rgba(125,243,255,0.3);
+  color: var(--accent-aqua);
+  border-radius: 2px;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+}
+.auth-nav-btn:hover {
+  background: linear-gradient(135deg, rgba(125,243,255,0.25), rgba(255,110,180,0.2));
+  box-shadow: 0 0 24px rgba(125,243,255,0.2);
+}
+.auth-nav-btn.logout-btn {
+  border-color: rgba(255,110,180,0.4);
+  color: var(--accent-rose);
+}
+.auth-nav-btn.logout-btn:hover {
+  background: rgba(255,110,180,0.2);
+  box-shadow: 0 0 24px rgba(255,110,180,0.2);
+}
+
 #hero {
 position: relative; z-index: 2;
 min-height: 100vh;
@@ -1116,7 +1145,7 @@ footer { padding: 36px 20px 0; }
   </div>
 </div>
 
-<!-- NAV (with cart icon) -->
+<!-- NAV (with cart icon and new auth button) -->
 <nav>
   <div class="nav-logo-wrapper">
     <img src="logo.jpg" alt="Daasebre logo" class="nav-logo-img" onerror="this.style.display='none'">
@@ -1131,8 +1160,9 @@ footer { padding: 36px 20px 0; }
     <li><a href="#" class="nav-link-page" data-page="editorial">Editorial</a></li>
     <li><a href="#" class="nav-link-page" data-page="galleries">Galleries</a></li>
   </ul>
-  <div style="display:flex; align-items:center;">
+  <div style="display:flex; align-items:center; gap:12px;">
     <button class="nav-cta nav-cta-desk" id="navAdmissionBtn">ADMISSION</button>
+    <button id="authNavBtn" class="auth-nav-btn">SIGN IN</button>
     <div class="cart-icon" id="cartToggle">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 22a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm9 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM2.5 3h2.5l1.68 9.3a2 2 0 0 0 2 1.7h8.8a2 2 0 0 0 1.97-1.57L21 6H6"/></svg>
       <span class="cart-count" id="cartCount">0</span>
@@ -1150,6 +1180,7 @@ footer { padding: 36px 20px 0; }
     <li><a href="#" class="nav-link-page" data-page="lookbook">Lookbook</a></li>
     <li><a href="#" class="nav-link-page" data-page="editorial">Editorial</a></li>
     <li><a href="#" class="nav-link-page" data-page="galleries">Galleries</a></li>
+    <li><button id="mobileAuthBtn" class="auth-nav-btn" style="margin-top:20px;">SIGN IN</button></li>
   </ul>
   <button class="nav-cta" style="width:100%;margin-top:32px;" id="mobileAdmissionBtn">ADMISSION</button>
 </div>
@@ -1682,7 +1713,7 @@ footer { padding: 36px 20px 0; }
       el.addEventListener('click', () => { hamburger.classList.remove('open'); drawer.classList.remove('open'); document.body.style.overflow = ''; });
     });
 
-    // ----- AUTH GATE with geolocation & keyboard fit -----
+    // ----- AUTH GATE with geolocation & keyboard fit, plus logout button -----
     let isAuthenticated = false; // always start false to prompt
 
     const authOverlay = document.getElementById('authOverlay');
@@ -1699,6 +1730,38 @@ footer { padding: 36px 20px 0; }
     const detectBtn = document.getElementById('detectLocationBtn');
     let authMode = 'signup'; // 'signup' or 'login'
     let pendingAction = null;
+
+    // Auth navigation buttons
+    const authNavBtn = document.getElementById('authNavBtn');
+    const mobileAuthBtn = document.getElementById('mobileAuthBtn');
+    
+    function updateAuthButtonUI() {
+      if (isAuthenticated) {
+        authNavBtn.textContent = 'LOGOUT';
+        authNavBtn.classList.add('logout-btn');
+        if (mobileAuthBtn) mobileAuthBtn.textContent = 'LOGOUT';
+      } else {
+        authNavBtn.textContent = 'SIGN IN';
+        authNavBtn.classList.remove('logout-btn');
+        if (mobileAuthBtn) mobileAuthBtn.textContent = 'SIGN IN';
+      }
+    }
+
+    function logout() {
+      isAuthenticated = false;
+      updateAuthButtonUI();
+      // Clear modal fields for next login
+      authName.value = '';
+      authPhone.value = '';
+      authLocation.value = '';
+      authEmail.value = '';
+      authPass.value = '';
+      // Show signup mode by default
+      authMode = 'signup';
+      authTitle.innerText = 'Create account';
+      toggleAuthMode.innerText = 'Log in';
+      signupFields.style.display = 'block';
+    }
 
     // Geolocation (auto‑fill location)
     if (detectBtn) {
@@ -1759,11 +1822,18 @@ footer { padding: 36px 20px 0; }
         }
       }
       isAuthenticated = true;
+      updateAuthButtonUI();
       authOverlay.classList.remove('open');
       if (pendingAction) {
         pendingAction();
         pendingAction = null;
       }
+      // Reset fields for next potential login
+      authName.value = '';
+      authPhone.value = '';
+      authLocation.value = '';
+      authEmail.value = '';
+      authPass.value = '';
     });
 
     function withAuthCheck(fn) {
@@ -1775,6 +1845,17 @@ footer { padding: 36px 20px 0; }
         }
       };
     }
+    
+    // Handle auth button click (sign in / logout)
+    function handleAuthClick() {
+      if (isAuthenticated) {
+        logout();
+      } else {
+        openAuthModal(null);
+      }
+    }
+    authNavBtn.addEventListener('click', handleAuthClick);
+    if (mobileAuthBtn) mobileAuthBtn.addEventListener('click', handleAuthClick);
 
     // ----- CART (original) -----
     let cart = JSON.parse(localStorage.getItem('daasebreCart')) || [];
@@ -1872,6 +1953,7 @@ footer { padding: 36px 20px 0; }
     });
 
     updateCartUI();
+    updateAuthButtonUI();
   })();
 </script>
 </body>
