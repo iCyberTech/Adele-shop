@@ -345,7 +345,8 @@ padding: 120px 48px;
 }
 .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 72px; }
 .section-label {
-font-family: 'Syncopate', sans-serif; font-size: 10px;
+font-family: 'Syncopate', sans-serif;
+font-size: 10px;
 letter-spacing: 0.4em; text-transform: uppercase;
 color: var(--accent-aqua); margin-bottom: 16px;
 display: flex; align-items: center; gap: 12px;
@@ -1022,9 +1023,9 @@ const auth = firebase.auth();
 
 let currentUser = null;
 let cart = [];
-let addToCartLock = false; // prevent double addition
+let processingAdd = false; // ✅ FIX: prevent double addition
 
-// Helper: sync cart to db and localstorage
+// --- Helper: sync cart to db and localstorage
 function syncCartToDB() {
   if (currentUser && currentUser.uid) {
     db.ref(`carts/${currentUser.uid}`).set(cart).catch(console.warn);
@@ -1047,9 +1048,8 @@ function loadCartFromDB(userId) {
 function updateCartUI() {
   let total = 0, html = '';
   cart.forEach((item, idx) => {
-    const qty = item.qty || 1;
-    total += item.price * qty;
-    html += `<div class="cart-item"><div class="cart-item-img" style="background-image:url('${item.img}')"></div><div class="cart-item-details"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">₵${item.price} x ${qty}</div><button class="cart-item-remove" data-index="${idx}">remove</button></div></div>`;
+    total += item.price * (item.qty || 1);
+    html += `<div class="cart-item"><div class="cart-item-img" style="background-image:url('${item.img}')"></div><div class="cart-item-details"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">₵${item.price}</div><button class="cart-item-remove" data-index="${idx}">remove</button></div></div>`;
   });
   document.getElementById('cartItems').innerHTML = html || '<div style="color:var(--text-secondary);text-align:center;">Your cart is empty</div>';
   document.getElementById('cartTotal').textContent = '₵' + total;
@@ -1057,12 +1057,11 @@ function updateCartUI() {
   syncCartToDB();
 }
 function addToCartImpl(btn) {
-  if (addToCartLock) return; // block double-click
-  addToCartLock = true;
-  setTimeout(() => { addToCartLock = false; }, 300);
-  
+  if (processingAdd) return; // ✅ prevent double invocation
+  processingAdd = true;
+  setTimeout(() => { processingAdd = false; }, 300);
   const card = btn.closest('.card');
-  if(!card) { addToCartLock = false; return; }
+  if(!card) { processingAdd = false; return; }
   const id = card.dataset.id || Math.random().toString(36);
   const name = card.dataset.name;
   const price = parseInt(card.dataset.price) || 0;
@@ -1074,7 +1073,6 @@ function addToCartImpl(btn) {
   const cartIcon = document.querySelector('.cart-icon');
   cartIcon.classList.add('pulse');
   setTimeout(()=> cartIcon.classList.remove('pulse'), 300);
-  addToCartLock = false;
 }
 function withAuthCheck(fn) {
   return function(...args) {
@@ -1083,7 +1081,8 @@ function withAuthCheck(fn) {
   };
 }
 const addToCart = withAuthCheck(addToCartImpl);
-function bindAddButtons() { document.querySelectorAll('.add-btn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); addToCart(btn); })); }
+function bindAddButtons() { document.querySelectorAll('.add-btn').forEach(btn => btn.removeEventListener('click', addToCartHandler)); document.querySelectorAll('.add-btn').forEach(btn => btn.addEventListener('click', addToCartHandler)); }
+function addToCartHandler(e) { e.stopPropagation(); addToCart(e.currentTarget); }
 function pickStyleImpl(btn) {
   const card = btn.closest('.lookbook-card');
   const styleName = card.dataset.look || card.querySelector('.lookbook-caption')?.innerText || 'style';
@@ -1095,7 +1094,7 @@ function pickStyleImpl(btn) {
 const pickStyle = withAuthCheck(pickStyleImpl);
 function bindPickButtons() { document.querySelectorAll('.pick-style-btn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); pickStyle(btn); })); }
 
-// admission and data loads
+// --- admission and data loads (unchanged)
 document.getElementById('submitAdmissionBtn')?.addEventListener('click', () => { const name=document.getElementById('admissionName')?.value.trim(), email=document.getElementById('admissionEmail')?.value.trim(), phone=document.getElementById('admissionPhone')?.value.trim(), dob=document.getElementById('admissionDob')?.value, program=document.getElementById('admissionProgram')?.value, portfolio=document.getElementById('admissionPortfolio')?.value.trim(), statement=document.getElementById('admissionStatement')?.value.trim(); if(!name||!email||!phone||!program) { alert('Please fill all required fields'); return; } db.ref('admissions').push({ name, email, phone, dob, program, portfolio, statement, timestamp: Date.now(), status:'pending' }).then(()=>{ alert('✅ Application submitted successfully!'); document.getElementById('admissionName').value=''; document.getElementById('admissionEmail').value=''; document.getElementById('admissionPhone').value=''; document.getElementById('admissionDob').value=''; document.getElementById('admissionPortfolio').value=''; document.getElementById('admissionStatement').value=''; }); });
 function loadFeaturedFromDB() {
   const grid = document.getElementById('featuredGrid');
@@ -1126,7 +1125,7 @@ function loadLookbook() { db.ref('lookbook').once('value', snap => { const items
 function loadGalleries() { db.ref('galleries').once('value', snap => { const items = snap.val(); const grid = document.getElementById('galleriesGrid'); if(!grid) return; grid.innerHTML=''; if(items) Object.values(items).forEach(item=>{ const card=document.createElement('div'); card.className='lookbook-card'; card.innerHTML=`<div class="lookbook-media">${item.type==='video'?`<video controls poster="${item.image}"><source src="${item.src}" type="video/mp4"></video>`:`<img src="${item.image}" loading="lazy">`}</div><div class="lookbook-caption"><small>${item.category||''}</small>${item.title}</div>`; grid.appendChild(card); }); }); }
 function loadCollectionsFull() { db.ref('collections').once('value', snap => { const items = snap.val(); const grid = document.getElementById('collectionsGallery'); if(!grid) return; grid.innerHTML=''; if(items) Object.values(items).forEach((item,idx)=>{ const card=document.createElement('div'); card.className=`card`; card.setAttribute('data-id',item.id); card.setAttribute('data-name',item.name); card.setAttribute('data-price',item.price); card.setAttribute('data-img',item.image); card.innerHTML=`<div class="card-img-wrap"><div class="card-img-bg"><img src="${item.image}" style="width:100%;height:100%;object-fit:cover;"></div><div class="card-glass"></div><div class="card-tag">${item.tag||'Archive'}</div></div><div class="card-info"><div class="card-name">${item.name}</div><div class="card-sub">${item.sub||''}</div><div class="card-price"><span class="price-val">₵${item.price}</span><button class="add-btn" data-collection>+</button></div></div>`; grid.appendChild(card); }); bindAddButtons(); }); }
 
-// AUTH UI
+// --- AUTH UI with persistent login and dynamic button
 const authOverlay = document.getElementById('authOverlay'), closeAuth = document.getElementById('closeAuthBtn');
 const authName=document.getElementById('authName'), authPhone=document.getElementById('authPhone'), authLocation=document.getElementById('authLocation'), authEmail=document.getElementById('authEmail'), authPass=document.getElementById('authPass'), authAction=document.getElementById('authActionBtn'), toggleMode=document.getElementById('toggleAuthMode'), authTitle=document.getElementById('authTitle'), signupDiv=document.getElementById('signupFields'), detectLoc=document.getElementById('detectLocationBtn');
 let authMode='signup';
@@ -1147,7 +1146,7 @@ function updateNavAuthButton() {
 }
 auth.onAuthStateChanged(user=>{ if(user){ db.ref('users/'+user.uid).once('value',snap=>{ currentUser=snap.val()||{email:user.email,uid:user.uid}; updateNavAuthButton(); loadCartFromDB(user.uid); }); } else { currentUser=null; cart = []; updateCartUI(); updateNavAuthButton(); localStorage.removeItem('daasebreCart'); } });
 
-// page navigation
+// --- page navigation (preserved)
 const mainSite=document.getElementById('mainSiteContent'), pages={ collections:document.getElementById('collectionsPage'), lookbook:document.getElementById('lookbookPage'), editorial:document.getElementById('editorialPage'), admission:document.getElementById('admissionPage'), galleries:document.getElementById('galleriesPage') }, backBtn=document.getElementById('backToMainBtn');
 function showMainSite(){ mainSite.style.display='block'; Object.values(pages).forEach(p=>{ if(p) p.style.display='none'; }); backBtn.style.display='none'; }
 function showPage(id){ mainSite.style.display='none'; Object.values(pages).forEach(p=>{ if(p) p.style.display='none'; }); if(pages[id]) pages[id].style.display='block'; backBtn.style.display='flex'; document.getElementById('mobileDrawer')?.classList.remove('open'); document.getElementById('navHamburger')?.classList.remove('open'); }
@@ -1160,7 +1159,7 @@ document.getElementById('cartToggle')?.addEventListener('click',()=>document.get
 document.getElementById('cartClose')?.addEventListener('click',()=>document.getElementById('cartSidebar').classList.remove('open'));
 document.getElementById('cartItems')?.addEventListener('click',e=>{ if(e.target.classList.contains('cart-item-remove')){ const idx=e.target.dataset.index; if(idx!==undefined){ cart.splice(idx,1); updateCartUI(); } } });
 
-// hero slideshow
+// --- hero slideshow preserved
 let slideIdx=0; let currentProgressInterval=null; const slides=document.querySelectorAll('.hero-slide'), dots=document.querySelectorAll('.hero-dot'), progressBar=document.getElementById('heroProgressBar'), counter=document.getElementById('heroCountCurrent'), eyebrow=document.querySelector('.eyebrow-text'), bodyText=document.getElementById('heroBody'), titleLines=document.querySelectorAll('.ht-line .ht-inner');
 const slideData=[{eyebrow:'Oppong Asare Peter',lines:['He\'s','The','CEO'],body:'Highly motivated designer crafting stories through fabric and form. Exploring the intersection of streetwear and haute couture.'},{eyebrow:'African Heritage',lines:['Rooted in','Radiance','Reborn'],body:'Ancestral craft elevated to couture. Kente, adinkra, and ankara silhouettes woven through crystalline light.'},{eyebrow:'Bridal Couture',lines:['Dressed','in','Forever'],body:'Gowns that dissolve the boundary between fabric and light. Every veil, train and bodice crafted to hold the moment still.'},{eyebrow:'Tailored Suiting',lines:['Power','Dis-','tilled'],body:'Structured precision meets African-Wear fabric. Suits engineered for authority, softened by crystalline detail.'},{eyebrow:'New Arrivals',lines:['The','New','Now'],body:'Fresh drops from the atelier — limited runs, lifetime pieces. Reserve yours before the world finds out.'}];
 function updateSlideContent(idx){ const d=slideData[idx]; if(eyebrow) eyebrow.textContent=d.eyebrow; d.lines.forEach((txt,i)=>{ if(titleLines[i]) titleLines[i].textContent=txt; }); if(bodyText) bodyText.textContent=d.body; if(counter) counter.textContent=String(idx+1).padStart(2,'0'); dots.forEach((dot,i)=>dot.classList.toggle('active',i===idx)); }
@@ -1170,30 +1169,34 @@ document.getElementById('heroPrev')?.addEventListener('click',()=>{ if(currentPr
 document.getElementById('heroNext')?.addEventListener('click',()=>{ if(currentProgressInterval) clearInterval(currentProgressInterval); activateSlide((slideIdx+1)%slides.length); });
 activateSlide(0);
 
-// mobile menu
+// --- mobile menu
 const hamburger=document.getElementById('navHamburger'), drawer=document.getElementById('mobileDrawer');
 hamburger?.addEventListener('click',()=>{ const open=hamburger.classList.toggle('open'); drawer.classList.toggle('open',open); document.body.style.overflow=open?'hidden':''; });
 drawer?.querySelectorAll('a, button').forEach(el=>{ el.addEventListener('click',()=>{ hamburger?.classList.remove('open'); drawer?.classList.remove('open'); document.body.style.overflow=''; }); });
 
-// reveal observer
+// --- reveal observer
 const revealObserver = new IntersectionObserver(entries=>{ entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); }); },{threshold:0.1});
 document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
 
-// tilt & cursor
+// --- tilt & cursor
 document.querySelectorAll('.card').forEach(card=>{ card.addEventListener('mousemove',e=>{ const r=card.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width-0.5; const y=(e.clientY-r.top)/r.height-0.5; card.style.transform=`perspective(800px) rotateY(${x*10}deg) rotateX(${-y*8}deg) translateY(-8px) scale(1.01)`; }); card.addEventListener('mouseleave',()=>{ card.style.transform=''; card.style.transition='transform 0.6s cubic-bezier(0.23,1,0.32,1)'; }); });
 if(window.matchMedia('(hover: none)').matches){ document.body.style.cursor='auto'; document.getElementById('cursor')?.remove(); document.getElementById('cursor-ring')?.remove(); } else { let mx=0,my=0,rx=0,ry=0; const cursor=document.getElementById('cursor'), ring=document.getElementById('cursor-ring'); document.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY; }); (function anim(){ rx+=(mx-rx)*0.18; ry+=(my-ry)*0.18; if(cursor){ cursor.style.left=mx+'px'; cursor.style.top=my+'px'; } if(ring){ ring.style.left=rx+'px'; ring.style.top=ry+'px'; } requestAnimationFrame(anim); })(); }
 
-// Keyboard handling: reset viewport when keyboard dismisses on mobile
-window.addEventListener('resize', () => {
-  if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'SELECT')) {
+// --- Mobile keyboard fix: reset viewport after form interaction
+const allInputs = document.querySelectorAll('input, textarea, select');
+allInputs.forEach(el => {
+  el.addEventListener('blur', () => {
     setTimeout(() => {
-      window.scrollTo(0, 0);
-      document.activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      window.scrollTo(0, window.pageYOffset);
+      if (window.visualViewport) {
+        const currentHeight = window.visualViewport.height;
+        window.scrollTo(0, Math.max(0, window.pageYOffset - 10));
+      }
     }, 100);
-  }
+  });
 });
 
-// init all
+// --- init all
 loadFeaturedFromDB();
 loadEditorial();
 loadLookbook();
