@@ -919,6 +919,216 @@ footer { padding: 36px 20px 0; }
 .geo-hint { font-size:11px; color:var(--accent-aqua); margin:-10px 0 16px; text-align:right; cursor:pointer; display:inline-block; float:right; }
 @media (max-width:768px) { .page-container { padding: 100px 24px 60px; } .admission-form { padding: 32px 24px; } .lookbook-grid { grid-template-columns: 1fr; } .collection-gallery { grid-template-columns: repeat(2,1fr); } }
 @media (max-width:480px) { .collection-gallery { grid-template-columns: 1fr; } }
+/* Cart close button styling */
+.cart-close {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+  font-size: 16px;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  backdrop-filter: blur(10px);
+}
+
+.cart-close:hover {
+  background: rgba(255,110,180,0.15);
+  border-color: rgba(255,110,180,0.35);
+  color: var(--accent-rose);
+  transform: rotate(90deg) scale(1.05);
+}
+
+.cart-close:active {
+  transform: rotate(90deg) scale(0.95);
+}
+
+/* Cart remove button styling */
+.cart-item-remove {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text-secondary);
+  padding: 4px 12px;
+  font-size: 10px;
+  font-family: 'Syncopate', sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  cursor: none;
+  transition: all 0.3s ease;
+  margin-top: 6px;
+  backdrop-filter: blur(8px);
+}
+
+.cart-item-remove:hover {
+  background: rgba(255,110,180,0.2);
+  border-color: rgba(255,110,180,0.4);
+  color: var(--accent-rose);
+  transform: translateX(2px);
+}
+
+.cart-item-remove:active {
+  transform: translateX(2px) scale(0.98);
+}
+
+/* Cart item styling enhancement */
+.cart-item {
+  position: relative;
+  transition: all 0.3s ease;
+  animation: slideIn 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.cart-item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-item-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 300;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.cart-item-price {
+  font-size: 14px;
+  color: var(--accent-aqua);
+  margin: 4px 0;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Cart header styling enhancement */
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.cart-title {
+  font-family: 'Syncopate', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--accent-aqua), var(--accent-rose));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Cart sidebar close button positioning */
+.cart-sidebar .cart-header {
+  position: relative;
+}
+
+/* Enhanced hover effect for cart items */
+.cart-item:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(125,243,255,0.2);
+  transform: translateX(-4px);
+}
+
+/* Remove button container styling */
+.cart-item-remove {
+  align-self: flex-start;
+  width: fit-content;
+}
+
+/* Animation for remove button click feedback */
+.cart-item-remove.removing {
+  animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+/* Mobile responsiveness for cart buttons */
+@media (max-width: 768px) {
+  .cart-close {
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+  }
+  
+  .cart-item-remove {
+    cursor: pointer;
+    padding: 6px 14px;
+  }
+  
+  .cart-close:hover,
+  .cart-item-remove:hover {
+    transform: none;
+  }
+  
+  .cart-close:active {
+    transform: rotate(90deg) scale(0.95);
+  }
+  
+  .cart-item-remove:active {
+    transform: translateX(2px) scale(0.98);
+  }
+}
+
+/* Dark mode enhancement for buttons */
+@media (prefers-color-scheme: dark) {
+  .cart-close {
+    background: rgba(0,0,0,0.3);
+  }
+  
+  .cart-item-remove {
+    background: rgba(0,0,0,0.3);
+  }
+}
+
+/* Focus styles for accessibility */
+.cart-close:focus-visible,
+.cart-item-remove:focus-visible {
+  outline: 2px solid var(--accent-aqua);
+  outline-offset: 2px;
+}
+
+/* Empty cart message styling enhancement */
+.cart-items > div[style*="empty"] {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-family: 'Syncopate', sans-serif;
+}
+
+/* Optional: Add a subtle pulse animation for the cart icon when items are added */
+@keyframes cartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.cart-icon.pulse {
+  animation: cartPulse 0.3s ease;
+}
 </style>
 </head>
 <body>
