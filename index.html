@@ -9,6 +9,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-functions-compat.js"></script>
 <style>
 /* ----- ORIGINAL COMPLETE CSS (unchanged, all features preserved) ----- */
 :root {
@@ -907,7 +908,8 @@ footer { padding: 36px 20px 0; }
 .cart-item-name { font-family:'Cormorant Garamond'; font-size:18px; }
 .cart-item-price { font-size:14px; color:var(--accent-aqua); margin:4px 0; }
 .cart-total { border-top:1px solid rgba(255,255,255,0.1); padding-top:16px; display:flex; justify-content:space-between; font-family:'Syncopate'; font-size:12px;}
-.checkout-btn { background:linear-gradient(135deg, rgba(125,243,255,0.2), rgba(192,132,252,0.2)); border:1px solid rgba(125,243,255,0.4); color:var(--accent-aqua); padding:14px; font-family:'Syncopate'; font-size:10px; letter-spacing:0.2em; border-radius:2px; cursor:none; width:100%;}
+.checkout-btn { background:linear-gradient(135deg, rgba(125,243,255,0.2), rgba(192,132,252,0.2)); border:1px solid rgba(125,243,255,0.4); color:var(--accent-aqua); padding:14px; font-family:'Syncopate'; font-size:10px; letter-spacing:0.2em; border-radius:2px; cursor:none; width:100%; transition:all 0.3s; }
+.checkout-btn:disabled { opacity:0.5; cursor:not-allowed; }
 .auth-overlay { position: fixed; inset:0; z-index:1000; background:rgba(4,4,10,0.8); backdrop-filter:blur(20px); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.3s; padding:16px; }
 .auth-overlay.open { opacity:1; pointer-events:all; }
 .auth-modal { background:rgba(4,4,10,0.95); border:1px solid rgba(125,243,255,0.2); border-radius:8px; padding:32px 24px; max-width:440px; width:100%; position:relative; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.5); margin:auto; }
@@ -986,6 +988,28 @@ footer { padding: 36px 20px 0; }
 }
 .cart-item-details { flex:1; }
 .cart-item-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+
+/* payment modal */
+.payment-modal {
+  position: fixed; inset:0; z-index:1100; background:rgba(4,4,10,0.95); backdrop-filter:blur(30px);
+  display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none;
+  transition:opacity 0.3s; padding:24px;
+}
+.payment-modal.open { opacity:1; pointer-events:all; }
+.payment-card {
+  background:rgba(4,4,10,0.98); border:1px solid rgba(125,243,255,0.3); border-radius:12px;
+  padding:32px; max-width:480px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,0.6);
+}
+.payment-card h3 { font-family:'Cormorant Garamond'; font-size:28px; margin-bottom:24px; }
+.payment-input { width:100%; padding:14px; background:rgba(255,255,255,0.06); border:1px solid rgba(125,243,255,0.2); color:white; border-radius:6px; margin-bottom:20px; font-size:16px; }
+.payment-input:focus { outline:none; border-color:var(--accent-aqua); }
+.payment-amount { font-size:24px; font-family:'Cormorant Garamond'; color:var(--accent-aqua); margin:16px 0; }
+.payment-actions { display:flex; gap:12px; margin-top:24px; }
+.payment-btn { flex:1; padding:12px; background:rgba(125,243,255,0.15); border:1px solid rgba(125,243,255,0.3); color:var(--accent-aqua); border-radius:4px; cursor:none; transition:all 0.3s; }
+.payment-btn-primary { background:linear-gradient(135deg, rgba(125,243,255,0.2), rgba(192,132,252,0.2)); border-color:rgba(125,243,255,0.5); }
+.payment-status { margin-top:20px; padding:12px; border-radius:6px; font-size:13px; display:none; }
+.payment-status.success { background:rgba(0,255,0,0.1); border:1px solid #0f0; color:#0f0; display:block; }
+.payment-status.error { background:rgba(255,0,0,0.1); border:1px solid #f00; color:#f66; display:block; }
 </style>
 </head>
 <body>
@@ -998,7 +1022,22 @@ footer { padding: 36px 20px 0; }
 <!-- AUTH MODAL -->
 <div class="auth-overlay" id="authOverlay"><div class="auth-modal"><button class="close-auth" id="closeAuthBtn">✕</button><h2 id="authTitle">Create account</h2><div id="signupFields"><input type="text" class="auth-field" placeholder="Full name" id="authName"><div class="auth-row"><input type="tel" class="auth-field" placeholder="Phone" id="authPhone"><div style="flex:1; position:relative;"><input type="text" class="auth-field" placeholder="Location (city)" id="authLocation" readonly><span class="geo-hint" id="detectLocationBtn">📍 detect</span></div></div></div><input type="email" class="auth-field" placeholder="Email address" id="authEmail"><input type="password" class="auth-field" placeholder="Password" id="authPass"><button class="auth-btn" id="authActionBtn">Continue</button><div class="auth-switch" id="toggleAuthMode">Already have an account? Log in</div></div></div>
 
-<!-- NAVIGATION -->
+<!-- PAYMENT MODAL -->
+<div class="payment-modal" id="paymentModal">
+  <div class="payment-card glass">
+    <h3>MTN MoMo Payment</h3>
+    <p style="margin-bottom:16px; color:var(--text-secondary);">Enter your MoMo number to pay with MTN Mobile Money (Ghana)</p>
+    <div class="payment-amount" id="paymentAmount">Total: ₵0</div>
+    <input type="tel" class="payment-input" id="momoNumber" placeholder="024XXXXXXX" autocomplete="off">
+    <div class="payment-status" id="paymentStatus"></div>
+    <div class="payment-actions">
+      <button class="payment-btn" id="closePaymentBtn">Cancel</button>
+      <button class="payment-btn payment-btn-primary" id="confirmPaymentBtn">Pay Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- NAVIGATION (unchanged) -->
 <nav><div class="nav-logo-wrapper"><img src="logo.jpg" alt="Daasebre" class="nav-logo-img" onerror="this.style.display='none'"><div class="nav-logo-text-group"><div class="nav-logo">DAASEBRE</div><div class="nav-logo-small">fashion & trainee</div></div></div><ul class="nav-links"><li><a href="#" class="nav-link-page" data-page="collections">Collections</a></li><li><a href="#" class="nav-link-page" data-page="lookbook">Lookbook</a></li><li><a href="#" class="nav-link-page" data-page="editorial">Editorial</a></li><li><a href="#" class="nav-link-page" data-page="galleries">Galleries</a></li></ul><div style="display:flex; align-items:center;"><button class="nav-cta nav-cta-desk" id="navAuthBtn">LOGIN</button><div class="cart-icon" id="cartToggle"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 22a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm9 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM2.5 3h2.5l1.68 9.3a2 2 0 0 0 2 1.7h8.8a2 2 0 0 0 1.97-1.57L21 6H6"/></svg><span class="cart-count" id="cartCount">0</span></div></div><button class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></button></nav>
 
 <div class="mobile-drawer" id="mobileDrawer"><ul class="mobile-nav-links"><li><a href="#" class="nav-link-page" data-page="collections">Collections</a></li><li><a href="#" class="nav-link-page" data-page="lookbook">Lookbook</a></li><li><a href="#" class="nav-link-page" data-page="editorial">Editorial</a></li><li><a href="#" class="nav-link-page" data-page="galleries">Galleries</a></li></ul><button class="nav-cta" id="mobileAuthBtn">LOGIN</button><button class="nav-cta" style="width:100%;margin-top:16px;" id="mobileAdmissionBtn">ADMISSION</button></div>
@@ -1020,14 +1059,14 @@ footer { padding: 36px 20px 0; }
   <footer><div class="footer-brand-row"><div class="footer-brand-left"><div class="footer-logo-mark">DAASEBRE</div><p class="footer-tagline">Fashion & Trainee — distilled through light. Couture crafted for those who dare to wear the future.</p></div><div class="footer-socials"><a href="https://www.tiktok.com/@daasebre.fashion" class="social-btn" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg></a><a href="https://wa.me/+233530725409" class="social-btn" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.473-.149-.673.149-.2.297-.767.967-.94 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.099-.198.05-.371-.025-.52-.075-.149-.673-1.62-.922-2.22-.242-.58-.487-.5-.673-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.57-.085 1.758-.719 2.006-1.413.248-.694.248-1.29.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></a><a href="mailto:daasebrefashion@gmail.com" class="social-btn" aria-label="Email"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a><a href="tel:+233530725409" class="social-btn" aria-label="Phone"><svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></a></div></div><div class="footer-nav-row"><div class="footer-col"><h4>Shop</h4><ul><li><a href="#">New Arrivals</a></li><li><a href="#">Bridal Collection</a></li><li><a href="#">Ready-to-Wear</a></li><li><a href="#">Accessories</a></li><li><a href="#">Archival</a></li></ul></div><div class="footer-col"><h4>World</h4><ul><li><a href="#">Editorial</a></li><li><a href="#">Lookbook</a></li><li><a href="#">Atelier</a></li><li><a href="#">Events</a></li><li><a href="#">Press</a></li></ul></div><div class="footer-col"><h4>Company</h4><ul><li><a href="#">Our Story</a></li><li><a href="#">Sustainability</a></li><li><a href="#">Careers</a></li><li><a href="#">Stockists</a></li><li><a href="#">Contact</a></li></ul></div></div><div class="footer-bottom"><div class="footer-copy">© 2026 DAASEBRE Fashion & Trainee. All rights reserved.</div><div class="footer-legal"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Cookies</a></div></div></footer>
 </div>
 
-<!-- PAGE CONTAINERS -->
+<!-- PAGE CONTAINERS (unchanged) -->
 <div id="collectionsPage" class="page-container" style="display:none;"><div class="section-header"><div class="section-label">Full Archive</div><h1 class="page-hero-title">The Collections</h1><p class="page-hero-sub">African heritage, bridal couture, and tailored suiting — each piece a crystalline study.</p></div><div class="collection-gallery" id="collectionsGallery"></div></div>
 <div id="lookbookPage" class="page-container" style="display:none;"><div class="section-header"><div class="section-label">Visual Diary</div><h1 class="page-hero-title">Lookbook</h1><p class="page-hero-sub">Editorial styles, campaign imagery and motion — pick your favorite.</p></div><div class="lookbook-grid" id="lookbookGrid"></div></div>
 <div id="galleriesPage" class="page-container" style="display:none;"><div class="section-header"><div class="section-label">Events & Archives</div><h1 class="page-hero-title">Galleries</h1><p class="page-hero-sub">Moments from runway shows, private events, and behind‑the‑scenes — captured in light.</p></div><div class="lookbook-grid" id="galleriesGrid"></div></div>
 <div id="admissionPage" class="page-container" style="display:none;"><div class="section-header"><div class="section-label">Join the atelier</div><h1 class="page-hero-title">Admission</h1><p class="page-hero-sub">Apply for the DAASEBRE fashion & trainee program. Future African designers start here.</p></div><div class="admission-form glass" id="admissionFormContainer"><div class="form-row"><div class="form-group"><label>Full name</label><input type="text" id="admissionName"></div><div class="form-group"><label>Email</label><input type="email" id="admissionEmail"></div></div><div class="form-row"><div class="form-group"><label>Phone</label><input type="tel" id="admissionPhone"></div><div class="form-group"><label>Date of birth</label><input type="date" id="admissionDob"></div></div><div class="form-group"><label>Program of interest</label><select id="admissionProgram"><option>Fashion design (African wear)</option><option>Pattern making / Atelier</option><option>Textile innovation</option><option>Creative direction</option></select></div><div class="form-group"><label>Portfolio / CV link</label><input type="url" id="admissionPortfolio"></div><div class="form-group"><label>Why DAASEBRE? (short statement)</label><textarea id="admissionStatement"></textarea></div><button class="btn-submit" id="submitAdmissionBtn">Submit application</button><p style="font-size:11px; color:var(--text-secondary); margin-top:8px;">We'll respond within 2 weeks. All trainee positions include mentorship.</p></div></div>
 <div id="editorialPage" class="page-container" style="display:none;"><div class="section-header"><div class="section-label">Stories</div><h1 class="page-hero-title">The Magazine</h1><p class="page-hero-sub">Essays, interviews, and visual narratives from the crystalline world.</p></div><div class="editorial-grid" id="editorialFullGrid"></div></div>
 <a href="#" id="backToMainBtn" class="page-back" style="display:none;">✕</a>
-<div class="cart-sidebar" id="cartSidebar"><div class="cart-header"><span class="cart-title">Your light cart</span><button class="cart-close" id="cartClose">✕</button></div><div class="cart-items" id="cartItems"></div><div class="cart-total"><span>Total</span><span id="cartTotal">₵0</span></div><button class="checkout-btn">checkout</button></div>
+<div class="cart-sidebar" id="cartSidebar"><div class="cart-header"><span class="cart-title">Your light cart</span><button class="cart-close" id="cartClose">✕</button></div><div class="cart-items" id="cartItems"></div><div class="cart-total"><span>Total</span><span id="cartTotal">₵0</span></div><button class="checkout-btn" id="checkoutBtn">checkout</button></div>
 
 <script>
 // Firebase Config
@@ -1089,9 +1128,10 @@ function updateCartUI() {
   const totalItems = cart.reduce((acc, i) => acc + (i.qty || 1), 0);
   document.getElementById('cartCount').textContent = totalItems;
   syncCartToDB();
+  return total;
 }
 
-// Add to cart implementation with notification and quantity update
+// Add to cart implementation
 function addToCartImpl(btn) {
   const card = btn.closest('.card');
   if (!card) return;
@@ -1138,7 +1178,177 @@ function addToCartHandler(e) {
   addToCart(e.currentTarget);
 }
 
-// Enhanced style pick with nicer confirmation
+// MTN MoMo Payment Integration (Ghana)
+async function initiatePayment(amount, phoneNumber) {
+  const paymentId = 'PAY_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+  const orderData = {
+    paymentId: paymentId,
+    userId: currentUser?.uid || 'guest',
+    userEmail: currentUser?.email || '',
+    userName: currentUser?.name || '',
+    phone: phoneNumber,
+    amount: amount,
+    items: cart,
+    status: 'pending',
+    timestamp: Date.now(),
+    currency: 'GHS'
+  };
+  
+  // Store order in Firebase
+  await db.ref(`orders/${paymentId}`).set(orderData);
+  
+  // Call Firebase Cloud Function to process MoMo payment
+  try {
+    const requestPayment = firebase.functions().httpsCallable('requestMomoPayment');
+    const result = await requestPayment({
+      amount: amount,
+      phoneNumber: phoneNumber,
+      paymentId: paymentId,
+      orderData: orderData
+    });
+    
+    if (result.data.success) {
+      // Payment initiated, wait for webhook confirmation
+      return { success: true, referenceId: result.data.referenceId, paymentId: paymentId };
+    } else {
+      throw new Error(result.data.message || 'Payment initiation failed');
+    }
+  } catch (error) {
+    console.error('Payment error:', error);
+    throw error;
+  }
+}
+
+// Listen for payment status updates via Firebase
+function listenForPaymentStatus(paymentId, onSuccess, onFailure) {
+  const orderRef = db.ref(`orders/${paymentId}`);
+  const handler = orderRef.on('value', (snap) => {
+    const order = snap.val();
+    if (order) {
+      if (order.status === 'completed') {
+        orderRef.off('value', handler);
+        onSuccess(order);
+      } else if (order.status === 'failed') {
+        orderRef.off('value', handler);
+        onFailure(order);
+      }
+    }
+  });
+}
+
+// Checkout with MoMo
+async function checkout() {
+  if (!currentUser) {
+    document.getElementById('authOverlay').classList.add('open');
+    return;
+  }
+  
+  if (cart.length === 0) {
+    showToast('Your cart is empty');
+    return;
+  }
+  
+  const total = cart.reduce((sum, item) => sum + (item.price * (item.qty || 1)), 0);
+  if (total <= 0) return;
+  
+  // Show payment modal
+  const paymentModal = document.getElementById('paymentModal');
+  const paymentAmountSpan = document.getElementById('paymentAmount');
+  const momoInput = document.getElementById('momoNumber');
+  const paymentStatusDiv = document.getElementById('paymentStatus');
+  
+  paymentAmountSpan.textContent = `Total: ₵${total}`;
+  momoInput.value = '';
+  paymentStatusDiv.style.display = 'none';
+  paymentStatusDiv.className = 'payment-status';
+  paymentModal.classList.add('open');
+  
+  // Store checkout promise handlers
+  window.pendingCheckout = { resolve: null, reject: null };
+  
+  return new Promise((resolve, reject) => {
+    window.pendingCheckout = { resolve, reject };
+  });
+}
+
+// Confirm payment handler
+async function confirmPayment() {
+  const momoNumber = document.getElementById('momoNumber').value.trim();
+  const paymentStatusDiv = document.getElementById('paymentStatus');
+  
+  if (!momoNumber.match(/^(0[2][4-9]|0[5][0-9]|0[5][5-9]|0[2][0-9])\d{7}$/)) {
+    paymentStatusDiv.textContent = 'Please enter a valid MTN Ghana MoMo number (e.g., 024XXXXXXX)';
+    paymentStatusDiv.className = 'payment-status error';
+    paymentStatusDiv.style.display = 'block';
+    return;
+  }
+  
+  const total = cart.reduce((sum, item) => sum + (item.price * (item.qty || 1)), 0);
+  const confirmBtn = document.getElementById('confirmPaymentBtn');
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = 'Processing...';
+  paymentStatusDiv.style.display = 'block';
+  paymentStatusDiv.className = 'payment-status';
+  paymentStatusDiv.textContent = 'Initiating payment request...';
+  
+  try {
+    const result = await initiatePayment(total, momoNumber);
+    
+    if (result.success) {
+      paymentStatusDiv.textContent = 'Payment request sent. Please check your phone to complete the payment.';
+      paymentStatusDiv.className = 'payment-status';
+      
+      // Listen for payment completion
+      listenForPaymentStatus(result.paymentId, 
+        async (order) => {
+          paymentStatusDiv.textContent = '✅ Payment successful! Thank you for your purchase.';
+          paymentStatusDiv.className = 'payment-status success';
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = 'Pay Now';
+          
+          // Clear cart after successful payment
+          cart = [];
+          updateCartUI();
+          
+          // Record transaction
+          await db.ref(`transactions/${result.paymentId}`).set({
+            userId: currentUser.uid,
+            amount: total,
+            phone: momoNumber,
+            status: 'completed',
+            timestamp: Date.now(),
+            items: cart
+          });
+          
+          showToast('🎉 Payment successful! Order confirmed.');
+          
+          setTimeout(() => {
+            document.getElementById('paymentModal').classList.remove('open');
+            document.getElementById('cartSidebar').classList.remove('open');
+            if (window.pendingCheckout?.resolve) window.pendingCheckout.resolve(order);
+          }, 2000);
+        },
+        (order) => {
+          paymentStatusDiv.textContent = '❌ Payment failed. Please try again or contact support.';
+          paymentStatusDiv.className = 'payment-status error';
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = 'Pay Now';
+          if (window.pendingCheckout?.reject) window.pendingCheckout.reject(order);
+        }
+      );
+    } else {
+      throw new Error(result.message || 'Payment initiation failed');
+    }
+  } catch (error) {
+    console.error('Checkout error:', error);
+    paymentStatusDiv.textContent = error.message || 'Payment request failed. Please try again.';
+    paymentStatusDiv.className = 'payment-status error';
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = 'Pay Now';
+  }
+}
+
+// Pick style implementation (unchanged)
 function pickStyleImpl(btn) {
   const card = btn.closest('.lookbook-card');
   const styleName = card?.dataset.look || card?.querySelector('.lookbook-caption')?.innerText || 'this style';
@@ -1434,6 +1644,15 @@ backBtn.addEventListener('click', e => { e.preventDefault(); showMainSite(); });
 document.getElementById('exploreBtn')?.addEventListener('click', () => showPage('collections'));
 document.getElementById('cartToggle')?.addEventListener('click', () => document.getElementById('cartSidebar').classList.add('open'));
 document.getElementById('cartClose')?.addEventListener('click', () => document.getElementById('cartSidebar').classList.remove('open'));
+document.getElementById('checkoutBtn')?.addEventListener('click', () => checkout());
+
+// Payment modal event listeners
+document.getElementById('closePaymentBtn')?.addEventListener('click', () => {
+  document.getElementById('paymentModal').classList.remove('open');
+  if (window.pendingCheckout?.reject) window.pendingCheckout.reject('Cancelled');
+});
+document.getElementById('confirmPaymentBtn')?.addEventListener('click', confirmPayment);
+
 document.getElementById('cartItems')?.addEventListener('click', e => {
   if (e.target.classList.contains('cart-item-remove')) {
     const idx = e.target.dataset.index;
